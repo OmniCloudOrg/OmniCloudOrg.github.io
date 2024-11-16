@@ -26,3 +26,4 @@ export type NewsItem = {
     //   impactLevel: "major"
     // },
   ]
+  
