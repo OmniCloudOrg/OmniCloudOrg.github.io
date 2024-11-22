@@ -6,7 +6,7 @@ const Workflow = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const phases = [
     {

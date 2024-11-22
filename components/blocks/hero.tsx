@@ -3,9 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Server, Users } from 'lucide-react';
 
-const generateFloatingElements = (count) => {
+interface FloatingElement {
+    top: string;
+    left: string;
+    width: string;
+    height: string;
+    background: string;
+    transform: string;
+    animation: string;
+    dx: number;
+    dy: number;
+}
+
+const generateFloatingElements = (count: number): FloatingElement[] => {
     // Create a grid-like initial distribution
-    const elements = [];
+    const elements: FloatingElement[] = [];
     const gridSize = Math.ceil(Math.sqrt(count));
     const cellSize = 100 / gridSize;
 

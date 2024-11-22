@@ -73,11 +73,24 @@ const features = [
     }
 ];
 
-const FeatureCard = ({ feature }) => {
+interface Feature {
+    icon: JSX.Element;
+    title: string;
+    description: string;
+    area: string;
+    className: string;
+}
+
+const FeatureCard = ({ feature }: { feature: Feature }) => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
 
-    const handleMouseMove = (e) => {
+    interface MousePosition {
+        x: number;
+        y: number;
+    }
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         const rect = e.currentTarget.getBoundingClientRect();
         setMousePosition({
             x: e.clientX - rect.left,
