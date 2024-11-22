@@ -15,8 +15,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Horizon - Far Beyond LLC Open Source",
-  description: "The scalable game server of your dreams!",
+  title: "OmniForge",
+  description: "Deploy Anything Anywhere, Now!",
 };
 
 export default function RootLayout({
