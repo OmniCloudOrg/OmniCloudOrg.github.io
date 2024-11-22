@@ -100,7 +100,7 @@ export const Header = () => {
           {/* Call to Action Buttons */}
           <div className="flex items-center gap-4">
             <Link
-              href="https://github.com/omniforge/community"
+              href="https://github.com/Omni-Forge"
               target="_blank"
               rel="noopener noreferrer"
               className="text-neutral-300 hover:text-neutral-100 transition-colors"
