@@ -48,7 +48,7 @@ export const Footer = () => {
 const FooterLove = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 text-center text-gray-400">
-      <p>Made with <Heart className="w-4 h-4 inline-block text-red-500" /> by Tristan J. Poland</p>
+      <p>Made with <Heart className="w-4 h-4 inline-block text-red-500" /> by <a className='underline' target='_' href='https://github.com/tristanpoland'>Tristan J. Poland</a> and  <a className='underline' target='_' href='https://github.com/caznix'>Caznix</a></p>
     </div>
   )
 }
