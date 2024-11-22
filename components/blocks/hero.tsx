@@ -109,10 +109,7 @@ const Hero = () => {
                                 <Server className="w-4 h-4 text-cyan-400" />
                                 99.99% uptime
                             </div>
-                            <div className="flex items-center gap-2">
-                                <Users className="w-4 h-4 text-cyan-400" />
-                                10k+ users
-                            </div>
+
                         </div>
                     </div>
 
