@@ -17,10 +17,10 @@ const CallToAction: React.FC = () => {
         </p>
         <div className="flex gap-6 justify-center">
           <button className="bg-gradient-to-r from-cyan-500 to-blue-500 px-10 py-5 rounded-lg font-semibold text-xl hover:opacity-90 transition-opacity">
-            Start Free Trial
+            Get satrted
           </button>
           <button className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-gray-700 px-10 py-5 rounded-lg font-semibold text-xl hover:bg-gray-900 transition-colors">
-            Schedule Demo
+            View Demo
           </button>
         </div>
       </div>
