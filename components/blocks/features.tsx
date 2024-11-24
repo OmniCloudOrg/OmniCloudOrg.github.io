@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Cloud, Zap, Shield, Terminal, GitBranch, Network, Cpu, Activity, Settings } from 'lucide-react';
 
 const features = [
@@ -84,13 +84,20 @@ interface Feature {
 const FeatureCard = ({ feature }: { feature: Feature }) => {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
+    const [supportsSpotlight, setSupportsSpotlight] = useState(true);
 
-    interface MousePosition {
-        x: number;
-        y: number;
-    }
+    useEffect(() => {
+        // Check for Firefox
+        const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+        // Check for mobile
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+        
+        setSupportsSpotlight(!isFirefox && !isMobile);
+    }, []);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        if (!supportsSpotlight) return;
+        
         const rect = e.currentTarget.getBoundingClientRect();
         setMousePosition({
             x: e.clientX - rect.left,
@@ -106,15 +113,28 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            {/* Spotlight effect */}
-            <div 
-                className="absolute inset-0 transition-opacity duration-300 pointer-events-none"
-                style={{
-                    opacity: isHovered ? 1 : 0,
-                    background: `radial-gradient(200px circle at ${mousePosition.x}px ${mousePosition.y}px, 
-                                rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05) 40%, transparent 60%)`
-                }}
-            />
+            {/* Spotlight effect - only shown if supported */}
+            {supportsSpotlight && (
+                <div 
+                    className="absolute inset-0 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                        opacity: isHovered ? 1 : 0,
+                        background: `radial-gradient(200px circle at ${mousePosition.x}px ${mousePosition.y}px, 
+                                    rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05) 40%, transparent 60%)`
+                    }}
+                />
+            )}
+
+            {/* Simplified hover effect for Firefox/mobile */}
+            {!supportsSpotlight && (
+                <div 
+                    className="absolute inset-0 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                        opacity: isHovered ? 1 : 0,
+                        background: 'linear-gradient(to bottom right, rgba(6, 182, 212, 0.05), rgba(167, 139, 250, 0.05))'
+                    }}
+                />
+            )}
 
             {/* Border gradient */}
             <div className="absolute inset-0 rounded-lg transition-opacity duration-300 pointer-events-none opacity-0 group-hover:opacity-100"
@@ -161,7 +181,6 @@ const Features = () => {
                     </p>
                 </div>
                 
-                {/* Grid with auto-rows for uniform height within rows */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-fr">
                     {features.map((feature, index) => (
                         <FeatureCard key={index} feature={feature} />

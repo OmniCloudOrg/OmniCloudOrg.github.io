@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Shield, Server } from 'lucide-react';
 
 interface FloatingElement {
@@ -52,15 +52,11 @@ const generateFloatingElements = (count: number): FloatingElement[] => {
 
 const generateRacks = (count: number) => {
     return Array.from({ length: count }, (_, index) => {
-        // First rack moves right (+24px/1.5rem) and up (+14px/0.875rem)
-        // Second rack stays at origin
-        // Subsequent racks move left and down in increments
-        const xStep = 6; // 1.5rem = 24px
-        const yStep = 3.6; // 0.875rem ≈ 14px
+        const xStep = 6;
+        const yStep = 3.6;
         
-        if (index === 0) return { x: xStep, y: yStep, z: 1 };  // First rack slightly behind
-        if (index === 1) return { x: 0, y: 0, z: 0 };    // Second rack at front
-        // For subsequent racks, move left and down progressively
+        if (index === 0) return { x: xStep, y: yStep, z: 1 };
+        if (index === 1) return { x: 0, y: 0, z: 0 };
         return {
             x: -xStep * (index - 1),
             y: -yStep * (index - 1),
@@ -71,7 +67,12 @@ const generateRacks = (count: number) => {
 
 const Hero: React.FC = () => {
     const [floatingElements] = useState(() => generateFloatingElements(20));
+    const [isFirefox, setIsFirefox] = useState(false);
     const racks = generateRacks(5);
+
+    useEffect(() => {
+        setIsFirefox(navigator.userAgent.toLowerCase().includes('firefox'));
+    }, []);
 
     return (
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -79,6 +80,13 @@ const Hero: React.FC = () => {
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a3f_1px,transparent_1px),linear-gradient(to_bottom,#1a1a3f_1px,transparent_1px)] bg-[size:2rem_2rem]" />
             <div className="absolute inset-0 overflow-hidden">
                 <style>
+                    {`
+                        @supports not (-moz-appearance: none) {
+                            .floating-element {
+                                backdrop-filter: blur(12px);
+                            }
+                        }
+                    `}
                     {floatingElements.map((element, i) => `
                         @keyframes float${i} {
                             0% {
@@ -99,13 +107,15 @@ const Hero: React.FC = () => {
                 {floatingElements.map((element, i) => (
                     <div
                         key={i}
-                        className="absolute rounded-full opacity-30 backdrop-blur-3xl"
+                        className={`absolute rounded-full opacity-30 floating-element`}
                         style={{
                             top: element.top,
                             left: element.left,
                             width: element.width,
                             height: element.height,
-                            background: element.background,
+                            background: isFirefox 
+                                ? element.background.replace(/[0-9]\.4/g, '0.2')  // Reduce opacity on Firefox
+                                : element.background,
                             transform: element.transform,
                             animation: element.animation
                         }}
@@ -118,7 +128,15 @@ const Hero: React.FC = () => {
                         <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 text-transparent bg-clip-text">
                             OmniForge
                         </span><br />
-                        <div className="inline-block mb-4 px-6 py-2 rounded-full bg-gradient-to-r from-blue-950/50 to-violet-950/50 border border-indigo-900/50 backdrop-blur-xl">
+                        <div 
+                            className="inline-block mb-4 px-6 py-2 rounded-full bg-gradient-to-r from-blue-950/50 to-violet-950/50 border border-indigo-900/50"
+                            style={{
+                                backdropFilter: isFirefox ? 'none' : 'blur(16px)',
+                                background: isFirefox 
+                                    ? 'linear-gradient(to right, rgba(23, 37, 84, 0.95), rgba(46, 16, 101, 0.95))' 
+                                    : 'linear-gradient(to right, rgba(23, 37, 84, 0.5), rgba(46, 16, 101, 0.5))'
+                            }}
+                        >
                             <div className="flex justify-center items-center gap-8 text-sm text-gray-400">
                                 <div className="flex items-center gap-2">
                                     <Shield className="w-4 h-4 text-cyan-400" />
@@ -139,7 +157,15 @@ const Hero: React.FC = () => {
                         <button className="bg-gradient-to-r from-cyan-400 to-blue-500 px-8 py-4 rounded-lg font-semibold hover:opacity-90 transition-all duration-300 text-lg shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40">
                             Get Started Free
                         </button>
-                        <button className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700/50 px-8 py-4 rounded-lg font-semibold hover:border-gray-600 transition-all duration-300 text-lg group backdrop-blur-xl">
+                        <button 
+                            className="bg-gradient-to-r from-gray-900 to-gray-800 border border-gray-700/50 px-8 py-4 rounded-lg font-semibold hover:border-gray-600 transition-all duration-300 text-lg group"
+                            style={{
+                                backdropFilter: isFirefox ? 'none' : 'blur(16px)',
+                                background: isFirefox 
+                                    ? 'linear-gradient(to right, rgba(17, 24, 39, 0.95), rgba(31, 41, 55, 0.95))' 
+                                    : 'linear-gradient(to right, rgba(17, 24, 39, 0.5), rgba(31, 41, 55, 0.5))'
+                            }}
+                        >
                             View Documentation
                             <span className="inline-block transition-transform group-hover:translate-x-1 ml-2">
                                 →
