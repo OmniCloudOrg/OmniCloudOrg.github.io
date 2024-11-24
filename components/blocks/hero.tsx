@@ -173,7 +173,7 @@ const Hero: React.FC = () => {
                         </button>
                     </div>
                 </div>
-                <div className="md:w-1/2 flex justify-center md:justify-end translate-x-96">
+                <div className="md:w-1/2 flex justify-center md:justify-end translate-x-56">
                     {racks.map((transform, index) => (
                         <img
                             key={index}
