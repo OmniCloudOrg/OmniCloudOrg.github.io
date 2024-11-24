@@ -93,6 +93,7 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
         
         setSupportsSpotlight(!isFirefox && !isMobile);
+        setSupportsSpotlight(false);
     }, []);
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
