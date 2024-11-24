@@ -1,7 +1,13 @@
 import React from 'react';
 import { Layers, GitBranch, Cpu, Shield } from 'lucide-react';
 
-const TechStackCard = ({ title, description, features }) => (
+interface TechStackCardProps {
+  title: string;
+  description: string;
+  features: string[];
+}
+
+const TechStackCard: React.FC<TechStackCardProps> = ({ title, description, features }) => (
   <div className="bg-slate-900/50 p-6 rounded-lg backdrop-blur-sm border border-slate-800/50">
     <h3 className="text-xl font-semibold text-white mb-4">{title}</h3>
     <p className="text-slate-400 mb-4">{description}</p>
@@ -64,7 +70,7 @@ const OpenSourceStack = () => {
     }
   ];
 
-  const IconComponent = ({ icon: Icon }) => (
+  const IconComponent: React.FC<{ icon: React.ComponentType<{ className?: string }> }> = ({ icon: Icon }) => (
     <div className="p-2 bg-cyan-500/10 rounded-lg w-fit mb-6">
       <Icon className="w-6 h-6 text-cyan-400" />
     </div>

@@ -1,7 +1,14 @@
 import React from 'react';
 import { Code2, MessageSquare, Book, Heart } from 'lucide-react';
 
-const ContributionCard = ({ icon: Icon, title, description, buttonText }) => (
+interface ContributionCardProps {
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  title: string;
+  description: string;
+  buttonText: string;
+}
+
+const ContributionCard: React.FC<ContributionCardProps> = ({ icon: Icon, title, description, buttonText }) => (
   <div className="bg-slate-900/50 p-6 rounded-lg backdrop-blur-sm border border-slate-800/50 flex flex-col h-full">
     <div className="p-2 bg-cyan-500/10 rounded-lg w-fit">
       <Icon className="w-6 h-6 text-cyan-400" />

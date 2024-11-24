@@ -1,7 +1,14 @@
 import React from 'react';
 import { Star, GitFork, Users, Clock } from 'lucide-react';
 
-const MetricCard = ({ icon: Icon, title, value, description }) => (
+interface MetricCardProps {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  value: string | number;
+  description: string;
+}
+
+const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, title, value, description }) => (
   <div className="bg-slate-900/50 p-6 rounded-lg backdrop-blur-sm border border-slate-800/50">
     <div className="flex items-start gap-4">
       <div className="p-2 bg-cyan-500/10 rounded-lg">
