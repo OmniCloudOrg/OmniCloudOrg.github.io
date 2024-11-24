@@ -17,7 +17,7 @@ import Network from '@/components/blocks/network';
 
 export default function LandingPage() {
   return (
-    <div style={{ marginTop: '-60px' }}>
+    <div style={{ marginTop: '-66px' }}>
       <Hero />
 
       <Features />
