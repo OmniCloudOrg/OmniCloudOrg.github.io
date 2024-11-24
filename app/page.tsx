@@ -20,9 +20,9 @@ export default function LandingPage() {
     <div style={{ marginTop: '-60px' }}>
       <Hero />
 
+      <Features />
       <TechOverview />
       <Ghstats />
-      <Features />
       <Workflow />
       <HandsFree />
       <Stack />
