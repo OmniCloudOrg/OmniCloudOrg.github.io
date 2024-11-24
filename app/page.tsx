@@ -7,22 +7,25 @@ import {
 } from 'lucide-react';
 import CallToAction from '@/components/blocks/cta';
 import Workflow from '@/components/blocks/workflow';
-import StatsSection from '@/components/blocks/stats';
 import Features from '@/components/blocks/features';
 import Hero from '@/components/blocks/hero';
 import TechOverview from '@/components/blocks/tech';
 import HandsFree from '@/components/blocks/handsfree';
+import Stack from '@/components/blocks/stack';
+import Ghstats from '@/components/blocks/ghstats';
+import Network from '@/components/blocks/network';
 
 export default function LandingPage() {
   return (
-    <div className="bg-black text-white">
-
+    <div style={{ marginTop: '-60px' }}>
       <Hero />
 
+      <TechOverview />
+      <Ghstats />
       <Features />
       <Workflow />
-      <TechOverview />
       <HandsFree />
+      <Stack />
       <CallToAction />
     </div>
   );
