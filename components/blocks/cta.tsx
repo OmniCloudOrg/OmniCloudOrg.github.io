@@ -5,9 +5,9 @@ const CallToAction: React.FC = () => {
     <section className="py-32 px-4 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-black to-blue-900/20" />
       <div className="relative z-10 max-w-5xl mx-auto text-center">
-        <h2 className="text-5xl font-bold mb-8">
+        <h2 className="text-5xl font-bold mb-10">
           Ready to Transform Your 
-          <span className="block mt-2 bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
+          <span className="block mt-2 bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text pb-5">
             Deployment Pipeline?
           </span>
         </h2>
