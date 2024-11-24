@@ -68,7 +68,7 @@ const generateRacks = (count: number) => {
 const Hero: React.FC = () => {
     const [floatingElements] = useState(() => generateFloatingElements(20));
     const [isFirefox, setIsFirefox] = useState(false);
-    const racks = generateRacks(5);
+    const racks = generateRacks(4);
 
     useEffect(() => {
         setIsFirefox(navigator.userAgent.toLowerCase().includes('firefox'));
