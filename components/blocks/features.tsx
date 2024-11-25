@@ -47,7 +47,7 @@ const features = [
         title: "Service Mesh Integration",
         description: "Built-in service mesh provides advanced networking, traffic management, and observability. Support for Istio, Linkerd, and custom implementations.",
         area: "feat6",
-        className: "lg:col-span-2"
+        className: "lg:col-span-1"
     },
     {
         icon: <Cpu className="w-8 h-8 text-cyan-400" />,
