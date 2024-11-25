@@ -25,7 +25,6 @@ export default function LandingPage() {
       <Ghstats />
       <Workflow />
       <HandsFree />
-      <Stack />
       <CallToAction />
     </div>
   );
