@@ -12,13 +12,13 @@ const features = [
         area: "feat1",
         className: "lg:col-span-2"
     },
-    {
-        icon: <Shield className="w-8 h-8 text-cyan-400" />,
-        title: "Enterprise Security",
-        description: "Zero-trust architecture, RBAC, and comprehensive audit logging keep your deployments secure. Full compliance with SOC 2, HIPAA, and GDPR requirements.",
-        area: "feat2",
-        className: "lg:col-span-1"
-    },
+    //{
+    //    icon: <Shield className="w-8 h-8 text-cyan-400" />,
+    //    title: "Enterprise Security",
+    //    description: "Zero-trust architecture, RBAC, and comprehensive audit logging keep your deployments secure. Full compliance with SOC 2, HIPAA, and GDPR requirements.",
+    //    area: "feat2",
+    //    className: "lg:col-span-1"
+    //},
     // Row 2 - Performance features
     {
         icon: <Zap className="w-8 h-8 text-cyan-400" />,
