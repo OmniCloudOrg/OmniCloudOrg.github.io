@@ -69,7 +69,7 @@ const features = [
         title: "Automated Operations",
         description: "Automate routine operations with self-healing infrastructure and predictive scaling.",
         area: "feat9",
-        className: "lg:col-span-2"
+        className: "lg:col-span-1"
     }
 ];
 
