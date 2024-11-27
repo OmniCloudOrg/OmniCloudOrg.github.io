@@ -2,16 +2,31 @@ import { getDocBySlug, getAllDocs, buildTableOfContents } from '@/lib/docs';
 import DocPageContent from '@/components/docs/DocPageContent';
 import DocNotFoundModal from './DocNotFoundModal';
 
-export default async function DocPage({
-  params,
-}: {
-  params: { document: string[] }
-}) {
-  const slug = params.document.join('/');
+// Define interfaces for the document structure
+interface DocFrontmatter {
+  title: string;
+  description: string;
+}
 
+interface Doc {
+  content: string;
+  slug: string | string[];
+  frontmatter?: Partial<DocFrontmatter>;
+}
+
+interface PageProps {
+  params: {
+    document: string[];
+  };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+export default async function DocPage({ params }: PageProps) {
+  const slug = params.document.join('/');
+  
   try {
     const doc = await getDocBySlug(params.document);
-    
+   
     if (!doc || !doc.content) {
       console.log(`Document not found for slug: ${slug}`);
       return <DocNotFoundModal slug={slug} />;
