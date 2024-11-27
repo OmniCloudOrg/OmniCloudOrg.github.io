@@ -2,10 +2,12 @@ import { getDocBySlug, getAllDocs, buildTableOfContents } from '@/lib/docs';
 import DocPageContent from '@/components/docs/DocPageContent';
 import DocNotFoundModal from './DocNotFoundModal';
 
-interface DocPageProps {
+// Proper typing for Next.js App Router
+type Props = {
   params: {
     document: string[]
   }
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
 // This is required for static export
@@ -15,8 +17,8 @@ export async function generateStaticParams() {
   // Transform the docs into params objects
   const paths = allDocs.map((doc) => {
     // Handle both string and array slugs
-    const slugArray = typeof doc.slug === 'string' 
-      ? doc.slug.split('/') 
+    const slugArray = typeof doc.slug === 'string'
+      ? doc.slug.split('/')
       : doc.slug;
     
     return {
@@ -30,7 +32,7 @@ export async function generateStaticParams() {
   return paths;
 }
 
-export default async function DocPage({ params }: DocPageProps) {
+export default async function DocPage({ params, searchParams }: Props) {
   const slug = params.document.join('/');
 
   try {
@@ -65,6 +67,6 @@ export default async function DocPage({ params }: DocPageProps) {
   }
 }
 
-// Make sure the page knows it's static
+// Configure static generation
 export const dynamic = 'error';
 export const dynamicParams = false;
