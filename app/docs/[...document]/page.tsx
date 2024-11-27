@@ -2,28 +2,10 @@ import { getDocBySlug, getAllDocs, buildTableOfContents } from '@/lib/docs';
 import DocPageContent from '@/components/docs/DocPageContent';
 import DocNotFoundModal from './DocNotFoundModal';
 
-interface Params {
-  document: string[];
-}
-
-interface SearchParams {
-  [key: string]: string | string[] | undefined;
-}
-
-export async function generateStaticParams(): Promise<{ document: string[] }[]> {
-  const allDocs = await getAllDocs();
-  return allDocs.map((doc) => ({
-    document: typeof doc.slug === 'string' ? doc.slug.split('/') : doc.slug,
-  }));
-}
-
-// Remove any custom types and let Next.js infer the types
-export default async function DocPage({ 
+export default async function DocPage({
   params,
-  searchParams
 }: {
-  params: Params;
-  searchParams: SearchParams;
+  params: { document: string[] }
 }) {
   const slug = params.document.join('/');
 
@@ -59,6 +41,12 @@ export default async function DocPage({
   }
 }
 
-// Disable dynamic behavior
+export async function generateStaticParams() {
+  const allDocs = await getAllDocs();
+  return allDocs.map((doc) => ({
+    document: typeof doc.slug === 'string' ? doc.slug.split('/') : doc.slug,
+  }));
+}
+
 export const dynamic = 'error';
 export const dynamicParams = false;
