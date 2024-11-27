@@ -1,27 +1,30 @@
-import type { Metadata } from 'next';
 import { getDocBySlug, getAllDocs, buildTableOfContents } from '@/lib/docs';
 import DocPageContent from '@/components/docs/DocPageContent';
 import DocNotFoundModal from './DocNotFoundModal';
 
-// Use the Next.js PageProps type
-type PageProps = {
-  params: { document: string[] };
-  searchParams: { [key: string]: string | string[] | undefined };
+interface Params {
+  document: string[];
 }
 
-export async function generateStaticParams() {
+interface SearchParams {
+  [key: string]: string | string[] | undefined;
+}
+
+export async function generateStaticParams(): Promise<{ document: string[] }[]> {
   const allDocs = await getAllDocs();
-  
   return allDocs.map((doc) => ({
     document: typeof doc.slug === 'string' ? doc.slug.split('/') : doc.slug,
   }));
 }
 
-// Use PageProps type for the component
-export default async function DocPage({
+// Remove any custom types and let Next.js infer the types
+export default async function DocPage({ 
   params,
-  searchParams,
-}: PageProps) {
+  searchParams
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const slug = params.document.join('/');
 
   try {
@@ -59,13 +62,3 @@ export default async function DocPage({
 // Disable dynamic behavior
 export const dynamic = 'error';
 export const dynamicParams = false;
-
-// Optional: Add metadata export if needed
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const doc = await getDocBySlug(params.document);
-  
-  return {
-    title: doc?.frontmatter?.title || params.document.join(' - '),
-    description: doc?.frontmatter?.description || '',
-  };
-}
