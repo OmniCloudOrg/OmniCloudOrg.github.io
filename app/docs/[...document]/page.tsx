@@ -15,7 +15,6 @@ interface Doc {
 
 // Use the props type but cast as 'any' for the CI environment
 export default async function DocPage(
-  // @ts-expect-error - Next.js App Router types inconsistency
   props: { params: { document: string[] } }
 ) {
   const { document } = props.params;
