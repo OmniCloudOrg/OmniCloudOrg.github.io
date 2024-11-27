@@ -1,38 +1,27 @@
+import type { Metadata } from 'next';
 import { getDocBySlug, getAllDocs, buildTableOfContents } from '@/lib/docs';
 import DocPageContent from '@/components/docs/DocPageContent';
 import DocNotFoundModal from './DocNotFoundModal';
 
-// Proper typing for Next.js App Router
-type Props = {
-  params: {
-    document: string[]
-  }
-  searchParams?: { [key: string]: string | string[] | undefined }
+// Use the Next.js PageProps type
+type PageProps = {
+  params: { document: string[] };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-// This is required for static export
 export async function generateStaticParams() {
   const allDocs = await getAllDocs();
   
-  // Transform the docs into params objects
-  const paths = allDocs.map((doc) => {
-    // Handle both string and array slugs
-    const slugArray = typeof doc.slug === 'string'
-      ? doc.slug.split('/')
-      : doc.slug;
-    
-    return {
-      document: slugArray,
-    };
-  });
-
-  // Log the paths being generated for debugging
-  console.log('Generated paths:', paths);
-  
-  return paths;
+  return allDocs.map((doc) => ({
+    document: typeof doc.slug === 'string' ? doc.slug.split('/') : doc.slug,
+  }));
 }
 
-export default async function DocPage({ params, searchParams }: Props) {
+// Use PageProps type for the component
+export default async function DocPage({
+  params,
+  searchParams,
+}: PageProps) {
   const slug = params.document.join('/');
 
   try {
@@ -67,6 +56,16 @@ export default async function DocPage({ params, searchParams }: Props) {
   }
 }
 
-// Configure static generation
+// Disable dynamic behavior
 export const dynamic = 'error';
 export const dynamicParams = false;
+
+// Optional: Add metadata export if needed
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const doc = await getDocBySlug(params.document);
+  
+  return {
+    title: doc?.frontmatter?.title || params.document.join(' - '),
+    description: doc?.frontmatter?.description || '',
+  };
+}
