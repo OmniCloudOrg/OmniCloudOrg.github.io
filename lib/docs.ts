@@ -1,63 +1,6 @@
 import matter from 'gray-matter';
 import path from 'path';
-
-// Get base URL for requests
-const getBaseUrl = () => {
-  if (process.env.NODE_ENV === 'development') {
-    return 'http://localhost:3000';
-  }
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    return process.env.NEXT_PUBLIC_SITE_URL;
-  }
-  return ''; // Use relative URLs in production by default
-};
-
-async function fetchMarkdown(slug: string | string[]) {
-  const baseUrl = getBaseUrl();
-  // Handle both string and array slugs
-  const formattedSlug = Array.isArray(slug) ? slug.join('/') : slug;
-  const url = `${baseUrl}/docs/${formattedSlug}.md`;
- 
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'Accept': 'text/markdown, text/plain, */*'
-      },
-    });
-   
-    if (!response.ok) {
-      return "";
-    }
-   
-    return response.text();
-  } catch (error) {
-    console.error(`Error fetching markdown for ${slug}:`, error);
-    throw error;
-  }
-}
-
-async function fetchManifest() {
-  const baseUrl = getBaseUrl();
-  const url = `${baseUrl}/docs/manifest.json`;
- 
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'Accept': 'application/json'
-      },
-    });
-   
-    if (!response.ok) {
-      throw new Error('Failed to fetch manifest');
-    }
-   
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching manifest:', error);
-    throw error;
-  }
-}
-
+import fs from 'fs';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
@@ -65,29 +8,82 @@ import remarkMath from 'remark-math';
 import remarkRehype from 'remark-rehype';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeHighlight from 'rehype-highlight';
-import rehypeKatex from 'rehype-katex';
 import rehypePrism from 'rehype-prism-plus';
-import rehypeStringify from 'rehype-stringify';
+import rehypeKatex from 'rehype-katex';
 import rehypeSanitize from 'rehype-sanitize';
+import rehypeStringify from 'rehype-stringify';
+
+// Types
+interface DocFrontmatter {
+  title: string;
+  description: string;
+  order?: number;
+  [key: string]: any;
+}
+
+interface Doc {
+  slug: string | string[];
+  frontmatter: DocFrontmatter;
+  content: string;
+}
+
+// Helper to read markdown files from filesystem
+function getMarkdownContent(slug: string | string[]): string {
+  const docsDirectory = path.join(process.cwd(), 'public/docs');
+  const formattedSlug = Array.isArray(slug) ? slug.join('/') : slug;
+  const fullPath = path.join(docsDirectory, `${formattedSlug}.md`);
+  
+  try {
+    return fs.readFileSync(fullPath, 'utf8');
+  } catch (error) {
+    console.error(`Error reading markdown file for ${formattedSlug}:`, error);
+    return '';
+  }
+}
+
+// Helper to get all markdown files recursively
+function getAllMarkdownFiles(dir: string, baseSlug: string[] = []): Doc[] {
+  const files: Doc[] = [];
+  const items = fs.readdirSync(dir);
+
+  for (const item of items) {
+    const fullPath = path.join(dir, item);
+    const stat = fs.statSync(fullPath);
+
+    if (stat.isDirectory()) {
+      files.push(...getAllMarkdownFiles(fullPath, [...baseSlug, item]));
+    } else if (item.endsWith('.md')) {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      const { data, content: markdownContent } = matter(content);
+      const slug = [...baseSlug, item.replace(/\.md$/, '')];
+      
+      files.push({
+        slug,
+        frontmatter: {
+          title: data.title || slug[slug.length - 1],
+          description: data.description || '',
+          order: data.order || 0,
+          ...data,
+        },
+        content: markdownContent
+      });
+    }
+  }
+
+  return files;
+}
 
 export async function markdownToHtml(markdown: string) {
   const result = await unified()
-    // Parse markdown
     .use(remarkParse)
-    // GitHub Flavored Markdown
     .use(remarkGfm)
-    // Math support
     .use(remarkMath)
-    // Convert to HTML AST
     .use(remarkRehype, {
       allowDangerousHtml: true,
       footnoteLabel: 'Footnotes',
       footnoteBackLabel: 'Back to reference'
     })
-    // Add IDs to headings
     .use(rehypeSlug)
-    // Add anchor links to headings
     .use(rehypeAutolinkHeadings, {
       behavior: 'append',
       properties: {
@@ -107,33 +103,38 @@ export async function markdownToHtml(markdown: string) {
         }]
       }
     })
-    // Syntax highlighting
     .use(rehypePrism, {
       showLineNumbers: true,
       ignoreMissing: true,
     })
-    // Math rendering
     .use(rehypeKatex)
-    // Security sanitization
     .use(rehypeSanitize)
-    // Convert to HTML string
     .use(rehypeStringify)
     .process(markdown);
 
   return result.toString();
 }
 
-// Add to your existing getDocBySlug function:
 export async function getDocBySlug(slug: string | string[]) {
-  const content = await fetchMarkdown(slug);
+  const content = getMarkdownContent(slug);
+  if (!content) {
+    return {
+      slug,
+      frontmatter: {
+        title: Array.isArray(slug) ? slug[slug.length - 1] : slug,
+        description: '',
+      },
+      content: ''
+    };
+  }
+
   const { data, content: markdownContent } = matter(content);
- 
   const html = await markdownToHtml(markdownContent);
 
   return {
     slug,
     frontmatter: {
-      title: data.title || slug,
+      title: data.title || (Array.isArray(slug) ? slug[slug.length - 1] : slug),
       description: data.description || '',
       order: data.order || 0,
       ...data,
@@ -143,21 +144,16 @@ export async function getDocBySlug(slug: string | string[]) {
 }
 
 export async function getAllDocs() {
-  const manifest = await fetchManifest();
-  return manifest.docs;
+  const docsDirectory = path.join(process.cwd(), 'public/docs');
+  return getAllMarkdownFiles(docsDirectory);
 }
 
 export async function getStaticDocPaths() {
-  const manifest = await fetchManifest();
-  // Return paths in the format Next.js expects
-  return manifest.docs.map((doc: any) => ({
+  const docs = await getAllDocs();
+  return docs.map((doc) => ({
     params: {
-      // For docs/getting-started/quick-start
-      // slug should be ['getting-started', 'quick-start']
-      slug: doc.slug.split('/')
-    },
-    // This is the full path that will be generated
-    document: doc.slug
+      document: Array.isArray(doc.slug) ? doc.slug : doc.slug.split('/')
+    }
   }));
 }
 
@@ -169,24 +165,22 @@ interface TocItem {
   items?: Record<string, TocItem>;
 }
 
-export function buildTableOfContents(docs: any[]) {
+export function buildTableOfContents(docs: Doc[]) {
   const toc: Record<string, TocItem> = {};
 
   docs.forEach(doc => {
-    const parts = doc.slug.split('/');
+    const slug = Array.isArray(doc.slug) ? doc.slug : doc.slug.split('/');
     let current = toc;
-   
-    parts.forEach((part: string, index: number) => {
-      if (index === parts.length - 1) {
-        // Leaf node (actual document)
+    
+    slug.forEach((part, index) => {
+      if (index === slug.length - 1) {
         current[part] = {
           title: doc.frontmatter.title,
           description: doc.frontmatter.description,
-          slug: doc.slug,
+          slug: Array.isArray(doc.slug) ? doc.slug.join('/') : doc.slug,
           order: doc.frontmatter.order
         };
       } else {
-        // Create/traverse directory structure
         current[part] = current[part] || {
           title: part.split('-').map(word =>
             word.charAt(0).toUpperCase() + word.slice(1)
