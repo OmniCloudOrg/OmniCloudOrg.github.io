@@ -18,3 +18,222 @@ body {
     text-wrap: balance;
   }
 }
+
+
+.markdown-content {
+  /* Base text styles */
+  @apply text-gray-300 leading-relaxed;
+  
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-purple-400 font-bold mt-8 mb-4;
+  }
+  h1 { @apply text-4xl; }
+  h2 { @apply text-3xl; }
+  h3 { @apply text-2xl; }
+  h4 { @apply text-xl; }
+  h5 { @apply text-lg; }
+  h6 { @apply text-base; }
+
+  /* Paragraphs and spacing */
+  p {
+    @apply mb-4;
+  }
+
+  /* Lists */
+  ul, ol {
+    @apply mb-4 pl-6;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  li {
+    @apply mb-2;
+  }
+
+  /* Nested lists */
+  ul ul, ul ol, ol ul, ol ol {
+    @apply mt-2 mb-2;
+  }
+
+  /* Code blocks */
+  pre {
+    @apply bg-gray-800 rounded-lg p-4 mb-4 overflow-x-auto;
+  }
+
+  /* Inline code */
+  :not(pre) > code {
+    @apply bg-gray-800 text-purple-300 px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+
+  /* Blockquotes */
+  blockquote {
+    @apply border-l-4 border-purple-400 pl-4 italic my-4 text-gray-400;
+  }
+
+  /* Links */
+  a {
+    @apply text-purple-400 hover:text-purple-300 underline;
+  }
+
+  /* Tables */
+  table {
+    @apply w-full mb-4 border-collapse;
+  }
+
+  th {
+    @apply bg-gray-800 text-purple-400 p-2 border border-gray-700 font-bold;
+  }
+
+  td {
+    @apply p-2 border border-gray-700;
+  }
+
+  /* Images */
+  img {
+    @apply max-w-full h-auto rounded-lg my-4;
+  }
+
+  /* Horizontal rule */
+  hr {
+    @apply my-8 border-gray-700;
+  }
+
+  /* Task lists */
+  .task-list-item {
+    @apply list-none pl-0;
+  }
+
+  .task-list-item input[type="checkbox"] {
+    @apply mr-2;
+  }
+
+  /* Code syntax highlighting */
+  .line-number {
+    @apply text-gray-500 mr-4 select-none;
+  }
+
+  /* Math equations */
+  .katex {
+    @apply text-purple-300;
+  }
+
+  /* Footnotes */
+  .footnotes {
+    @apply mt-8 pt-4 border-t border-gray-700;
+  }
+
+  .footnote-ref {
+    @apply text-purple-400 no-underline;
+  }
+
+  .footnote-backref {
+    @apply text-purple-400 no-underline ml-1;
+  }
+
+  /* Definition lists */
+  dl {
+    @apply mb-4;
+  }
+
+  dt {
+    @apply font-bold text-purple-400;
+  }
+
+  dd {
+    @apply ml-4 mb-2;
+  }
+
+  /* Abbreviations */
+  abbr[title] {
+    @apply cursor-help border-dotted border-b border-purple-400;
+  }
+
+  /* Mark text */
+  mark {
+    @apply bg-purple-400/20 text-purple-200 px-1 rounded;
+  }
+
+  /* Subscript and Superscript */
+  sub, sup {
+    @apply text-sm;
+  }
+
+  /* Custom containers */
+  .custom-block {
+    @apply p-4 mb-4 rounded-lg border;
+  }
+
+  .custom-block.info {
+    @apply bg-blue-900/20 border-blue-400 text-blue-200;
+  }
+
+  .custom-block.warning {
+    @apply bg-yellow-900/20 border-yellow-400 text-yellow-200;
+  }
+
+  .custom-block.danger {
+    @apply bg-red-900/20 border-red-400 text-red-200;
+  }
+
+  .custom-block-title {
+    @apply font-bold mb-2;
+  }
+
+  /* Keyboard keys */
+  kbd {
+    @apply px-2 py-1 text-sm font-mono bg-gray-800 border border-gray-600 rounded shadow-sm;
+  }
+
+  /* Line highlighting in code blocks */
+  .highlight-line {
+    @apply bg-purple-400/10;
+  }
+
+  /* Diagram support (mermaid) */
+  .mermaid {
+    @apply my-4 flex justify-center bg-gray-800 rounded-lg p-4;
+  }
+}
+
+/* Webkit browsers (Chrome, Safari, newer Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3f3f3f;
+  border-radius: 5px;
+  border: 2px solid #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4f4f4f;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f3f #1a1a1a;
+}
+
+/* For edge cases where you want to hide scrollbars but keep functionality */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}

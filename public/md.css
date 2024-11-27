@@ -1,0 +1,134 @@
+/* Import Prism themes for syntax highlighting */
+@import 'prismjs/themes/prism.css';
+@import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
+
+/* Import KaTeX styles for math */
+@import 'katex/dist/katex.min.css';
+
+/* Markdown content styles */
+.markdown-content {
+  /* Typography */
+  --content-line-height: 1.8;
+  --content-paragraph-spacing: 1.5em;
+  
+  line-height: var(--content-line-height);
+  
+  /* Headings */
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+  
+  h1 { font-size: 2.5em; }
+  h2 { font-size: 2em; }
+  h3 { font-size: 1.5em; }
+  h4 { font-size: 1.25em; }
+  
+  /* Paragraphs and spacing */
+  p, ul, ol {
+    margin-bottom: var(--content-paragraph-spacing);
+  }
+  
+  /* Lists */
+  ul, ol {
+    padding-left: 2em;
+  }
+  
+  li > ul, li > ol {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  
+  /* Code blocks */
+  pre {
+    padding: 1em;
+    border-radius: 0.5em;
+    overflow-x: auto;
+    margin: 1.5em 0;
+  }
+  
+  code {
+    font-family: ui-monospace, monospace;
+  }
+  
+  /* Inline code */
+  :not(pre) > code {
+    padding: 0.2em 0.4em;
+    border-radius: 0.25em;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Tables */
+  table {
+    width: 100%;
+    margin: 1.5em 0;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 0.75em;
+    border: 1px solid #e2e8f0;
+  }
+  
+  th {
+    background-color: #f8fafc;
+    font-weight: 600;
+  }
+  
+  /* Blockquotes */
+  blockquote {
+    margin: 1.5em 0;
+    padding: 1em 1.5em;
+    border-left: 4px solid #e2e8f0;
+    background-color: #f8fafc;
+  }
+  
+  /* Links */
+  a {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+  
+  a:hover {
+    text-decoration: none;
+  }
+  
+  /* Images */
+  img {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5em 0;
+  }
+  
+  /* Horizontal rule */
+  hr {
+    margin: 2em 0;
+    border: 0;
+    border-top: 1px solid #e2e8f0;
+  }
+  
+  /* Task lists */
+  .task-list-item {
+    list-style-type: none;
+  }
+  
+  .task-list-item input {
+    margin-right: 0.5em;
+  }
+  
+  /* Anchor links */
+  .anchor-link {
+    opacity: 0;
+    margin-left: 0.5em;
+    text-decoration: none;
+  }
+  
+  h1:hover .anchor-link,
+  h2:hover .anchor-link,
+  h3:hover .anchor-link,
+  h4:hover .anchor-link {
+    opacity: 1;
+  }
+}

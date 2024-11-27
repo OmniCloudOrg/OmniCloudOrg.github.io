@@ -1,0 +1,156 @@
+{
+    "docs": [
+      {
+        "slug": "getting-started/introduction",
+        "frontmatter": {
+          "title": "Introduction",
+          "description": "Overview of our cloud-native application platform",
+          "order": 1
+        }
+      },
+      {
+        "slug": "getting-started/quick-start",
+        "frontmatter": {
+          "title": "Quick Start Guide 🚀",
+          "description": "Deploy your first application in minutes",
+          "order": 2
+        }
+      },
+      {
+        "slug": "getting-started/installation",
+        "frontmatter": {
+          "title": "Installation",
+          "description": "Set up the platform CLI and components",
+          "order": 3
+        }
+      },
+      {
+        "slug": "core-concepts/architecture",
+        "frontmatter": {
+          "title": "Platform Architecture",
+          "description": "Understanding the platform components and architecture",
+          "order": 4
+        }
+      },
+      {
+        "slug": "applications/deployment",
+        "frontmatter": {
+          "title": "Application Deployment",
+          "description": "Learn how to deploy and manage applications",
+          "order": 5
+        }
+      },
+      {
+        "slug": "applications/buildpacks",
+        "frontmatter": {
+          "title": "Buildpacks",
+          "description": "Working with buildpacks and runtime environments",
+          "order": 6
+        }
+      },
+      {
+        "slug": "applications/manifests",
+        "frontmatter": {
+          "title": "Application Manifests",
+          "description": "Configuring application deployment with manifest files",
+          "order": 7
+        }
+      },
+      {
+        "slug": "services/overview",
+        "frontmatter": {
+          "title": "Services Overview",
+          "description": "Introduction to platform services and service brokers",
+          "order": 8
+        }
+      },
+      {
+        "slug": "services/binding",
+        "frontmatter": {
+          "title": "Service Binding",
+          "description": "Connecting applications to services",
+          "order": 9
+        }
+      },
+      {
+        "slug": "networking/routes",
+        "frontmatter": {
+          "title": "Routes and Domains",
+          "description": "Managing application routes and custom domains",
+          "order": 10
+        }
+      },
+      {
+        "slug": "networking/security-groups",
+        "frontmatter": {
+          "title": "Security Groups",
+          "description": "Configuring network security policies",
+          "order": 11
+        }
+      },
+      {
+        "slug": "platform/orgs-spaces",
+        "frontmatter": {
+          "title": "Organizations and Spaces",
+          "description": "Managing platform organizations and spaces",
+          "order": 12
+        }
+      },
+      {
+        "slug": "platform/user-management",
+        "frontmatter": {
+          "title": "User Management",
+          "description": "Managing users, roles, and permissions",
+          "order": 13
+        }
+      },
+      {
+        "slug": "platform/quotas",
+        "frontmatter": {
+          "title": "Quotas and Limits",
+          "description": "Understanding and configuring resource quotas",
+          "order": 14
+        }
+      },
+      {
+        "slug": "operations/logging",
+        "frontmatter": {
+          "title": "Logging and Monitoring",
+          "description": "Application logs and platform monitoring",
+          "order": 15
+        }
+      },
+      {
+        "slug": "operations/scaling",
+        "frontmatter": {
+          "title": "Scaling Applications",
+          "description": "Horizontal and vertical application scaling",
+          "order": 16
+        }
+      },
+      {
+        "slug": "advanced/api",
+        "frontmatter": {
+          "title": "Platform API",
+          "description": "REST API reference and usage",
+          "order": 17
+        }
+      },
+      {
+        "slug": "advanced/custom-buildpacks",
+        "frontmatter": {
+          "title": "Custom Buildpacks",
+          "description": "Creating and managing custom buildpacks",
+          "order": 18
+        }
+      },
+      {
+        "slug": "advanced/service-brokers",
+        "frontmatter": {
+          "title": "Service Brokers",
+          "description": "Implementing custom service brokers",
+          "order": 19
+        }
+      }
+    ]
+  }
