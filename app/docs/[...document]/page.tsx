@@ -2,7 +2,6 @@ import { getDocBySlug, getAllDocs, buildTableOfContents } from '@/lib/docs';
 import DocPageContent from '@/components/docs/DocPageContent';
 import DocNotFoundModal from './DocNotFoundModal';
 
-// Define interfaces for the document structure
 interface DocFrontmatter {
   title: string;
   description: string;
@@ -14,22 +13,17 @@ interface Doc {
   frontmatter?: Partial<DocFrontmatter>;
 }
 
-// Define the page props according to Next.js App Router conventions
-interface PageProps {
+type Props = {
   params: {
-    document: string[];
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+    document: string[]
+  }
 }
 
-export default async function DocPage({
-  params,
-  searchParams,
-}: PageProps) {
-  const slug = params.document.join('/');
+export default async function DocPage(props: Props) {
+  const slug = props.params.document.join('/');
   
   try {
-    const doc = await getDocBySlug(params.document);
+    const doc = await getDocBySlug(props.params.document);
    
     if (!doc || !doc.content) {
       console.log(`Document not found for slug: ${slug}`);
