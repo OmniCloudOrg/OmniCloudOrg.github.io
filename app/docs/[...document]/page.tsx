@@ -14,14 +14,18 @@ interface Doc {
   frontmatter?: Partial<DocFrontmatter>;
 }
 
+// Define the page props according to Next.js App Router conventions
 interface PageProps {
   params: {
     document: string[];
   };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function DocPage({ params }: PageProps) {
+export default async function DocPage({
+  params,
+  searchParams,
+}: PageProps) {
   const slug = params.document.join('/');
   
   try {
