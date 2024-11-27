@@ -1,7 +1,6 @@
 import { getDocBySlug, getAllDocs, buildTableOfContents } from '@/lib/docs';
 import DocPageContent from '@/components/docs/DocPageContent';
 import DocNotFoundModal from './DocNotFoundModal';
-import type { GenerateStaticParams } from 'next'
 
 interface DocFrontmatter {
   title: string;
@@ -14,15 +13,9 @@ interface Doc {
   frontmatter?: Partial<DocFrontmatter>;
 }
 
-interface Params {
-  document: string[]
-}
-
-export default async function DocPage({
-  params: { document },
-}: {
-  params: Params
-}) {
+// Remove type annotations from the function parameters
+export default async function DocPage(props) {
+  const { document } = props.params;
   const slug = document.join('/');
   
   try {
@@ -57,7 +50,7 @@ export default async function DocPage({
   }
 }
 
-export const generateStaticParams: GenerateStaticParams<Params> = async () => {
+export async function generateStaticParams() {
   const allDocs = await getAllDocs();
   return allDocs.map((doc) => ({
     document: typeof doc.slug === 'string' ? doc.slug.split('/') : doc.slug,
