@@ -14,19 +14,30 @@ interface Doc {
 }
 
 // Remove type annotations from the function parameters
-export default async function DocPage(props) {
+interface DocPageProps {
+  params: {
+    document: string[];
+  };
+}
+
+interface NormalizedDoc extends Doc {
+  slug: string;
+  frontmatter: DocFrontmatter;
+}
+
+export default async function DocPage(props: DocPageProps) {
   const { document } = props.params;
   const slug = document.join('/');
   
   try {
     const doc = await getDocBySlug(document);
-   
+   ``
     if (!doc || !doc.content) {
       console.log(`Document not found for slug: ${slug}`);
       return <DocNotFoundModal slug={slug} />;
     }
 
-    const normalizedDoc = {
+    const normalizedDoc: NormalizedDoc = {
       ...doc,
       slug: typeof doc.slug === 'string' ? doc.slug : Array.isArray(doc.slug) ? doc.slug.join('/') : '',
       frontmatter: {
