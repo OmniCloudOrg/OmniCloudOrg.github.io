@@ -129,7 +129,7 @@ export const Header = () => {
         <div className="md:hidden bg-black/95 backdrop-blur-lg">
           <div className="px-2 pt-2 pb-3 space-y-1">
             <MobileNavLink href="/features">Features</MobileNavLink>
-            <MobileNavLink href="/docs">Documentation</MobileNavLink>
+            <MobileNavLink href="/docs/getting-started">Documentation</MobileNavLink>
             <MobileNavLink href="/blog">Blog</MobileNavLink>
           </div>
         </div>

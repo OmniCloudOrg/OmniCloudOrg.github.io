@@ -45,20 +45,20 @@ export default function DocPageContent({
       return (
         <div key={key} className="mb-4">
           {key !== 'items' && <h3 className="text-purple-300 font-semibold mb-2">{key}</h3>}
-          <ul className="space-y-2">
+          <p className="space-y-2">
             {Object.entries(item.items)
               .sort(([, a], [, b]) => (a.order || 0) - (b.order || 0))
               .map(([childKey, child]) =>
                 renderTocItem(child, childKey, [...path, key])
               )}
-          </ul>
+          </p>
         </div>
       );
     }
 
     if (item.slug) {
       return (
-        <li key={key}
+        <p key={key}
           className="text-gray-400 hover:text-purple-400 cursor-pointer pl-2 border-l border-gray-800 hover:border-purple-400 transition-colors"
         >
           <Link
@@ -71,7 +71,7 @@ export default function DocPageContent({
           >
             {item.title}
           </Link>
-        </li>
+        </p>
       );
     }
 
