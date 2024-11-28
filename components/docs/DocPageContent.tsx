@@ -135,7 +135,7 @@ export default function DocPageContent({
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1">
           <div className="p-8 max-w-4xl mx-auto">
             <article className="prose prose-invert prose-purple max-w-none">
               {doc.frontmatter.description && (
