@@ -28,16 +28,27 @@ See the [Introduction](getting-started) page for more information on each specif
 
 ## 💬 Terminology
 
+### 🏢 IAAS (Infastructure As A Service)
+
+Infrastructure as a Service (IaaS) platforms are those that provide virtualized computing resources over the internet. They can be managed or in-house self hosted, and deliver computing, storage, and networking resources on-demand, allowing organizations to scale their IT infrastructure without managing physical hardware.
+
+Common examples include:
+* Amazon EC2 (Elastic Compute Cloud)
+* Microsoft Azure Virtual Machines
+* Google Compute Engine
+* VMWare VSphere
+* OpenStack
+
 ### 📜 CPI (Cloud Provider Interface)
 A standardized specification that defines how infrastructure management tools interact with different container runtimes or cloud providers. It serves as a universal blueprint that translates high-level operations into platform-specific commands, enabling consistent infrastructure management across diverse environments without needing to modify the application code on a per-platform basis.
 
 ### 🌐 API (Application Programming Interface)
 A carefully structured communication protocol that enables different software components to interact seamlessly. Unlike traditional interfaces that connect users with applications, APIs connect applications with other applications, defining the methods and data formats they can use to request and exchange information. Think of it as a digital contract that specifies how different pieces of software can work together effectively.
 
-### 🔀 How it works in practice
+## 🔀 How it works in practice
 The Cloud Platform Interface (CPI) acts as a translation layer between services, allowing them to communicate effectively through their APIs. As data flows between services and reaches either the Director or Agent components, these components often need to perform specific infrastructure actions like creating containers or setting up new workers.
 
-Rather than hardcoding commands for each possible runtime, the service checks its CPI specification file; a JSON configuration that maps standardized requests to runtime-specific commands. This approach means that no matter your backend technologies the same API request gets translated into the correct command for your specific environment. CPIs function as a universal translator that ensures your infrastructure requests get executed properly, regardless of the underlying technology being used.
+Rather than hardcoding commands for each possible runtime, or IAAS the service checks its CPI specification file; a JSON configuration that maps standardized requests to runtime-specific commands. This approach means that no matter your backend technologies the same API request gets translated into the correct command for your specific environment. CPIs function as a universal translator that ensures your infrastructure requests get executed properly, regardless of the underlying technology being used.
 
 ![](/doc-images/interface/OmniInPractice.drawio.png)
 
