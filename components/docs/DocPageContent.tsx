@@ -45,20 +45,20 @@ export default function DocPageContent({
       return (
         <div key={key} className="mb-4">
           {key !== 'items' && <h3 className="text-purple-300 font-semibold mb-2">{key}</h3>}
-          <p className="space-y-2">
+          <div className="space-y-2">
             {Object.entries(item.items)
               .sort(([, a], [, b]) => (a.order || 0) - (b.order || 0))
               .map(([childKey, child]) =>
                 renderTocItem(child, childKey, [...path, key])
               )}
-          </p>
+          </div>
         </div>
       );
     }
 
     if (item.slug) {
       return (
-        <p key={key}
+        <div key={key}
           className="text-gray-400 hover:text-purple-400 cursor-pointer pl-2 border-l border-gray-800 hover:border-purple-400 transition-colors"
         >
           <Link
@@ -71,7 +71,7 @@ export default function DocPageContent({
           >
             {item.title}
           </Link>
-        </p>
+        </div>
       );
     }
 
@@ -79,13 +79,12 @@ export default function DocPageContent({
   };
 
   return (
-    <div className="flex h-screen bg-black text-gray-100">
+    <div className="flex bg-black text-gray-100" style={{ height: `calc(100vh - ${navbarHeight})` }}>
       {/* Overlay Background - Only for mobile */}
       {isMenuOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
           onClick={() => setIsMenuOpen(false)}
-          style={{ top: navbarHeight }}
         />
       )}
 
@@ -93,13 +92,9 @@ export default function DocPageContent({
       <aside
         className={`${
           isMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        } fixed lg:static lg:flex flex-shrink-0 w-64 transition-transform duration-300 bg-gray-900 border-r border-gray-800 overflow-y-auto z-30`}
-        style={{ 
-          top: navbarHeight,
-          height: `calc(100vh - ${navbarHeight})`
-        }}
+        } fixed lg:static w-64 h-full transition-transform duration-300 bg-gray-900 border-r border-gray-800 overflow-y-auto z-30`}
       >
-        <div className="p-4 w-full">
+        <div className="p-4">
           <h1 className="text-xl font-bold text-purple-400 mb-4">Documentation</h1>
           <div className="space-y-4">
             {Object.entries(tableOfContents).map(([key, item]) =>
@@ -109,8 +104,9 @@ export default function DocPageContent({
         </div>
       </aside>
 
-      {/* Main content */}
+      {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0">
+        {/* Search header */}
         <header className="sticky top-0 bg-gray-900 border-b border-gray-800 p-4 z-10">
           <div className="flex items-center justify-between">
             <button
@@ -135,7 +131,8 @@ export default function DocPageContent({
           </div>
         </header>
 
-        <main className="flex-1">
+        {/* Main content */}
+        <main className="flex-1 overflow-y-auto">
           <div className="p-8 max-w-4xl mx-auto">
             <article className="prose prose-invert prose-purple max-w-none">
               {doc.frontmatter.description && (
