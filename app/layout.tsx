@@ -93,10 +93,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative overflow-x-hidden`}
       >
-        <div className="fixed inset-0 pointer-events-none z-50">
-          <Snow />
-        </div>
-        <Snow />
         <Header />
         {children}
         <Footer />
