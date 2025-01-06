@@ -66,7 +66,7 @@ const Workflow = () => {
   }, []);
 
   useEffect(() => {
-    let interval;
+    let interval: string | number | NodeJS.Timeout | undefined;
     if (isVisible) {
       interval = setInterval(() => {
         setActivePhase((prev) => (prev + 1) % phases.length);

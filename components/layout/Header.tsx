@@ -40,7 +40,7 @@ const ForgeLogoSVG = () => (
   </svg>
 );
 
-const NavLink = ({ href, children }) => (
+const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
   <Link
     href={href}
     className="text-sm text-zinc-400 hover:text-white transition-colors duration-200"

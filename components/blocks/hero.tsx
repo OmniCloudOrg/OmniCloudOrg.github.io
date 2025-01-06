@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Zap, Server, Lock } from 'lucide-react';
 
-const generateRacks = (count) => {
+const generateRacks = (count: number) => {
     return Array.from({ length: count }, (_, index) => {
         const xStep = 6;
         const yStep = 3.6;
@@ -104,9 +104,7 @@ const Hero = () => {
                                 alt={`Server Rack ${index + 1}`}
                                 className="h-96"
                                 style={{
-                                    '--tw-translate-x': `${transform.x}rem`,
-                                    '--tw-translate-y': `${transform.y}rem`,
-                                    transform: 'translate(var(--tw-translate-x), var(--tw-translate-y))',
+                                    transform: `translate(${transform.x}rem, ${transform.y}rem)`,
                                     zIndex: transform.z
                                 }}
                             />

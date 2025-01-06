@@ -52,7 +52,16 @@ const features = [
     }
 ];
 
-const FeatureCard = ({ feature }) => {
+interface Feature {
+    icon: React.ReactNode;
+    title: string;
+    description: string;
+    detail: string;
+    area: string;
+    className: string;
+}
+
+const FeatureCard = ({ feature }: { feature: Feature }) => {
     return (
         <div 
             className={`group relative p-6 bg-black border border-zinc-800 

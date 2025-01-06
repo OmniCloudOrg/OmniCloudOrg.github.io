@@ -13,13 +13,13 @@ const fetchGitHubStats = async () => {
     };
 };
 
-const fetchContributors = async (url) => {
+const fetchContributors = async (url: string | URL | Request) => {
     const response = await fetch(url);
     const data = await response.json();
     return data.length;
 };
 
-const MetricCard = ({ icon: Icon, label, value, detail }) => (
+const MetricCard = ({ icon: Icon, label, value, detail }: { icon: React.ElementType, label: string, value: number | string, detail: string }) => (
     <div className="relative group">
         {/* Card content */}
         <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-sm 
