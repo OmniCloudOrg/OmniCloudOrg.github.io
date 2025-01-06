@@ -1,65 +1,57 @@
-"use client";
+"use client"
 import React, { useState, useEffect, useRef } from 'react';
-import { Code, Box, BarChart, Loader2 } from 'lucide-react';
+import { Terminal, Box, Activity, ArrowRight } from 'lucide-react';
 
 const Workflow = () => {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activePhase, setActivePhase] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const phases = [
     {
-      step: "01",
-      title: "Development",
-      description: "Start with our powerful CLI tools and SDKs. Develop locally with automatic environment synchronization.",
-      icon: <Code className="w-8 h-8" />
+      id: "dev",
+      icon: <Terminal className="w-6 h-6 text-cyan-400" />,
+      title: "Develop",
+      tech: "CLI + SDKs",
+      description: "Write code with real-time environment sync",
+      details: [
+        "Local development with live reload",
+        "Automatic dependency management",
+        "Environment parity guaranteed"
+      ]
     },
     {
-      step: "02",
-      title: "Build & Test",
-      description: "Automated build pipeline with integrated testing and security scanning. Support for all major frameworks.",
-      icon: <Box className="w-8 h-8" />
+      id: "build",
+      icon: <Box className="w-6 h-6 text-cyan-400" />,
+      title: "Build",
+      tech: "Container Factory",
+      description: "Automatic container optimization",
+      details: [
+        "Smart dependency detection",
+        "Multi-stage optimization",
+        "Security scanning included"
+      ]
     },
     {
-      step: "03",
-      title: "Deploy & Monitor",
-      description: "One-click deployments with automatic scaling and real-time monitoring. Full observability and logging.",
-      icon: <BarChart className="w-8 h-8" />
+      id: "deploy",
+      icon: <Activity className="w-6 h-6 text-cyan-400" />,
+      title: "Deploy",
+      tech: "Universal Runtime",
+      description: "Deploy anywhere with 24MB overhead",
+      details: [
+        "Cloud or bare metal deployment",
+        "Automatic scaling built-in",
+        "Real-time monitoring"
+      ]
     }
   ];
 
-  // Start/stop animation based on visibility
-  useEffect(() => {
-    if (isVisible) {
-      intervalRef.current = setInterval(() => {
-        setActiveStep((prev) => (prev + 1) % (phases.length + 1));
-      }, 1000);
-    } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        setActiveStep(0); // Reset to initial state when not visible
-      }
-    }
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, [isVisible]);
-
-  // Set up intersection observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
       },
-      {
-        root: null,
-        rootMargin: '0px',
-        threshold: 0.5, // Trigger when 50% of the element is visible
-      }
+      { threshold: 0.2 }
     );
 
     if (sectionRef.current) {
@@ -73,43 +65,120 @@ const Workflow = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let interval;
+    if (isVisible) {
+      interval = setInterval(() => {
+        setActivePhase((prev) => (prev + 1) % phases.length);
+      }, 3000);
+    }
+    return () => clearInterval(interval);
+  }, [isVisible]);
+
   return (
-    <section ref={sectionRef} className="py-32 px-4 relative">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-20">
-          <span className="bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
-            Streamlined Workflow
-          </span>
-        </h2>
-       
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-          {/* Connector Lines */}
-          <div className="hidden md:block absolute top-24 left-1/3 w-1/3 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 transform -translate-y-1/2 transition-opacity duration-500"
-               style={{ opacity: activeStep >= 1 ? 1 : 0 }} />
-          <div className="hidden md:block absolute top-24 left-2/3 w-1/3 h-1 bg-gradient-to-r from-cyan-400 to-purple-500 transform -translate-y-1/2 transition-opacity duration-500"
-               style={{ opacity: activeStep >= 2 ? 1 : 0 }} />
+    <section ref={sectionRef} className="py-24 px-4 bg-black relative overflow-hidden">
+      {/* Tech grid background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] 
+                    bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black_60%)]" />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-block">
+            <p className="text-cyan-400 text-sm font-medium tracking-wider mb-2 uppercase">
+              Development Pipeline
+            </p>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Streamlined Developer Experience
+            </h2>
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-30" />
+          </div>
+        </div>
+
+        {/* Workflow Steps */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+          {/* Connector lines */}
+          <div className="hidden md:block absolute top-12 left-[27%] right-[27%] h-px">
+            <div className="relative w-full h-full">
+              {[0, 1].map(index => (
+                <div
+                  key={index}
+                  className="absolute top-0 h-full transition-all duration-500 flex items-center"
+                  style={{
+                    left: `${index * 50}%`,
+                    width: '50%',
+                    opacity: activePhase > index ? 1 : 0
+                  }}
+                >
+                  <div className="w-full h-px bg-cyan-400/30" />
+                  <ArrowRight className="w-4 h-4 text-cyan-400/30 absolute -right-2" />
+                </div>
+              ))}
+            </div>
+          </div>
 
           {phases.map((phase, index) => (
-            <div key={index} className="relative p-8 rounded-xl bg-gradient-to-b from-gray-900 to-black border border-gray-800 overflow-hidden">
-              {/* Loading Animation */}
-              <div className={`absolute top-2 left-2 transition-opacity duration-500 ${activeStep === index ? 'opacity-100' : 'opacity-0'}`}>
-                <Loader2 className="w-6 h-6 animate-spin text-cyan-400" />
-              </div>
+            <div
+              key={phase.id}
+              className={`relative group ${
+                activePhase === index ? 'z-10' : 'z-0'
+              }`}
+            >
+              {/* Card */}
+              <div className="relative p-6 bg-zinc-900/50 border border-zinc-800 rounded-sm h-full
+                            transition-all duration-500 hover:border-cyan-900">
+                {/* Progress indicator */}
+                <div
+                  className="absolute inset-x-0 bottom-0 h-px bg-cyan-400 transition-all duration-500"
+                  style={{
+                    width: activePhase >= index ? '100%' : '0%',
+                    opacity: activePhase >= index ? 0.5 : 0
+                  }}
+                />
 
-              {/* Completion Indicator */}
-              <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 to-purple-500 transition-opacity duration-500 ${activeStep > index ? 'opacity-100' : 'opacity-0'}`} />
-              
-              <div className="text-6xl font-bold text-gray-800 absolute top-4 right-4">
-                {phase.step}
-              </div>
-              <div className="relative z-10">
-                <div className="mb-6">{phase.icon}</div>
-                <h3 className="text-2xl font-semibold mb-4">{phase.title}</h3>
-                <p className="text-gray-400">{phase.description}</p>
-              </div>
+                {/* Content */}
+                <div className="flex flex-col h-full">
+                  {/* Header */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="p-2 rounded bg-black/50">
+                      {phase.icon}
+                    </div>
+                    <span className="text-sm font-mono text-cyan-400/70">
+                      {String(index + 1).padStart(2, '0')}
+                    </span>
+                  </div>
 
-              {/* Completion Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-r from-cyan-400/10 to-purple-500/10 transition-opacity duration-500 pointer-events-none ${activeStep > index ? 'opacity-100' : 'opacity-0'}`} />
+                  {/* Title and Tech */}
+                  <div className="mb-4">
+                    <h3 className="text-lg font-medium text-white mb-1">
+                      {phase.title}
+                    </h3>
+                    <p className="text-sm font-mono text-cyan-400">
+                      {phase.tech}
+                    </p>
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-zinc-400 text-sm mb-4">
+                    {phase.description}
+                  </p>
+
+                  {/* Details */}
+                  <div className="mt-auto">
+                    <ul className="space-y-2">
+                      {phase.details.map((detail, i) => (
+                        <li
+                          key={i}
+                          className="flex items-center text-xs text-zinc-500"
+                        >
+                          <span className="w-1 h-1 bg-cyan-400/50 rounded-full mr-2" />
+                          {detail}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>

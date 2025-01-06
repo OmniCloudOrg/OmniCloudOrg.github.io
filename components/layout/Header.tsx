@@ -1,7 +1,6 @@
-"use client"
 import React from 'react';
 import Link from 'next/link';
-import { IconBrandGithub } from "@tabler/icons-react";
+import { Github, Menu, ExternalLink } from 'lucide-react';
 
 const ForgeLogoSVG = () => (
   <svg 
@@ -10,25 +9,25 @@ const ForgeLogoSVG = () => (
     fill="none" 
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Anvil base */}
+    {/* Simplified Anvil base */}
     <path 
       d="M12 44L52 44L56 52H8L12 44Z" 
-      fill="url(#gradient-base)"
+      fill="#06B6D4"
     />
     {/* Anvil body */}
     <path 
       d="M16 28L48 28L52 44H12L16 28Z" 
-      fill="url(#gradient-body)"
+      fill="#0EA5E9"
     />
     {/* Hammer head */}
     <path 
       d="M32 12L40 20L36 24L28 16L32 12Z" 
-      fill="url(#gradient-hammer)"
+      fill="#0EA5E9"
     />
     {/* Hammer handle */}
     <path 
       d="M28 16L24 28L20 32L16 28L24 20L28 16Z" 
-      fill="url(#gradient-handle)"
+      fill="#06B6D4"
     />
     {/* Spark effect */}
     <circle 
@@ -38,103 +37,102 @@ const ForgeLogoSVG = () => (
       fill="#fff"
       className="animate-pulse"
     />
-    {/* Gradients */}
-    <defs>
-      <linearGradient id="gradient-base" x1="8" y1="44" x2="56" y2="52" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#3B82F6" />
-        <stop offset="1" stopColor="#06B6D4" />
-      </linearGradient>
-      <linearGradient id="gradient-body" x1="12" y1="28" x2="52" y2="44" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#8B5CF6" />
-        <stop offset="1" stopColor="#3B82F6" />
-      </linearGradient>
-      <linearGradient id="gradient-hammer" x1="28" y1="12" x2="40" y2="24" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#EC4899" />
-        <stop offset="1" stopColor="#8B5CF6" />
-      </linearGradient>
-      <linearGradient id="gradient-handle" x1="16" y1="16" x2="28" y2="32" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#F43F5E" />
-        <stop offset="1" stopColor="#EC4899" />
-      </linearGradient>
-    </defs>
   </svg>
 );
 
-const MobileNavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+const NavLink = ({ href, children }) => (
   <Link
     href={href}
-    className="block px-3 py-2 text-base font-medium text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-md transition-colors"
+    className="text-sm text-zinc-400 hover:text-white transition-colors duration-200"
   >
     {children}
   </Link>
 );
 
-export const Header = () => {
+const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-sm bg-black/50 border-b border-neutral-800">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo and Brand */}
-          <Link href="/">
-            <div className="flex items-center gap-3">
-              <ForgeLogoSVG />
-              <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
+    <header className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800/50">
+      <div className="bg-black/80 backdrop-blur-xl">
+        <nav className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative">
+                <ForgeLogoSVG />
+                <div className="absolute inset-0 bg-cyan-400/20 rounded-full blur-xl 
+                              opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </div>
+              <span className="text-lg font-medium text-white">
                 OmniForge
               </span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-8">
+              <NavLink href="/features">Features</NavLink>
+              <NavLink href="/docs">Documentation</NavLink>
+              <NavLink href="/blog">Blog</NavLink>
+
+              <div className="h-4 w-px bg-zinc-800" />
+
+              {/* GitHub */}
+              <a href="https://github.com/Omni-Forge" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 className="text-zinc-400 hover:text-white transition-colors duration-200">
+                <Github className="w-5 h-5" />
+              </a>
+
+              {/* CTA Button */}
+              <Link href="/docs/quickstart" 
+                    className="inline-flex items-center gap-2 px-4 py-1.5 bg-cyan-400 
+                             hover:bg-cyan-500 text-black text-sm font-medium 
+                             transition-colors duration-200">
+                <span>Get Started</span>
+                <ExternalLink className="w-4 h-4" />
+              </Link>
             </div>
-          </Link>
-          {/* Navigation Links - Desktop */}
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/features" className="text-neutral-300 hover:text-neutral-100 transition-colors">
-              Features
-            </Link>
-            <Link href="/docs" className="text-neutral-300 hover:text-neutral-100 transition-colors">
-              Documentation
-            </Link>
-            <Link href="/blog" className="text-neutral-300 hover:text-neutral-100 transition-colors">
-              Blog
-            </Link>
-          </div>
-          {/* Call to Action Buttons */}
-          <div className="flex items-center gap-4">
-            <Link
-              href="https://github.com/Omni-Forge"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-neutral-300 hover:text-neutral-100 transition-colors"
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden p-2 text-zinc-400 hover:text-white"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              <IconBrandGithub className="w-5 h-5" />
-            </Link>
-            <Link href="/docs/quickstart">
-              <button className="px-4 py-2 text-sm bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg transition-all hover:opacity-90">
-                Get Started
-              </button>
-            </Link>
+              <Menu className="w-6 h-6" />
+            </button>
           </div>
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-neutral-300 hover:text-neutral-100"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-        </div>
+        </nav>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-zinc-800/50">
+            <nav className="max-w-7xl mx-auto px-4 py-4 space-y-4">
+              <NavLink href="/features">Features</NavLink>
+              <NavLink href="/docs">Documentation</NavLink>
+              <NavLink href="/blog">Blog</NavLink>
+              
+              <div className="h-px bg-zinc-800/50 my-4" />
+              
+              <div className="flex items-center justify-between">
+                <a href="https://github.com/Omni-Forge" 
+                   className="text-zinc-400 hover:text-white transition-colors duration-200">
+                  <Github className="w-5 h-5" />
+                </a>
+                <Link href="/docs/quickstart" 
+                      className="inline-flex items-center gap-2 px-4 py-1.5 
+                               bg-cyan-400 hover:bg-cyan-500 text-black text-sm 
+                               font-medium transition-colors duration-200">
+                  Get Started
+                  <ExternalLink className="w-4 h-4" />
+                </Link>
+              </div>
+            </nav>
+          </div>
+        )}
       </div>
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-black/95 backdrop-blur-lg">
-          <div className="px-2 pt-2 pb-3 space-y-1">
-            <MobileNavLink href="/features">Features</MobileNavLink>
-            <MobileNavLink href="/docs/getting-started">Documentation</MobileNavLink>
-            <MobileNavLink href="/blog">Blog</MobileNavLink>
-          </div>
-        </div>
-      )}
-    </nav>
+    </header>
   );
 };
 

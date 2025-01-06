@@ -1,115 +1,92 @@
-"use client";
 import React from 'react';
-import { Shield, Cpu, GitBranch, Gauge } from 'lucide-react';
+import { Shield, Cpu, GitBranch, Zap, Server, Lock, Code } from 'lucide-react';
 
 const TechOverview = () => {
+    const techFeatures = [
+        {
+            icon: <Zap className="w-5 h-5" />,
+            title: "Zero Runtime Overhead",
+            description: "No garbage collection, no runtime, no surprises",
+            metrics: [
+                { label: "Memory Overhead", value: "24MB" },
+                { label: "GC Pauses", value: "0ms" }
+            ]
+        },
+        {
+            icon: <Lock className="w-5 h-5" />,
+            title: "Memory Safe by Design",
+            description: "Compile-time guarantees eliminate common vulnerabilities",
+            metrics: [
+                { label: "Memory Safety", value: "100%" },
+                { label: "Data Races", value: "0" }
+            ]
+        },
+        {
+            icon: <Cpu className="w-5 h-5" />,
+            title: "Fearless Concurrency",
+            description: "Safe parallelism without the complexity of typical models",
+            metrics: [
+                { label: "Thread Safety", value: "✓" },
+                { label: "Deadlock Free", value: "✓" }
+            ]
+        }
+    ];
+
     return (
-        <section className="py-32 px-4 relative bg-black">
-            <div className="max-w-7xl mx-auto">
-                <div className="text-center mb-20">
-                    <h2 className="text-4xl font-bold mb-4">
-                        <span className="bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
-                            Built for Performance and Safety
-                        </span>
+        <section className="py-24 px-4 bg-black relative overflow-hidden">
+            {/* Grid background */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a3f_1px,transparent_1px),linear-gradient(to_bottom,#1a1a3f_1px,transparent_1px)] 
+                          bg-[size:4rem_4rem] opacity-10" />
+
+            <div className="max-w-6xl mx-auto relative">
+                {/* Header */}
+                <div className="mb-16">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-400/10 
+                                  border border-cyan-400/20 text-cyan-400 text-sm mb-6">
+                        <Code className="w-4 h-4" />
+                        <span className="font-mono">Built with Rust</span>
+                    </div>
+                    
+                    <h2 className="text-3xl font-bold text-white mb-4">
+                        Performance Without Compromise
                     </h2>
-                    <p className="text-gray-400 max-w-2xl mx-auto">
-                        Powered by Rust's memory safety guarantees and blazing-fast performance
+                    <p className="text-lg text-zinc-400 max-w-xl">
+                        Powered by Rust's zero-cost abstractions and memory safety guarantees, 
+                        OmniForge delivers exceptional performance while ensuring reliability.
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                    {/* Benefits List */}
-                    <div className="space-y-8">
-                        <div>
-                            <h3 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
-                                Memory Safety Guaranteed
-                            </h3>
-                            <p className="text-gray-400 mb-4">
-                                Built entirely in Rust, ensuring thread safety, memory safety, and zero data races at compile time. No more runtime surprises or memory leaks.
-                            </p>
-                            <ul className="space-y-2">
-                                <li className="flex items-center text-gray-300">
-                                    <Shield className="w-5 h-5 mr-2 text-cyan-400" />
-                                    Zero memory leaks
-                                </li>
-                                <li className="flex items-center text-gray-300">
-                                    <Shield className="w-5 h-5 mr-2 text-cyan-400" />
-                                    Thread-safe concurrency
-                                </li>
-                                <li className="flex items-center text-gray-300">
-                                    <Shield className="w-5 h-5 mr-2 text-cyan-400" />
-                                    No null pointer exceptions
-                                </li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h3 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
-                                Blazing Fast Performance
-                            </h3>
-                            <p className="text-gray-400 mb-4">
-                                Zero-cost abstractions and minimal runtime overhead deliver performance that matches or exceeds C++, while maintaining safety guarantees.
-                            </p>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-4 bg-gray-800/50 rounded-lg">
-                                    <div className="text-2xl font-bold text-cyan-400 mb-1">~0ms</div>
-                                    <div className="text-sm text-gray-400">GC Overhead</div>
+                {/* Main features grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                    {techFeatures.map((feature, index) => (
+                        <div key={index} className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-sm
+                                                  hover:border-cyan-900 transition-colors duration-300">
+                            {/* Header */}
+                            <div className="flex items-start gap-4 mb-4">
+                                <div className="p-2 rounded bg-black/40 text-cyan-400">
+                                    {feature.icon}
                                 </div>
-                                <div className="p-4 bg-gray-800/50 rounded-lg">
-                                    <div className="text-2xl font-bold text-purple-400 mb-1">100%</div>
-                                    <div className="text-sm text-gray-400">Memory Safety</div>
+                                <div>
+                                    <h3 className="text-lg font-medium text-white mb-1">
+                                        {feature.title}
+                                    </h3>
+                                    <p className="text-sm text-zinc-400">
+                                        {feature.description}
+                                    </p>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div className="space-y-8">
-                        <div>
-                            <h3 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
-                                Advanced Concurrency
-                            </h3>
-                            <p className="text-gray-400 mb-4">
-                                Rust's ownership model ensures thread safety and eliminates data races, making concurrent programming easier and safer.
-                            </p>
-                            <ul className="space-y-2">
-                                <li className="flex items-center text-gray-300">
-                                    <Cpu className="w-5 h-5 mr-2 text-cyan-400" />
-                                    Safe parallelism
-                                </li>
-                                <li className="flex items-center text-gray-300">
-                                    <Cpu className="w-5 h-5 mr-2 text-cyan-400" />
-                                    Efficient multithreading
-                                </li>
-                                <li className="flex items-center text-gray-300">
-                                    <Cpu className="w-5 h-5 mr-2 text-cyan-400" />
-                                    No data races
-                                </li>
-                            </ul>
+                            {/* Metrics */}
+                            <div className="grid grid-cols-2 gap-3 mt-6">
+                                {feature.metrics.map((metric, idx) => (
+                                    <div key={idx} className="p-2 bg-black/40 border border-zinc-800 rounded-sm">
+                                        <div className="text-xs text-zinc-500 mb-1">{metric.label}</div>
+                                        <div className="text-sm font-mono text-cyan-400">{metric.value}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-
-                        <div>
-                            <h3 className="text-2xl font-semibold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
-                                Modern Tooling
-                            </h3>
-                            <p className="text-gray-400 mb-4">
-                                Leverage the power of modern tooling and ecosystems to build, test, and deploy your applications with ease.
-                            </p>
-                            <ul className="space-y-2">
-                                <li className="flex items-center text-gray-300">
-                                    <GitBranch className="w-5 h-5 mr-2 text-cyan-400" />
-                                    Integrated with Git
-                                </li>
-                                <li className="flex items-center text-gray-300">
-                                    <GitBranch className="w-5 h-5 mr-2 text-cyan-400" />
-                                    Continuous Integration
-                                </li>
-                                <li className="flex items-center text-gray-300">
-                                    <GitBranch className="w-5 h-5 mr-2 text-cyan-400" />
-                                    Automated Testing
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </section>

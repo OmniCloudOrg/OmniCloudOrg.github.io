@@ -1,105 +1,153 @@
-"use client";
 import React from 'react';
-import { Activity, Workflow, GitMerge, BarChart, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Activity, GitMerge, BarChart, AlertCircle, CheckCircle2, Terminal, Server } from 'lucide-react';
 
 const AutonomousOps = () => {
+  const metrics = [
+    {
+      label: "System Health",
+      value: "99.99%",
+      status: "optimal",
+      icon: <Server className="w-4 h-4" />,
+      trend: "+0.01%"
+    },
+    {
+      label: "Active Services",
+      value: "1,247",
+      status: "normal",
+      icon: <Terminal className="w-4 h-4" />,
+      trend: "+23"
+    },
+    {
+      label: "Memory Usage",
+      value: "24MB",
+      status: "optimal",
+      icon: <Activity className="w-4 h-4" />,
+      trend: "per instance"
+    }
+  ];
+
+  const recentEvents = [
+    {
+      message: "Predictive scaling activated",
+      timestamp: "2m ago",
+      type: "success"
+    },
+    {
+      message: "Performance optimization applied",
+      timestamp: "15m ago",
+      type: "success"
+    },
+    {
+      message: "Automatic dependency update",
+      timestamp: "1h ago",
+      type: "info"
+    }
+  ];
+
   const features = [
     {
-      title: "Self-Healing Infrastructure",
-      description: "Automatic detection and resolution of common infrastructure issues without human intervention.",
-      icon: <Activity className="w-6 h-6" />,
-      metrics: ["99.99% Uptime", "60% Fewer Incidents"]
+      title: "Self-Healing",
+      description: "Autonomous infrastructure recovery with zero human intervention",
+      icon: <Activity className="w-5 h-5" />,
+      stats: [
+        { label: "Recovery Time", value: "<30s" },
+        { label: "Success Rate", value: "99.99%" }
+      ]
     },
     {
-      title: "Predictive Scaling",
-      description: "ML-powered resource allocation that anticipates demand spikes before they occur.",
-      icon: <BarChart className="w-6 h-6" />,
-      metrics: ["30% Cost Savings", "Zero Downtime"]
+      title: "Smart Scaling",
+      description: "ML-powered predictive resource allocation and optimization",
+      icon: <BarChart className="w-5 h-5" />,
+      stats: [
+        { label: "Cost Reduced", value: "−30%" },
+        { label: "Response Time", value: "−65%" }
+      ]
     },
     {
-      title: "Automated Rollbacks",
-      description: "Instant detection of deployment issues with automatic rollback to last known good state.",
-      icon: <GitMerge className="w-6 h-6" />,
-      metrics: ["< 30s Recovery", "100% Success Rate"]
+      title: "Safe Deploys",
+      description: "Instant rollback capability with automatic issue detection",
+      icon: <GitMerge className="w-5 h-5" />,
+      stats: [
+        { label: "Deploy Time", value: "89s" },
+        { label: "Success Rate", value: "100%" }
+      ]
     }
   ];
 
   return (
-    <section className="py-32 px-4 relative bg-black">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-cyan-400 to-purple-500 text-transparent bg-clip-text">
-              Hands-Free Operations
-            </span>
-          </h2>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            Set it and forget it. Our autonomous systems handle deployment, scaling, and incident response automatically.
-          </p>
-        </div>
-
-        {/* Live Status Dashboard Preview */}
-        <div className="mb-20 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-gray-800 blur-xl opacity-50" />
-          <div className="relative p-6 bg-gradient-to-b from-gray-900 to-black rounded-xl border border-gray-800">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="p-4 bg-gray-800/50 rounded-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-400">System Status</span>
-              <CheckCircle2 className="w-5 h-5 text-green-400" />
-            </div>
-            <div className="text-2xl font-bold text-white">Healthy</div>
-              </div>
-              <div className="p-4 bg-gray-800/50 rounded-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-400">Active Deployments</span>
-              <Activity className="w-5 h-5 text-cyan-400" />
-            </div>
-            <div className="text-2xl font-bold text-white">24/24</div>
-              </div>
-              <div className="p-4 bg-gray-800/50 rounded-lg">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-gray-400">Incidents</span>
-              <AlertCircle className="w-5 h-5 text-purple-400" />
-            </div>
-            <div className="text-2xl font-bold text-white">0 Active</div>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg">
-            <div className="flex items-center">
-              <CheckCircle2 className="w-5 h-5 text-green-400 mr-3" />
-              <span className="text-gray-300">Automatic scaling event completed</span>
-            </div>
-            <span className="text-gray-500">2m ago</span>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg">
-            <div className="flex items-center">
-              <CheckCircle2 className="w-5 h-5 text-green-400 mr-3" />
-              <span className="text-gray-300">Performance optimization applied</span>
-            </div>
-            <span className="text-gray-500">15m ago</span>
-              </div>
-            </div>
+    <section className="py-24 px-4 bg-black relative overflow-hidden">
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="inline-block">
+            <p className="text-cyan-400 text-sm font-medium tracking-wider mb-2 uppercase">
+              Autonomous Operations
+            </p>
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Zero-Touch Infrastructure
+            </h2>
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-30" />
           </div>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div key={index} className="p-6 bg-gradient-to-b from-gray-900 to-black border border-gray-800 rounded-xl">
-              <div className="w-12 h-12 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-lg flex items-center justify-center mb-6">
-                <div className="text-cyan-400">
-                  {feature.icon}
+        {/* Live Metrics Dashboard */}
+        <div className="mb-16 p-6 bg-zinc-900/50 border border-zinc-800 rounded-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {metrics.map((metric, index) => (
+              <div key={index} className="p-4 bg-black/40 border border-zinc-800 rounded-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded bg-zinc-900">
+                      {metric.icon}
+                    </div>
+                    <span className="text-sm text-zinc-400">{metric.label}</span>
+                  </div>
+                  <span className={`text-xs ${
+                    metric.status === 'optimal' ? 'text-cyan-400' : 'text-zinc-400'
+                  }`}>
+                    {metric.status}
+                  </span>
+                </div>
+                <div className="flex items-end justify-between">
+                  <span className="text-2xl font-mono text-white">{metric.value}</span>
+                  <span className="text-xs text-zinc-500">{metric.trend}</span>
                 </div>
               </div>
-              <h3 className="text-xl font-semibold mb-4">{feature.title}</h3>
-              <p className="text-gray-400 mb-6">{feature.description}</p>
-              <div className="grid grid-cols-2 gap-2">
-                {feature.metrics.map((metric, metricIndex) => (
-                  <div key={metricIndex} className="px-3 py-2 bg-gray-800/50 rounded-lg text-sm text-cyan-400">
-                    {metric}
+            ))}
+          </div>
+
+          {/* Recent Events Log */}
+          <div className="space-y-2">
+            {recentEvents.map((event, index) => (
+              <div key={index} 
+                   className="flex items-center justify-between p-3 bg-black/40 border border-zinc-900 rounded-sm">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                  <span className="text-sm text-zinc-300">{event.message}</span>
+                </div>
+                <span className="text-xs text-zinc-500">{event.timestamp}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Features */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {features.map((feature, index) => (
+            <div key={index} className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-sm
+                                      hover:border-cyan-900 transition-colors duration-300">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded bg-black/40 text-cyan-400">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-medium text-white">{feature.title}</h3>
+              </div>
+              <p className="text-sm text-zinc-400 mb-6">{feature.description}</p>
+              <div className="grid grid-cols-2 gap-3">
+                {feature.stats.map((stat, statIndex) => (
+                  <div key={statIndex} className="p-2 bg-black/40 border border-zinc-900 rounded-sm">
+                    <div className="text-xs text-zinc-500 mb-1">{stat.label}</div>
+                    <div className="text-sm font-mono text-cyan-400">{stat.value}</div>
                   </div>
                 ))}
               </div>
