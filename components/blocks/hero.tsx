@@ -84,7 +84,7 @@ const Hero = () => {
                         <div className="flex flex-wrap gap-4">
                             <button className="px-6 py-3 bg-cyan-400 hover:bg-cyan-500 
                                            text-black font-medium transition-colors duration-200">
-                                Get Started Free
+                                Get Started, it's Open Source!
                             </button>
                             
                             <button className="px-6 py-3 bg-zinc-900 hover:bg-zinc-800 
