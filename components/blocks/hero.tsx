@@ -49,7 +49,7 @@ const Hero = () => {
                         {/* Badge */}
                         <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 bg-cyan-400/10 
                                       border border-cyan-400/20 text-cyan-400 text-sm">
-                            <span className="font-mono">v1.0 Now Available</span>
+                            <span className="font-mono">v1.0 Coming Soon!</span>
                             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
                         </div>
 
