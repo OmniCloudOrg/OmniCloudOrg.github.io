@@ -36,7 +36,7 @@ const CallToAction = () => {
             <div className="flex flex-wrap items-center gap-4">
               <button className="group flex items-center gap-2 px-8 py-4 bg-cyan-400 hover:bg-cyan-500 
                                text-black font-medium transition-colors duration-200">
-                Get, it's open source!
+                Get Started, it's open source!
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
               
