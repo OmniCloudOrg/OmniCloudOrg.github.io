@@ -1,19 +1,36 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { Star, GitFork, Users, Clock, Github, ExternalLink, GitCommit } from 'lucide-react';
+import { Star, GitFork, Users, Clock, Github, ExternalLink, GitCommit, LucideIcon } from 'lucide-react';
 
-const fetchGitHubStats = async () => {
+interface GitHubStats {
+    stars: number;
+    forks: number;
+    contributors: number;
+    totalCommits: number;
+}
+
+interface Repository {
+    name: string;
+}
+
+interface MainRepoData {
+    stargazers_count: number;
+    forks_count: number;
+    contributors_url: string;
+}
+
+const fetchGitHubStats = async (): Promise<GitHubStats> => {
     // First get the organization's repositories
     const reposResponse = await fetch('https://api.github.com/orgs/Omni-Forge/repos');
-    const repos = await reposResponse.json();
+    const repos: Repository[] = await reposResponse.json();
     
     // Get the main repo stats
     const mainRepoResponse = await fetch('https://api.github.com/repos/Omni-Forge/OmniForge');
-    const mainRepoData = await mainRepoResponse.json();
+    const mainRepoData: MainRepoData = await mainRepoResponse.json();
     
     // Fetch commit counts for all repos
-    const commitPromises = repos.map(async (repo) => {
+    const commitPromises = repos.map(async (repo: Repository) => {
         const commitsResponse = await fetch(`https://api.github.com/repos/Omni-Forge/${repo.name}/commits?per_page=1`);
         const linkHeader = commitsResponse.headers.get('link');
         // If link header exists, extract last page number which is total commits
@@ -37,13 +54,20 @@ const fetchGitHubStats = async () => {
     };
 };
 
-const fetchContributors = async (url) => {
+const fetchContributors = async (url: string): Promise<number> => {
     const response = await fetch(url);
     const data = await response.json();
     return data.length;
 };
 
-const MetricCard = ({ icon: Icon, label, value, detail }) => (
+interface MetricCardProps {
+    icon: LucideIcon;
+    label: string;
+    value: number | string;
+    detail: string;
+}
+
+const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detail }) => (
     <div className="relative group">
         <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-sm 
                       transition-colors duration-300 hover:border-cyan-900">
@@ -61,8 +85,8 @@ const MetricCard = ({ icon: Icon, label, value, detail }) => (
     </div>
 );
 
-const CommunityMetrics = () => {
-    const [stats, setStats] = useState({
+const CommunityMetrics: React.FC = () => {
+    const [stats, setStats] = useState<GitHubStats>({
         stars: 0,
         forks: 0,
         contributors: 0,
