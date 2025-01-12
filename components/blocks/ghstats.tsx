@@ -1,27 +1,50 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { Star, GitFork, Users, Clock, Github, ExternalLink } from 'lucide-react';
+import { Star, GitFork, Users, Clock, Github, ExternalLink, GitCommit } from 'lucide-react';
 
 const fetchGitHubStats = async () => {
-    const response = await fetch('https://api.github.com/repos/Omni-Forge/OmniForge');
-    const data = await response.json();
+    // First get the organization's repositories
+    const reposResponse = await fetch('https://api.github.com/orgs/Omni-Forge/repos');
+    const repos = await reposResponse.json();
+    
+    // Get the main repo stats
+    const mainRepoResponse = await fetch('https://api.github.com/repos/Omni-Forge/OmniForge');
+    const mainRepoData = await mainRepoResponse.json();
+    
+    // Fetch commit counts for all repos
+    const commitPromises = repos.map(async (repo) => {
+        const commitsResponse = await fetch(`https://api.github.com/repos/Omni-Forge/${repo.name}/commits?per_page=1`);
+        const linkHeader = commitsResponse.headers.get('link');
+        // If link header exists, extract last page number which is total commits
+        if (linkHeader) {
+            const matches = linkHeader.match(/page=(\d+)>; rel="last"/);
+            return matches ? parseInt(matches[1]) : 0;
+        }
+        // If no link header, count commits from this page
+        const commits = await commitsResponse.json();
+        return commits.length;
+    });
+    
+    const commitCounts = await Promise.all(commitPromises);
+    const totalCommits = commitCounts.reduce((sum, count) => sum + count, 0);
+
     return {
-        stars: data.stargazers_count,
-        forks: data.forks_count,
-        contributors: await fetchContributors(data.contributors_url),
+        stars: mainRepoData.stargazers_count,
+        forks: mainRepoData.forks_count,
+        contributors: await fetchContributors(mainRepoData.contributors_url),
+        totalCommits,
     };
 };
 
-const fetchContributors = async (url: string | URL | Request) => {
+const fetchContributors = async (url) => {
     const response = await fetch(url);
     const data = await response.json();
     return data.length;
 };
 
-const MetricCard = ({ icon: Icon, label, value, detail }: { icon: React.ElementType, label: string, value: number | string, detail: string }) => (
+const MetricCard = ({ icon: Icon, label, value, detail }) => (
     <div className="relative group">
-        {/* Card content */}
         <div className="p-6 bg-zinc-900/50 border border-zinc-800 rounded-sm 
                       transition-colors duration-300 hover:border-cyan-900">
             <div className="flex items-start gap-4">
@@ -39,7 +62,12 @@ const MetricCard = ({ icon: Icon, label, value, detail }: { icon: React.ElementT
 );
 
 const CommunityMetrics = () => {
-    const [stats, setStats] = useState({ stars: 0, forks: 0, contributors: 0 });
+    const [stats, setStats] = useState({
+        stars: 0,
+        forks: 0,
+        contributors: 0,
+        totalCommits: 0
+    });
 
     useEffect(() => {
         const getStats = async () => {
@@ -51,12 +79,10 @@ const CommunityMetrics = () => {
 
     return (
         <section className="py-24 px-4 bg-black relative overflow-hidden">
-            {/* Grid background */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a3f_1px,transparent_1px),linear-gradient(to_bottom,#1a1a3f_1px,transparent_1px)] 
                           bg-[size:4rem_4rem] opacity-10" />
 
             <div className="max-w-6xl mx-auto relative">
-                {/* Header */}
                 <div className="mb-16">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-400/10 
                                   border border-cyan-400/20 text-cyan-400 text-sm mb-6">
@@ -72,8 +98,7 @@ const CommunityMetrics = () => {
                     </p>
                 </div>
 
-                {/* Metrics Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
                     <MetricCard
                         icon={Star}
                         label="GitHub Stars"
@@ -93,6 +118,12 @@ const CommunityMetrics = () => {
                         detail="Global participants"
                     />
                     <MetricCard
+                        icon={GitCommit}
+                        label="Total Commits"
+                        value={stats.totalCommits}
+                        detail="Across all repositories"
+                    />
+                    <MetricCard
                         icon={Clock}
                         label="Release Cycle"
                         value="2 weeks"
@@ -100,7 +131,6 @@ const CommunityMetrics = () => {
                     />
                 </div>
 
-                {/* Call to action */}
                 <div className="flex flex-wrap items-center justify-between gap-6 p-6 
                                bg-zinc-900/50 border border-zinc-800 rounded-sm">
                     <div>
