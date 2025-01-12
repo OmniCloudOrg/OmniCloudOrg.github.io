@@ -31,16 +31,30 @@ const fetchGitHubStats = async (): Promise<GitHubStats> => {
     
     // Fetch commit counts for all repos
     const commitPromises = repos.map(async (repo: Repository) => {
-        const commitsResponse = await fetch(`https://api.github.com/repos/Omni-Forge/${repo.name}/commits?per_page=1`);
-        const linkHeader = commitsResponse.headers.get('link');
-        // If link header exists, extract last page number which is total commits
-        if (linkHeader) {
-            const matches = linkHeader.match(/page=(\d+)>; rel="last"/);
-            return matches ? parseInt(matches[1]) : 0;
+        try {
+            const commitsResponse = await fetch(`https://api.github.com/repos/Omni-Forge/${repo.name}/commits?per_page=1`);
+            
+            // Check if the response is ok
+            if (!commitsResponse.ok) {
+                console.warn(`Failed to fetch commits for ${repo.name}: ${commitsResponse.statusText}`);
+                return 0;
+            }
+
+            const linkHeader = commitsResponse.headers.get('link');
+            
+            // If link header exists, extract last page number which is total commits
+            if (linkHeader) {
+                const matches = linkHeader.match(/page=(\d+)>; rel="last"/);
+                return matches ? parseInt(matches[1]) : 0;
+            }
+            
+            // If no link header, get commits from response
+            const commits = await commitsResponse.json();
+            return Array.isArray(commits) ? commits.length : 0;
+        } catch (error) {
+            console.error(`Error fetching commits for ${repo.name}:`, error);
+            return 0;
         }
-        // If no link header, count commits from this page
-        const commits = await commitsResponse.json();
-        return commits.length;
     });
     
     const commitCounts = await Promise.all(commitPromises);
@@ -127,31 +141,31 @@ const CommunityMetrics: React.FC = () => {
                         icon={Star}
                         label="GitHub Stars"
                         value={stats.stars}
-                        detail="From developers worldwide"
+                        detail=""
                     />
                     <MetricCard
                         icon={GitFork}
                         label="Active Forks"
                         value={stats.forks}
-                        detail="Development branches"
+                        detail=""
                     />
                     <MetricCard
                         icon={Users}
                         label="Contributors"
                         value={stats.contributors}
-                        detail="Global participants"
+                        detail=""
                     />
                     <MetricCard
                         icon={GitCommit}
                         label="Total Commits"
                         value={stats.totalCommits}
-                        detail="Across all repositories"
+                        detail=""
                     />
                     <MetricCard
                         icon={Clock}
                         label="Release Cycle"
                         value="2 weeks"
-                        detail="Stable releases"
+                        detail=""
                     />
                 </div>
 
