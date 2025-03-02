@@ -65,7 +65,7 @@ const Header = () => {
                               opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </div>
               <span className="text-lg font-medium text-white">
-                OmniForge
+                OmniCloud
               </span>
             </Link>
 

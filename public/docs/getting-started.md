@@ -1,13 +1,13 @@
 # Quick start
-Welcome to OmniForge! Your one-click solution to deploy anything at scale. OmniForge is designed to work out-of-the-box with minimal configuration, and can inspect, scan, build, deploy, and lifecycle manage your applications at massive scales without you lifting a finger. Its designed to be extremely user friendly while causing near-zero overhead. Omni supports everything from running VM workers in which your app ontainers run to working with bare metal hardware directly for maximum efficiency.
+Welcome to OmniCloud! Your one-click solution to deploy anything at scale. OmniCloud is designed to work out-of-the-box with minimal configuration, and can inspect, scan, build, deploy, and lifecycle manage your applications at massive scales without you lifting a finger. Its designed to be extremely user friendly while causing near-zero overhead. Omni supports everything from running VM workers in which your app ontainers run to working with bare metal hardware directly for maximum efficiency.
 
 ## Overview
 
-In this guide, we'll walk you through the steps to get started with OmniForge. By the end of this start, you'll have deployed your first application using our platform.
+In this guide, we'll walk you through the steps to get started with OmniCloud. By the end of this start, you'll have deployed your first application using our platform.
 
 ## Step 1: Install the CLI
 
-First, you'll need to install the OmniForge CLI. You can download it from our [installation page](https://github.com/Omni-Forge/Omni-CLI/releases/latest).
+First, you'll need to install the OmniCloud CLI. You can download it from our [installation page](https://github.com/Omni-Forge/Omni-CLI/releases/latest).
 
 ### Install using Package Managers
 
@@ -76,7 +76,7 @@ Verify that omni-cli is actually installed by running it. It should look somethi
 \____/_/ /_/ /_/_/ /_/_/_/    \____/_/   \__, /\___/
                                         /____/
 
-Welcome to Omniforge - Modern Development Environment
+Welcome to OmniCloud - Modern Development Environment
 Version 1.0.0
 
 
@@ -144,10 +144,10 @@ nano ./forge-cluster.json
 
 ## Step 3: Authenticate
 
-Next, authenticate with your OmniForge server.
+Next, authenticate with your OmniCloud server.
 
 ```bash
-omniforge login
+OmniCloud login
 ```
 
 ## Step 4: Deploy Your Application
@@ -155,7 +155,7 @@ omniforge login
 Deploy your application with a single command.
 
 ```bash
-omniforge up
+OmniCloud up
 ```
 
 ## Step 4: Monitor Your Deployment
@@ -163,9 +163,9 @@ omniforge up
 You can monitor the status of your deployment using the CLI.
 
 ```bash
-omniforge status
+OmniCloud status
 ```
 
 ## Next Steps
 
-Congratulations! You've successfully deployed your first application with OmniForge. Explore our [documentation](../introduction) to learn more about advanced features and capabilities.
+Congratulations! You've successfully deployed your first application with OmniCloud. Explore our [documentation](../introduction) to learn more about advanced features and capabilities.

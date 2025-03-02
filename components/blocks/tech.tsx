@@ -52,7 +52,7 @@ const TechOverview = () => {
                     </h2>
                     <p className="text-lg text-zinc-400 max-w-xl">
                         Powered by Rust's zero-cost abstractions and memory safety guarantees, 
-                        OmniForge delivers exceptional performance while ensuring reliability.
+                        OmniCloud delivers exceptional performance while ensuring reliability.
                     </p>
                 </div>
 

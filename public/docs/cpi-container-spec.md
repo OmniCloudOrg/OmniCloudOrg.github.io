@@ -2,7 +2,7 @@
 
 Transform your container runtime into a standardized powerhouse with the Cloud Platform Interface specification. This comprehensive guide walks you through implementing a CPI for your container runtime while maintaining strict compliance with established patterns.
 
-## 🎯 What is an OmniForge Container CPI?
+## 🎯 What is an OmniCloud Container CPI?
 
 The Cloud Platform Interface specification is a standardized way to integrate container runtimes into cloud platforms. It consists of four core components:
 - Identifier fields
@@ -12,7 +12,7 @@ The Cloud Platform Interface specification is a standardized way to integrate co
 
 ## ❓ What about Director CPIs?
 
-OmniForge has container and Director CPIs, Container CPIs are used to manage application instances in a runtime-agnostic, and easy to maintain way. Director CPIs are use by the OmniDirector to manage workers on your IAAS (Like VirtualBox, Bare Metal, AWS, Vsphere, etc). For more information on Director CPIs, see the cpi-director-spec docs.
+OmniCloud has container and Director CPIs, Container CPIs are used to manage application instances in a runtime-agnostic, and easy to maintain way. Director CPIs are use by the OmniDirector to manage workers on your IAAS (Like VirtualBox, Bare Metal, AWS, Vsphere, etc). For more information on Director CPIs, see the cpi-director-spec docs.
 
 
 ## 🏗️ Basic Structure
@@ -182,7 +182,7 @@ Let's explore a complete implementation using Linux Containers (LXC) as our runt
 ## 💡 Implementation Tips
 
 ### Parameter Handling
-Remember that different runtimes handle parameters differently. OmniForge passes more parameters than typically needed to ensure compatibility with various command-line tools.
+Remember that different runtimes handle parameters differently. OmniCloud passes more parameters than typically needed to ensure compatibility with various command-line tools.
 
 ### Network Operations
 Network handling can vary significantly between runtimes. Here's how LXC implements it:
@@ -227,5 +227,5 @@ Volume operations might require platform-specific CPIs when working with filesys
 
 After implementing your CPI:
 1. Test all required actions thoroughly
-2. Document any runtime-specific quirks or requirements, add any prereqs to the setup_commands section so OmniForge can handle setup
+2. Document any runtime-specific quirks or requirements, add any prereqs to the setup_commands section so OmniCloud can handle setup
 3. Submit your implementation for review if you would like it included as a default CPI

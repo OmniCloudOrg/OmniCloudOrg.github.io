@@ -28,7 +28,7 @@ const CallToAction = () => {
             </h2>
             
             <p className="text-lg text-zinc-400 max-w-xl mb-8">
-              Join thousands of companies already using OmniForge to modernize their 
+              Join thousands of companies already using OmniCloud to modernize their 
               deployment infrastructure. Get started free, scale as you grow.
             </p>
 

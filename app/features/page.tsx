@@ -203,7 +203,7 @@ const FeaturesPage: React.FC = () => {
             Ready to Get Started?
           </h3>
           <p className="text-gray-400 mb-6 text-sm">
-            Join thousands of developers and teams who trust OmniForge for their deployment needs.
+            Join thousands of developers and teams who trust OmniCloud for their deployment needs.
           </p>
           <button className="bg-cyan-500 px-6 py-2 rounded-md font-medium hover:bg-cyan-600 transition-colors text-black text-sm">
             Start Building Now

@@ -22,17 +22,17 @@ interface MainRepoData {
 
 const fetchGitHubStats = async (): Promise<GitHubStats> => {
     // First get the organization's repositories
-    const reposResponse = await fetch('https://api.github.com/orgs/Omni-Forge/repos');
+    const reposResponse = await fetch('https://api.github.com/orgs/OmniCloudOrg/repos');
     const repos: Repository[] = await reposResponse.json();
     
     // Get the main repo stats
-    const mainRepoResponse = await fetch('https://api.github.com/repos/Omni-Forge/OmniForge');
+    const mainRepoResponse = await fetch('https://api.github.com/repos/OmniCloudOrg/OmniCloud-Full');
     const mainRepoData: MainRepoData = await mainRepoResponse.json();
     
     // Fetch commit counts for all repos
     const commitPromises = repos.map(async (repo: Repository) => {
         try {
-            const commitsResponse = await fetch(`https://api.github.com/repos/Omni-Forge/${repo.name}/commits?per_page=1`);
+            const commitsResponse = await fetch(`https://api.github.com/repos/OmniCloudOrg/${repo.name}/commits?per_page=1`);
             
             // Check if the response is ok
             if (!commitsResponse.ok) {
@@ -180,7 +180,7 @@ const CommunityMetrics: React.FC = () => {
                         </p>
                     </div>
                     <div className="flex gap-4">
-                        <a href="https://github.com/Omni-Forge/OmniForge" 
+                        <a href="https://github.com/OmniCloudOrg/OmniCloud-Full" 
                            className="inline-flex items-center gap-2 px-4 py-2 bg-black/40 
                                     border border-zinc-800 text-sm text-zinc-300 hover:text-white 
                                     transition-colors duration-200">
