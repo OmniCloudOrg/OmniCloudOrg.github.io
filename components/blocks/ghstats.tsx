@@ -176,14 +176,17 @@ class GitHubMetricsService {
         console.log('[Metrics] Processing metrics data');
         
         // Extract the top contributors and map to our format
-        const topContributors: Contributor[] = metricsData.stats.contributors.top
-            .slice(0, 10) // Get top 6 contributors
+        const topContributors: Contributor[] = (metricsData.stats.contributors.top || [])
+            .slice(0, 10) // Get up to 10 contributors for better UI layout
             .map((contributor: any) => ({
-                login: contributor.login,
-                avatar_url: contributor.avatar_url,
-                contributions: contributor.contributions,
-                reposContributedTo: contributor.repositories || []
+            login: contributor.login || "Anonymous",
+            avatar_url: contributor.avatar_url || "",
+            contributions: contributor.contributions || 0,
+            reposContributedTo: contributor.repositories || []
             }));
+        
+        // Ensure we have at least some placeholder data if needed
+        console.log(`[Metrics] Found ${topContributors.length} contributors`);
         
         // Create the stats object
         const stats: GitHubStats = {
