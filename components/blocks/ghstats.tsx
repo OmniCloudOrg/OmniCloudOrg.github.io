@@ -177,7 +177,7 @@ class GitHubMetricsService {
         
         // Extract the top contributors and map to our format
         const topContributors: Contributor[] = metricsData.stats.contributors.top
-            .slice(0, 6) // Get top 6 contributors
+            .slice(0, 10) // Get top 6 contributors
             .map((contributor: any) => ({
                 login: contributor.login,
                 avatar_url: contributor.avatar_url,
