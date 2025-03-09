@@ -1,11 +1,11 @@
 
-# ❓ Interfacing with Omni-forge
+# ❓ Interfacing with OmniCloud
 
 ---
 
 ## 🔎 Overview
-See the [Introduction](getting-started) page for more information on each specific component in the stack. For reference, here's a quick overview of Omni-forge's core components:
-* Omni-forge
+See the [Introduction](getting-started) page for more information on each specific component in the stack. For reference, here's a quick overview of OmniCloud's core components:
+* OmniCloud
     * The core orchestration platform that manages the entire infrastructure lifecycle
     * Handles service discovery, load balancing, and high-level system coordination
     * Provides the central control plane for all Omni components
@@ -18,7 +18,7 @@ See the [Introduction](getting-started) page for more information on each specif
     * Executes container operations and reports node status
     * Manages local resources and maintains container health
 * Omni-CLI
-    * Command-line interface for interacting with the Omni-forge ecosystem
+    * Command-line interface for interacting with the OmniCloud ecosystem
     * Provides user-friendly commands for deployment and management
     * Offers monitoring and troubleshooting capabilities
 

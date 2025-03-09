@@ -78,7 +78,7 @@ const Header = () => {
               <div className="h-4 w-px bg-zinc-800" />
 
               {/* GitHub */}
-              <a href="https://github.com/Omni-Forge" 
+              <a href="https://github.com/OmniCloudOrg" 
                  target="_blank" 
                  rel="noopener noreferrer"
                  className="text-zinc-400 hover:text-white transition-colors duration-200">
@@ -116,7 +116,7 @@ const Header = () => {
               <div className="h-px bg-zinc-800/50 my-4" />
               
               <div className="flex items-center justify-between">
-                <a href="https://github.com/Omni-Forge" 
+                <a href="https://github.com/OmniCloudOrg" 
                    className="text-zinc-400 hover:text-white transition-colors duration-200">
                   <Github className="w-5 h-5" />
                 </a>
