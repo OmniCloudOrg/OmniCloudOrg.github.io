@@ -8,7 +8,7 @@ interface DocNotFoundModalProps {
 }
 
 const DocNotFoundModal: React.FC<DocNotFoundModalProps> = ({ slug }) => {
-  const githubUrl = `https://github.com/Omni-Forge/omni-forge.github.io/tree/master/public/docs/${slug}.md`;
+  const githubUrl = `https://github.com/OmniCloudOrg/OmniCloudOrg.github.io/tree/master/public/docs/${slug}.md`;
   
   const handleGoBack = () => {
     window.history.back();

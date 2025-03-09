@@ -7,7 +7,7 @@ In this guide, we'll walk you through the steps to get started with OmniCloud. B
 
 ## Step 1: Install the CLI
 
-First, you'll need to install the OmniCloud CLI. You can download it from our [installation page](https://github.com/Omni-Forge/Omni-CLI/releases/latest).
+First, you'll need to install the OmniCloud CLI. You can download it from our [installation page](https://github.com/OmniCloudOrg/Omni-CLI/releases/latest).
 
 ### Install using Package Managers
 
@@ -55,7 +55,7 @@ comet install omni-meta --build-deps # or -b
 After installing the dependencies:
 ```bash
 # Clone the repo
-git clone https://github.com/Omni-Forge/Omni-CLI
+git clone https://github.com/OmniCloudOrg/Omni-CLI
 
 # Move into the repo
 cd ./Omni-CLI/
@@ -108,7 +108,7 @@ sh get-docker.sh
 
 ```bash
 # Clone the repo
-git clone https://github.com/Omni-Forge/OmniMicro
+git clone https://github.com/OmniCloudOrg/OmniMicro
 
 # move to into the repo
 cd ./OmniMicro
@@ -124,7 +124,7 @@ docker-coompose up -d
 
 ```bash
 # Clone the repo
-git clone https://github.com/Omni-Forge/Omni-Up
+git clone https://github.com/OmniCloudOrg/Omni-Up
 
 # move to into the repo
 cd ./Omni-Up
