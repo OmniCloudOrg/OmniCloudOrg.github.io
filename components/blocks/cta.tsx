@@ -40,7 +40,7 @@ const CallToAction = () => {
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </button>
               
-              <a href="/demo" className="text-zinc-400 hover:text-white transition-colors">
+              <a href="/demo" target='_' className="text-zinc-400 hover:text-white transition-colors">
                 View the Live Demo →
               </a>
             </div>
