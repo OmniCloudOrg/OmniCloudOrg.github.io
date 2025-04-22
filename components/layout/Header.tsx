@@ -71,6 +71,8 @@ const Header = () => {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
+              <NavLink href="/">Home</NavLink>
+              <NavLink href="/why">Why</NavLink>
               <NavLink href="/features">Features</NavLink>
               <NavLink href="/docs">Documentation</NavLink>
               <NavLink href="/blog">Blog</NavLink>
