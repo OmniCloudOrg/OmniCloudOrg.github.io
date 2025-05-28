@@ -8,7 +8,7 @@ const AmoledHero = () => {
     const [codeText, setCodeText] = useState('');
     const [currentLineIndex, setCurrentLineIndex] = useState(0);
     const [scrollY, setScrollY] = useState(0);
-    const [cpuUsages, setCpuUsages] = useState([]);
+    const [cpuUsages, setCpuUsages] = useState<number[][]>([]);
     const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
 
