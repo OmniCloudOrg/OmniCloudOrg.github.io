@@ -1,297 +1,620 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Zap, Server, Lock, Terminal } from 'lucide-react';
+import { Zap, Code, Cpu, Rocket, Server, Activity, HardDrive, Wifi } from 'lucide-react';
 
-const Hero = () => {
-    const [isFirefox, setIsFirefox] = useState(false);
-    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const terminalRef = useRef<HTMLDivElement>(null);
-    const [terminalText, setTerminalText] = useState('');
-    const fullCommand = '$ deploy app --minimal --scale auto';
-    const typingSpeed = 80;
-    const blinkCursor = '|';
+const AmoledHero = () => {
+    const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
+    const [codeText, setCodeText] = useState('');
+    const [currentLineIndex, setCurrentLineIndex] = useState(0);
+    const [scrollY, setScrollY] = useState(0);
+    const [cpuUsages, setCpuUsages] = useState([]);
+    const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
+    const containerRef = useRef<HTMLDivElement>(null);
 
+    const codeLines = [
+        'npx create-next-app@latest',
+        'cd my-nextjs-app',
+        'omni up',
+        '> Your app is ready on http://localhost:3000',
+        '✨ Deployment optimized'
+    ];
 
-    // Terminal typing animation
+    // Technology logos from online sources
+    const TechIcons = {
+        nextjs: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" 
+                alt="Next.js" 
+                className="w-4 h-4 filter invert"
+            />
+        ),
+        rust: (
+            <img 
+                src="https://www.rust-lang.org/logos/rust-logo-128x128.png" 
+                alt="Rust" 
+                className="w-4 h-4"
+            />
+        ),
+        svelte: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/svelte/svelte-original.svg" 
+                alt="Svelte" 
+                className="w-4 h-4"
+            />
+        ),
+        react: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" 
+                alt="React" 
+                className="w-4 h-4"
+            />
+        ),
+        vue: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" 
+                alt="Vue.js" 
+                className="w-4 h-4"
+            />
+        ),
+        angular: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" 
+                alt="Angular" 
+                className="w-4 h-4"
+            />
+        ),
+        python: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" 
+                alt="Python" 
+                className="w-4 h-4"
+            />
+        ),
+        nodejs: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" 
+                alt="Node.js" 
+                className="w-4 h-4"
+            />
+        )
+    };
+
+    // Supported technologies for animated badge with custom styling
+    const supportedTechs = [
+        { 
+            icon: TechIcons.nextjs, 
+            name: "Next.js 15", 
+            borderColor: "border-white/30",
+            bgColor: "bg-white/5",
+            textColor: "text-white",
+            iconColor: "text-white"
+        },
+        { 
+            icon: TechIcons.rust, 
+            name: "Rust", 
+            borderColor: "border-orange-500/30",
+            bgColor: "bg-orange-500/5",
+            textColor: "text-orange-300",
+            iconColor: "text-orange-400"
+        },
+        { 
+            icon: TechIcons.svelte, 
+            name: "Svelte", 
+            borderColor: "border-red-500/30",
+            bgColor: "bg-red-500/5",
+            textColor: "text-red-300",
+            iconColor: "text-red-400"
+        },
+        { 
+            icon: TechIcons.react, 
+            name: "React", 
+            borderColor: "border-blue-500/30",
+            bgColor: "bg-blue-500/5",
+            textColor: "text-blue-300",
+            iconColor: "text-blue-400"
+        },
+        { 
+            icon: TechIcons.vue, 
+            name: "Vue.js", 
+            borderColor: "border-green-500/30",
+            bgColor: "bg-green-500/5",
+            textColor: "text-green-300",
+            iconColor: "text-green-400"
+        },
+        { 
+            icon: TechIcons.angular, 
+            name: "Angular", 
+            borderColor: "border-red-600/30",
+            bgColor: "bg-red-600/5",
+            textColor: "text-red-300",
+            iconColor: "text-red-500"
+        },
+        { 
+            icon: TechIcons.python, 
+            name: "Python", 
+            borderColor: "border-yellow-500/30",
+            bgColor: "bg-yellow-500/5",
+            textColor: "text-yellow-300",
+            iconColor: "text-yellow-400"
+        },
+        { 
+            icon: TechIcons.nodejs, 
+            name: "Node.js", 
+            borderColor: "border-green-600/30",
+            bgColor: "bg-green-600/5",
+            textColor: "text-green-300",
+            iconColor: "text-green-500"
+        }
+    ];
+
+    // Animated badge cycling
     useEffect(() => {
-        let currentIndex = 0;
-        let typingInterval: NodeJS.Timeout;
+        const interval = setInterval(() => {
+            setCurrentBadgeIndex((prev) => (prev + 1) % supportedTechs.length);
+        }, 3000);
 
-        const startTyping = () => {
-            typingInterval = setInterval(() => {
-                if (currentIndex < fullCommand.length) {
-                    setTerminalText(fullCommand.substring(0, currentIndex + 1));
-                    currentIndex++;
-                } else {
-                    clearInterval(typingInterval);
+        return () => clearInterval(interval);
+    }, []);
 
-                    // After typing is complete, show success message
-                    setTimeout(() => {
-                        setTerminalText(prev => `${prev}\n\n✓ Deployment successful in 1.2s`);
-                    }, 800);
+    // Generate random CPU usage values
+    useEffect(() => {
+        const generateCpuUsages = () => {
+            const usages = [];
+            for (let rackId = 0; rackId < 2; rackId++) {
+                const rackUsages = [];
+                for (let serverId = 0; serverId < 8; serverId++) {
+                    rackUsages.push(Math.floor(Math.random() * 85) + 10); // 10-95%
                 }
-            }, typingSpeed);
+                usages.push(rackUsages);
+            }
+            return usages;
         };
 
-        // Start typing after a brief delay
-        const timeout = setTimeout(startTyping, 1000);
+        setCpuUsages(generateCpuUsages());
+        
+        const interval = setInterval(() => {
+            setCpuUsages(generateCpuUsages());
+        }, 3000);
 
-        return () => {
-            clearTimeout(timeout);
-            clearInterval(typingInterval);
-        };
+        return () => clearInterval(interval);
     }, []);
 
-    // Browser detection
+    // Mouse tracking for parallax
     useEffect(() => {
-        setIsFirefox(navigator.userAgent.toLowerCase().includes('firefox'));
+        const handleMouseMove = (e: MouseEvent) => {
+            if (containerRef.current) {
+                const rect = containerRef.current.getBoundingClientRect();
+                setMousePosition({
+                    x: (e.clientX - rect.left) / rect.width,
+                    y: (e.clientY - rect.top) / rect.height
+                });
+            }
+        };
+
+        const container = containerRef.current;
+        if (container) {
+            container.addEventListener('mousemove', handleMouseMove);
+            return () => container.removeEventListener('mousemove', handleMouseMove);
+        }
     }, []);
 
-    const stats = [
-        { icon: <Zap className="w-4 h-4" />, text: "Minimal Footprint", highlight: "90% less resources" },
-        { icon: <Server className="w-4 h-4" />, text: "Any infrastructure", highlight: "Cloud or on-prem" },
-        { icon: <Lock className="w-4 h-4" />, text: "100% open source", highlight: "MIT license" }
+    // Scroll tracking
+    useEffect(() => {
+        const handleScroll = () => setScrollY(window.scrollY);
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Typewriter effect
+    useEffect(() => {
+        let timeout: NodeJS.Timeout;
+        
+        if (currentLineIndex < codeLines.length) {
+            const currentLine = codeLines[currentLineIndex];
+            const currentText = codeText.split('\n')[currentLineIndex] || '';
+            
+            if (currentText.length < currentLine.length) {
+                timeout = setTimeout(() => {
+                    const lines = codeText.split('\n');
+                    lines[currentLineIndex] = currentLine.slice(0, currentText.length + 1);
+                    setCodeText(lines.join('\n'));
+                }, 50);
+            } else if (currentLineIndex < codeLines.length - 1) {
+                timeout = setTimeout(() => {
+                    setCurrentLineIndex(prev => prev + 1);
+                    setCodeText(prev => prev + '\n');
+                }, 800);
+            }
+        }
+
+        return () => clearTimeout(timeout);
+    }, [codeText, currentLineIndex]);
+
+    const features = [
+        { icon: <Zap className="w-5 h-5" />, text: "Lightning Fast", detail: "Zero-config builds" },
+        { icon: <Code className="w-5 h-5" />, text: "Full-Stack Ready", detail: "API routes included" },
+        { icon: <Cpu className="w-5 h-5" />, text: "Edge Optimized", detail: "Global deployment" },
+        { icon: <Rocket className="w-5 h-5" />, text: "Scalable", detail: "Auto-scaling support" }
     ];
 
-    // Server rack configuration
+    // Enhanced server rack configuration with cool colors
     const serverRacks = [
-        { width: 100, height: 296, serverCount: 13, offsetX: -60, offsetY: 0, zIndex: 0},
-        { width: 100, height: 296, serverCount: 13, offsetX: 50, offsetY: 0, zIndex: 0},
-        { width: 100, height: 296, serverCount: 13, offsetX: 160, offsetY: 0, zIndex:0 }
+        { id: 1, servers: 8, color: '#00d4ff', intensity: 0.8, delay: 0, name: 'US-EAST-1' },
+        { id: 2, servers: 8, color: '#8b5cf6', intensity: 0.6, delay: 0.3, name: 'EU-WEST-1' }
     ];
+
+    // System stats for summary
+    const systemStats = {
+        totalServers: 16,
+        activeInstances: 247,
+        avgResponseTime: '12ms',
+        uptime: '99.99%',
+        dataTransfer: '2.4TB',
+        globalUsers: '150K+'
+    };
+
+    const currentTech = supportedTechs[currentBadgeIndex];
+
+    // Cool color scheme for CPU usage
+    const getCoolUsageColor = (usage: number) => {
+        if (usage > 75) return { bg: 'linear-gradient(to right, #7c3aed, #5b21b6)', color: '#a855f7' }; // Purple
+        if (usage > 50) return { bg: 'linear-gradient(to right, #0ea5e9, #0284c7)', color: '#38bdf8' }; // Blue
+        return { bg: 'linear-gradient(to right, #06b6d4, #0891b2)', color: '#22d3ee' }; // Cyan
+    };
 
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-            {/* Animated background gradients */}
-            <div className="absolute inset-0 bg-black">
-                <div className="absolute inset-0 opacity-30 bg-gradient-to-br from-blue-900 via-indigo-900 to-transparent animate-pulse-slow"
-                    style={{
-                        transform: `translate(${mousePosition.x * 10}px, ${mousePosition.y * 10}px)`,
-                        transition: 'transform 0.2s ease-out'
-                    }}
-                />
-                <div className="absolute inset-0 opacity-20 bg-gradient-to-tr from-cyan-900 via-transparent to-transparent"
-                    style={{
-                        transform: `translate(${-mousePosition.x * 15}px, ${-mousePosition.y * 15}px)`,
-                        transition: 'transform 0.2s ease-out'
-                    }}
-                />
-            </div>
+        <div className="relative bg-black">
+            <div 
+                ref={containerRef}
+                className="relative min-h-screen max-h-screen lg:max-h-none overflow-hidden flex items-center justify-center pt-8 sm:pt-12 lg:pt-0"
+            >
+                {/* Animated background elements */}
+                <div className="absolute inset-0">
+                    {/* Floating orbs */}
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <div
+                            key={i}
+                            className="absolute rounded-full opacity-20 animate-float"
+                            style={{
+                                width: `${120 + i * 40}px`,
+                                height: `${120 + i * 40}px`,
+                                background: `radial-gradient(circle, ${['#00ffff', '#ff0080', '#8000ff'][i % 3]} 0%, transparent 70%)`,
+                                left: `${10 + i * 15}%`,
+                                top: `${5 + i * 12}%`,
+                                animationDelay: `${i * 1.2}s`,
+                                transform: `translate(${(mousePosition.x - 0.5) * (30 + i * 10)}px, ${(mousePosition.y - 0.5) * (20 + i * 8)}px)`
+                            }}
+                        />
+                    ))}
 
-            {/* Dot grid pattern */}
-            <div className="absolute inset-0"
-                style={{
-                    backgroundImage: 'radial-gradient(circle at 1rem 1rem, #2a2a4a 1px, transparent 0)',
-                    backgroundSize: '3rem 3rem',
-                    opacity: 0.3,
-                    transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20}px)`,
-                    transition: 'transform 0.3s ease-out'
-                }}
-            />
+                    {/* Grid pattern */}
+                    <div 
+                        className="absolute inset-0 opacity-[0.03]"
+                        style={{
+                            backgroundImage: `
+                                linear-gradient(#00ffff 1px, transparent 1px),
+                                linear-gradient(90deg, #00ffff 1px, transparent 1px)
+                            `,
+                            backgroundSize: '60px 60px',
+                            transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20}px)`
+                        }}
+                    />
 
-            {/* Subtle glowing network lines */}
-            <div className="absolute inset-0 opacity-10">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="networkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#4facfe" />
-                            <stop offset="100%" stopColor="#00f2fe" />
-                        </linearGradient>
-                    </defs>
-                    <g stroke="url(#networkGradient)" strokeWidth="0.5">
-                        {Array.from({ length: 15 }).map((_, i) => (
-                            <line
-                                key={`h-line-${i}`}
-                                x1="0"
-                                y1={`${(i * 100) / 15}%`}
-                                x2="100%"
-                                y2={`${(i * 100) / 15}%`}
+                    {/* Pulsing lines */}
+                    <div className="absolute inset-0 opacity-10">
+                        {Array.from({ length: 4 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className="absolute h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse-line"
+                                style={{
+                                    top: `${20 + i * 20}%`,
+                                    left: '0',
+                                    right: '0',
+                                    animationDelay: `${i * 0.8}s`
+                                }}
                             />
                         ))}
-                        {Array.from({ length: 15 }).map((_, i) => (
-                            <line
-                                key={`v-line-${i}`}
-                                x1={`${(i * 100) / 15}%`}
-                                y1="0"
-                                x2={`${(i * 100) / 15}%`}
-                                y2="100%"
-                            />
-                        ))}
-                    </g>
-                </svg>
-            </div>
+                    </div>
+                </div>
 
-            {/* Main content */}
-            <div className="relative z-10 px-4 max-w-7xl mx-auto w-full py-8">
-                <div className="flex flex-col md:flex-row items-center gap-12">
-                    {/* Left side content */}
-                    <div className="flex-1 text-left max-w-xl">
-                        {/* Badge */}
-                        <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 bg-cyan-400/10 border border-cyan-400/20 text-cyan-400 text-sm rounded-full animate-shimmer bg-[linear-gradient(110deg,#1a1a3f,#2a2a4a,#1a1a3f)] bg-[length:200%_100%]">
-                            <span className="font-mono">v1.0 Coming Soon!</span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                {/* Main content with improved responsive padding */}
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 grid lg:grid-cols-2 gap-8 lg:gap-16 xl:gap-20 items-center w-full py-8 lg:py-16">
+                    {/* Left content */}
+                    <div className="space-y-6 lg:space-y-8 max-w-2xl">
+                        {/* Animated Badge */}
+                        <div className={`relative inline-flex items-center gap-3 px-4 py-2 rounded-full border ${currentTech.borderColor} ${currentTech.bgColor} backdrop-blur-sm overflow-hidden transition-all duration-500`}>
+                            <div 
+                                className="flex items-center gap-3 transition-all duration-500 ease-in-out"
+                                key={currentBadgeIndex}
+                            >
+                                <div className={`animate-badge-enter ${currentTech.iconColor}`}>
+                                    {currentTech.icon}
+                                </div>
+                                <span className={`text-sm font-medium ${currentTech.textColor} animate-badge-enter`}>
+                                    {currentTech.name} Ready
+                                </span>
+                                <div className={`w-2 h-2 rounded-full animate-pulse ${
+                                    currentTech.iconColor === 'text-white' ? 'bg-white' :
+                                    currentTech.iconColor === 'text-orange-400' ? 'bg-orange-400' :
+                                    currentTech.iconColor === 'text-red-400' ? 'bg-red-400' :
+                                    currentTech.iconColor === 'text-blue-400' ? 'bg-blue-400' :
+                                    currentTech.iconColor === 'text-green-400' ? 'bg-green-400' :
+                                    currentTech.iconColor === 'text-red-500' ? 'bg-red-500' :
+                                    currentTech.iconColor === 'text-yellow-400' ? 'bg-yellow-400' :
+                                    currentTech.iconColor === 'text-green-500' ? 'bg-green-500' :
+                                    'bg-cyan-400'
+                                }`} />
+                            </div>
                         </div>
 
-                        {/* Main heading without the erroneous line */}
-                        <h1 className="text-5xl md:text-6xl font-bold mb-4 tracking-tight leading-tight">
-                            Deploy Anywhere.
-                            <br />
-                            <span className="text-cyan-400">Use Less.</span>
-                        </h1>
+                        {/* Main heading */}
+                        <div className="space-y-4 lg:space-y-6">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-none">
+                                <span className="block text-white">Build</span>
+                                <span className="block text-blue-600">
+                                    Ship
+                                </span>
+                                <span className="block text-white">Scale</span>
+                            </h1>
+                            
+                            <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-lg leading-relaxed">
+                                Deploy your cloud native applications without the hassle.
+                                <span className="text-cyan-300 font-medium"> Zero configuration required</span>, 
+                                maximum performance.
+                            </p>
+                        </div>
 
-                        {/* Subheading */}
-                        <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
-                            The universal, lightweight deployment platform that runs anywhere.
-                            <span className="text-cyan-300"> Zero waste architecture</span> for maximum scale with minimal overhead.
-                        </p>
-
-                        {/* Stats row with hover effects */}
-                        <div className="flex flex-wrap gap-6 mb-8">
-                            {stats.map((stat, index) => (
-                                <div key={index}
-                                    className="group flex flex-col gap-2 p-3 rounded-md transition-all duration-300 hover:bg-zinc-900/50 hover:border-cyan-900/50 hover:border hover:-translate-y-1">
-                                    <div className="flex items-center gap-2 text-sm text-zinc-300">
-                                        <div className="text-cyan-400 group-hover:text-cyan-300 transition-colors">
-                                            {stat.icon}
+                        {/* Features */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+                            {features.map((feature, index) => (
+                                <div 
+                                    key={index}
+                                    className="group p-4 lg:p-5 rounded-xl border border-gray-800 bg-gray-900/20 backdrop-blur-sm hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all duration-300 cursor-pointer"
+                                    style={{
+                                        animationDelay: `${index * 0.2}s`
+                                    }}
+                                >
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500/20 transition-colors">
+                                            {feature.icon}
                                         </div>
-                                        {stat.text}
+                                        <span className="font-semibold text-white text-sm lg:text-base">{feature.text}</span>
                                     </div>
-                                    <div className="text-xs text-cyan-500/80 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        {stat.highlight}
-                                    </div>
+                                    <p className="text-xs lg:text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
+                                        {feature.detail}
+                                    </p>
                                 </div>
                             ))}
                         </div>
 
-                        {/* CTA buttons with animated effects */}
-                        <div className="flex flex-wrap gap-4">
-                            <button className="px-6 py-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-black font-medium rounded-md hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-300 transform hover:-translate-y-1">
-                                Get Started, it's Open Source!
+                        {/* CTA Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4 lg:gap-6">
+                            <button className="group px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-cyan-500 to-purple-600 text-black font-bold rounded-xl hover:from-cyan-400 hover:to-purple-500 transform hover:scale-105 transition-all duration-300 shadow-lg shadow-cyan-500/25">
+                                <span className="flex items-center justify-center gap-2">
+                                    Get Started
+                                    <Rocket className="w-4 lg:w-5 h-4 lg:h-5 group-hover:translate-x-1 transition-transform" />
+                                </span>
                             </button>
-
-                            <button className="px-6 py-3 bg-transparent border border-zinc-700 text-white rounded-md hover:border-cyan-500/50 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:shadow-cyan-900/10">
-                                View Documentation →
+                            
+                            <button className="px-6 lg:px-8 py-3 lg:py-4 border border-gray-700 text-white rounded-xl hover:border-cyan-500/50 hover:bg-cyan-500/5 transform hover:scale-105 transition-all duration-300 backdrop-blur-sm">
+                                Documentation →
                             </button>
                         </div>
                     </div>
 
-                    {/* Right side - Terminal animation */}
-                    <div className="flex-1 flex justify-center md:justify-end">
-                        <div className="relative">
-                            <div
-                                ref={terminalRef}
-                                className="w-full max-w-md bg-zinc-950 border border-zinc-800 rounded-md overflow-hidden shadow-xl shadow-cyan-900/10 backdrop-blur-sm"
-                                style={{
-                                    transform: `perspective(1000px) 
-                                               rotateY(${(mousePosition.x - 0.5) * -5}deg) 
-                                               rotateX(${(mousePosition.y - 0.5) * 5}deg)`,
-                                    transition: 'transform 0.2s ease-out'
-                                }}
-                            >
-                                {/* Terminal header */}
-                                <div className="flex items-center p-3 bg-zinc-900 border-b border-zinc-800">
-                                    <div className="flex gap-1.5 mr-4">
-                                        <div className="w-3 h-3 rounded-full bg-red-500" />
-                                        <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                                        <div className="w-3 h-3 rounded-full bg-green-500" />
-                                    </div>
-                                    <div className="flex-1 text-center text-xs text-zinc-400 font-mono">
-                                        terminal - deployment
-                                    </div>
-                                    <Terminal className="w-4 h-4 text-zinc-500" />
+                    {/* Right side - Terminal & Server Visualization */}
+                    <div className="space-y-6 lg:space-y-8 max-w-xl mx-auto lg:mx-0">
+                        {/* Terminal */}
+                        <div 
+                            className="relative p-4 sm:p-6 lg:p-8 rounded-2xl border border-gray-800 bg-gray-900/30 backdrop-blur-xl shadow-2xl w-full max-w-md mx-auto lg:mx-0"
+                            style={{
+                                transform: `perspective(1000px) rotateY(${(mousePosition.x - 0.5) * -8}deg) rotateX(${(mousePosition.y - 0.5) * 4}deg)`,
+                                transition: 'transform 0.3s ease-out'
+                            }}
+                        >
+                            {/* Terminal header */}
+                            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-700">
+                                <div className="flex gap-2">
+                                    <div className="w-3 h-3 rounded-full bg-red-500 shadow-lg shadow-red-500/50" />
+                                    <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-lg shadow-yellow-500/50" />
+                                    <div className="w-3 h-3 rounded-full bg-green-500 shadow-lg shadow-green-500/50" />
                                 </div>
-
-                                {/* Terminal content */}
-                                <div className="p-4 font-mono text-sm text-zinc-300 h-[250px] w-[500px] bg-[linear-gradient(110deg,#080815,#10102a,#080815)]">
-                                    <pre className="whitespace-pre-wrap">
-                                        {terminalText}
-                                        <span className="text-cyan-400 animate-blink">{blinkCursor}</span>
-                                    </pre>
-                                </div>
+                                <span className="ml-4 text-sm text-gray-400 font-mono">terminal</span>
                             </div>
 
-                            {/* Multiple server racks visualization below the terminal */}
-                            <div className="absolute top-52 transform -translate-x-1/2 mx-auto">
-                                <div className="relative flex items-end">
-                                    {serverRacks.map((rack, rackIndex) => (
-                                        <div 
-                                            key={rackIndex} 
-                                            className="absolute"
-                                            style={{ 
-                                                left: `${rack.offsetX}px`, 
-                                                top: `${rack.offsetY}px`,
-                                                zIndex: rack.zIndex
-                                            }}
-                                        >
-                                            <div className="relative border border-zinc-800 rounded bg-zinc-900/50" 
-                                                 style={{ height: `${rack.height}px`, width: `${rack.width}px` }}>
-                                                {/* Server lights */}
-                                                <div className="absolute -top-1 right-0 bottom-0 w-3 flex flex-col justify-evenly p-0.5">
-                                                    {Array.from({ length: Math.min(13, rack.serverCount) }).map((_, i) => (
-                                                        <div
-                                                            key={i}
-                                                            className="w-1.5 h-1.5 rounded-full"
-                                                            style={{
-                                                                backgroundColor: i % 3 === 0 ? '#4ade80' : '#2563eb',
-                                                                boxShadow: i % 3 === 0 ? '0 0 6px #4ade80' : '0 0 6px #2563eb',
-                                                                opacity: 0.7,
-                                                                animation: `glow ${1 + (rackIndex * 0.2)}s infinite alternate ${i * 0.1}s`,
+                            {/* Terminal content */}
+                            <div className="font-mono text-xs sm:text-sm space-y-1 min-h-[100px] lg:min-h-[120px] overflow-hidden">
+                                <pre className="text-cyan-300 whitespace-pre-wrap break-words">
+                                    {codeText}
+                                    <span className="animate-pulse text-white">|</span>
+                                </pre>
+                            </div>
+                        </div>
+
+                        {/* Enhanced Server Racks with Cool Colors */}
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6 max-w-md mx-auto lg:mx-0">
+                            {serverRacks.map((rack, rackIndex) => (
+                                <div key={rack.id} className="relative">
+                                    <div 
+                                        className="bg-gray-900/40 border border-gray-700 rounded-xl p-3 sm:p-4 lg:p-5 backdrop-blur-sm"
+                                        style={{
+                                            animation: `glow-${rack.id} 3s infinite ease-in-out`,
+                                            animationDelay: `${rack.delay}s`
+                                        }}
+                                    >
+                                        {/* Rack header */}
+                                        <div className="flex items-center justify-between mb-3">
+                                            <div>
+                                                <span className="text-xs text-gray-400 font-mono block">{rack.name}</span>
+                                                <span className="text-xs text-gray-500 font-mono">RACK-{rack.id}</span>
+                                            </div>
+                                            <div 
+                                                className="w-2 h-2 rounded-full animate-pulse"
+                                                style={{ backgroundColor: rack.color, boxShadow: `0 0 10px ${rack.color}` }}
+                                            />
+                                        </div>
+
+                                        {/* Server slots with cool CPU colors */}
+                                        <div className="space-y-2">
+                                            {Array.from({ length: rack.servers }).map((_, serverIndex) => {
+                                                const cpuUsage = cpuUsages[rackIndex]?.[serverIndex] || 0;
+                                                const coolColors = getCoolUsageColor(cpuUsage);
+                                                
+                                                return (
+                                                    <div
+                                                        key={serverIndex}
+                                                        className="flex items-center gap-2 p-2 rounded bg-gray-800/50 border border-gray-700"
+                                                        style={{
+                                                            animationDelay: `${serverIndex * 0.1 + rack.delay}s`
+                                                        }}
+                                                    >
+                                                        <div 
+                                                            className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
+                                                            style={{ 
+                                                                backgroundColor: coolColors.color,
+                                                                opacity: rack.intensity,
+                                                                boxShadow: `0 0 6px ${coolColors.color}`
                                                             }}
                                                         />
-                                                    ))}
-                                                </div>
-
-                                                {/* Server shelves */}
-                                                <div className="absolute left-2 right-4 top-2 bottom-2">
-                                                    {Array.from({ length: rack.serverCount }).map((_, i) => (
-                                                        <div
-                                                            key={i}
-                                                            className="w-full h-5 mb-1 border border-zinc-700 bg-zinc-800/50 rounded-sm flex items-center pl-2"
-                                                            style={{
-                                                                height: `${Math.max(5, 90 / rack.serverCount)}%`,
-                                                                marginBottom: '2px'
-                                                            }}
-                                                        >
-                                                            <div className="w-1.5 h-1.5 rounded-full bg-zinc-600" />
+                                                        <div className="flex-1 h-1.5 bg-gray-700 rounded overflow-hidden min-w-0 relative">
+                                                            <div 
+                                                                className="h-full transition-all duration-1000 ease-out"
+                                                                style={{ 
+                                                                    width: `${cpuUsage}%`,
+                                                                    background: coolColors.bg
+                                                                }}
+                                                            />
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            </div>
+                                                        <span 
+                                                            className="text-xs font-mono flex-shrink-0 w-8 text-right"
+                                                            style={{ color: coolColors.color }}
+                                                        >
+                                                            {cpuUsage}%
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Add keyframes for glow animation */}
+            {/* System Usage Summary */}
+            <div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-12 lg:py-16 xl:py-20">
+                    <div className="text-center mb-8 lg:mb-12">
+                        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
+                            Real-time System Overview
+                        </h2>
+                        <p className="text-gray-400 text-base lg:text-lg max-w-2xl mx-auto">
+                            Monitor your global infrastructure performance and resource utilization across all regions
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+                        <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
+                            <div className="flex items-center gap-3 mb-3">
+                                <Server className="w-4 lg:w-5 h-4 lg:h-5 text-cyan-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Total Servers</span>
+                            </div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.totalServers}</div>
+                            <div className="text-xs text-green-400 mt-1">All Active</div>
+                        </div>
+
+                        <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
+                            <div className="flex items-center gap-3 mb-3">
+                                <Activity className="w-4 lg:w-5 h-4 lg:h-5 text-purple-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Running Instances</span>
+                            </div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.activeInstances}</div>
+                            <div className="text-xs text-green-400 mt-1">+12 today</div>
+                        </div>
+
+                        <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
+                            <div className="flex items-center gap-3 mb-3">
+                                <Zap className="w-4 lg:w-5 h-4 lg:h-5 text-yellow-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Response Time</span>
+                            </div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.avgResponseTime}</div>
+                            <div className="text-xs text-green-400 mt-1">Avg Global</div>
+                        </div>
+
+                        <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
+                            <div className="flex items-center gap-3 mb-3">
+                                <Wifi className="w-4 lg:w-5 h-4 lg:h-5 text-green-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Uptime</span>
+                            </div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.uptime}</div>
+                            <div className="text-xs text-green-400 mt-1">30 days</div>
+                        </div>
+
+                        <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
+                            <div className="flex items-center gap-3 mb-3">
+                                <HardDrive className="w-4 lg:w-5 h-4 lg:h-5 text-blue-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Data Transfer</span>
+                            </div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.dataTransfer}</div>
+                            <div className="text-xs text-cyan-400 mt-1">This month</div>
+                        </div>
+
+                        <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
+                            <div className="flex items-center gap-3 mb-3">
+                                <Rocket className="w-4 lg:w-5 h-4 lg:h-5 text-pink-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Global Users</span>
+                            </div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.globalUsers}</div>
+                            <div className="text-xs text-green-400 mt-1">+5.2% growth</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Custom styles */}
             <style jsx>{`
-                @keyframes glow {
-                    0% { opacity: 0.4; }
-                    100% { opacity: 0.9; }
+                @keyframes float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-20px); }
                 }
                 
-                @keyframes pulse-slow {
-                    0% { opacity: 0.25; }
-                    50% { opacity: 0.35; }
-                    100% { opacity: 0.25; }
+                @keyframes pulse-line {
+                    0%, 100% { opacity: 0.1; }
+                    50% { opacity: 0.3; }
                 }
                 
-                @keyframes shimmer {
-                    0% { background-position: 200% 0; }
-                    100% { background-position: -200% 0; }
+                @keyframes glow-1 {
+                    0%, 100% { box-shadow: 0 0 20px #00d4ff20; }
+                    50% { box-shadow: 0 0 40px #00d4ff40; }
                 }
                 
-                @keyframes blink {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0; }
+                @keyframes glow-2 {
+                    0%, 100% { box-shadow: 0 0 20px #8b5cf620; }
+                    50% { box-shadow: 0 0 40px #8b5cf640; }
+                }
+
+                @keyframes badge-enter {
+                    0% { opacity: 0; transform: translateY(-10px) scale(0.9); }
+                    100% { opacity: 1; transform: translateY(0) scale(1); }
+                }
+                
+                .animate-float {
+                    animation: float 6s ease-in-out infinite;
+                }
+                
+                .animate-pulse-line {
+                    animation: pulse-line 2s ease-in-out infinite;
+                }
+
+                .animate-badge-enter {
+                    animation: badge-enter 0.5s ease-out;
                 }
             `}</style>
-        </section>
+        </div>
     );
 };
 
-export default Hero;
+export default AmoledHero;
