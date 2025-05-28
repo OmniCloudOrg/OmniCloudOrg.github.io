@@ -10,15 +10,102 @@ const AmoledHero = () => {
     const [scrollY, setScrollY] = useState(0);
     const [cpuUsages, setCpuUsages] = useState<number[][]>([]);
     const [currentBadgeIndex, setCurrentBadgeIndex] = useState(0);
+    const [currentFlipWord, setCurrentFlipWord] = useState(0);
+    const [flipWordText, setFlipWordText] = useState('');
+    const [isTypingFlipWord, setIsTypingFlipWord] = useState(false);
+    const [terminalCompleted, setTerminalCompleted] = useState(false);
+    const [cycleStartTime, setCycleStartTime] = useState<number | null>(null);
+    const [progressPercent, setProgressPercent] = useState(0);
+    const [totalCycleDuration, setTotalCycleDuration] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const codeLines = [
-        'npx create-next-app@latest',
-        'cd my-nextjs-app',
-        'omni up',
-        '> Your app is ready on http://localhost:3000',
-        '✨ Deployment optimized'
-    ];
+    // Constants for better control
+    const DISPLAY_DURATION = 6000; // 6 seconds to display completed terminal
+    const TYPING_SPEED = 50; // ms between characters
+    const LINE_DELAY = 800; // ms between lines
+
+    const flipWords = ["Build", "Ship", "Scale"];
+
+    // Different code examples for each technology
+    const codeExamples = {
+        nextjs: [
+            'npx create-next-app@latest my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Building Next.js application...',
+            '✨ Deployed to https://my-app.omni.dev'
+        ],
+        rust: [
+            'cargo new my-rust-app',
+            'cd my-rust-app',
+            'omni deploy --runtime rust',
+            '> Compiling Rust binary...',
+            '✨ Serverless function deployed'
+        ],
+        svelte: [
+            'npm create svelte@latest my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Building SvelteKit app...',
+            '✨ Edge deployment complete'
+        ],
+        react: [
+            'npx create-react-app my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Optimizing React build...',
+            '✨ CDN distribution ready'
+        ],
+        vue: [
+            'npm create vue@latest my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Building Vue.js application...',
+            '✨ Global deployment successful'
+        ],
+        angular: [
+            'ng new my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Building Angular project...',
+            '✨ Production build deployed'
+        ],
+        python: [
+            'mkdir my-python-api',
+            'cd my-python-api',
+            'omni deploy --runtime python',
+            '> Installing dependencies...',
+            '✨ Python API endpoint live'
+        ],
+        nodejs: [
+            'mkdir my-node-api',
+            'cd my-node-api && npm init -y',
+            'omni deploy',
+            '> Packaging Node.js app...',
+            '✨ Microservice deployed'
+        ]
+    };
+
+    const getCurrentCodeLines = () => {
+        const techKeys = Object.keys(codeExamples);
+        const currentTechKey = techKeys[currentBadgeIndex];
+        return codeExamples[currentTechKey] || codeExamples.nextjs;
+    };
+
+    // **NEW: Calculate total cycle duration including typing time**
+    const calculateCycleDuration = (codeLines: string[]) => {
+        let totalTypingTime = 0;
+        
+        // Calculate typing time for each line
+        codeLines.forEach((line, index) => {
+            totalTypingTime += line.length * TYPING_SPEED; // Time to type each character
+            if (index < codeLines.length - 1) {
+                totalTypingTime += LINE_DELAY; // Time between lines
+            }
+        });
+        
+        return totalTypingTime + DISPLAY_DURATION; // Total typing + display time
+    };
 
     // Technology logos from online sources
     const TechIcons = {
@@ -88,7 +175,8 @@ const AmoledHero = () => {
             borderColor: "border-white/30",
             bgColor: "bg-white/5",
             textColor: "text-white",
-            iconColor: "text-white"
+            iconColor: "text-white",
+            progressColor: "#ffffff"
         },
         { 
             icon: TechIcons.rust, 
@@ -96,7 +184,8 @@ const AmoledHero = () => {
             borderColor: "border-orange-500/30",
             bgColor: "bg-orange-500/5",
             textColor: "text-orange-300",
-            iconColor: "text-orange-400"
+            iconColor: "text-orange-400",
+            progressColor: "#fb923c"
         },
         { 
             icon: TechIcons.svelte, 
@@ -104,7 +193,8 @@ const AmoledHero = () => {
             borderColor: "border-red-500/30",
             bgColor: "bg-red-500/5",
             textColor: "text-red-300",
-            iconColor: "text-red-400"
+            iconColor: "text-red-400",
+            progressColor: "#f87171"
         },
         { 
             icon: TechIcons.react, 
@@ -112,7 +202,8 @@ const AmoledHero = () => {
             borderColor: "border-blue-500/30",
             bgColor: "bg-blue-500/5",
             textColor: "text-blue-300",
-            iconColor: "text-blue-400"
+            iconColor: "text-blue-400",
+            progressColor: "#60a5fa"
         },
         { 
             icon: TechIcons.vue, 
@@ -120,7 +211,8 @@ const AmoledHero = () => {
             borderColor: "border-green-500/30",
             bgColor: "bg-green-500/5",
             textColor: "text-green-300",
-            iconColor: "text-green-400"
+            iconColor: "text-green-400",
+            progressColor: "#4ade80"
         },
         { 
             icon: TechIcons.angular, 
@@ -128,7 +220,8 @@ const AmoledHero = () => {
             borderColor: "border-red-600/30",
             bgColor: "bg-red-600/5",
             textColor: "text-red-300",
-            iconColor: "text-red-500"
+            iconColor: "text-red-500",
+            progressColor: "#ef4444"
         },
         { 
             icon: TechIcons.python, 
@@ -136,7 +229,8 @@ const AmoledHero = () => {
             borderColor: "border-yellow-500/30",
             bgColor: "bg-yellow-500/5",
             textColor: "text-yellow-300",
-            iconColor: "text-yellow-400"
+            iconColor: "text-yellow-400",
+            progressColor: "#facc15"
         },
         { 
             icon: TechIcons.nodejs, 
@@ -144,18 +238,117 @@ const AmoledHero = () => {
             borderColor: "border-green-600/30",
             bgColor: "bg-green-600/5",
             textColor: "text-green-300",
-            iconColor: "text-green-500"
+            iconColor: "text-green-500",
+            progressColor: "#22c55e"
         }
     ];
 
-    // Animated badge cycling
+    // **UPDATED: Progress bar animation - tracks entire cycle**
     useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentBadgeIndex((prev) => (prev + 1) % supportedTechs.length);
-        }, 3000);
+        let progressInterval: NodeJS.Timeout;
 
-        return () => clearInterval(interval);
+        if (cycleStartTime && totalCycleDuration > 0) {
+            progressInterval = setInterval(() => {
+                const elapsed = Date.now() - cycleStartTime;
+                const newProgress = Math.min((elapsed / totalCycleDuration) * 100, 100);
+                setProgressPercent(newProgress);
+
+                // Clean up when progress is complete
+                if (newProgress >= 100) {
+                    clearInterval(progressInterval);
+                }
+            }, 16); // ~60fps updates for smooth animation
+        } else {
+            // Reset progress when cycle hasn't started
+            setProgressPercent(0);
+        }
+
+        return () => {
+            if (progressInterval) {
+                clearInterval(progressInterval);
+            }
+        };
+    }, [cycleStartTime, totalCycleDuration]);
+
+    // Simple typewriter flip words animation
+    useEffect(() => {
+        if (!isTypingFlipWord) {
+            const timer = setTimeout(() => {
+                setIsTypingFlipWord(true);
+                setFlipWordText('');
+                
+                // Start typing the current word
+                const currentWord = flipWords[currentFlipWord];
+                let charIndex = 0;
+                
+                const typeInterval = setInterval(() => {
+                    if (charIndex < currentWord.length) {
+                        setFlipWordText(currentWord.slice(0, charIndex + 1));
+                        charIndex++;
+                    } else {
+                        clearInterval(typeInterval);
+                        
+                        // Wait a bit then move to next word
+                        setTimeout(() => {
+                            setCurrentFlipWord((prev) => (prev + 1) % flipWords.length);
+                            setIsTypingFlipWord(false);
+                        }, 1500);
+                    }
+                }, 100); // Typing speed
+                
+            }, 500); // Delay between words
+            
+            return () => clearTimeout(timer);
+        }
+    }, [currentFlipWord, isTypingFlipWord]);
+
+    // Initialize first word
+    useEffect(() => {
+        setFlipWordText(flipWords[0]);
     }, []);
+
+    // **UPDATED: Main badge cycling logic - uses calculated total duration**
+    useEffect(() => {
+        let transitionTimer: NodeJS.Timeout;
+
+        // Only set up transition if we have a cycle start time and total duration
+        if (cycleStartTime && totalCycleDuration > 0) {
+            const elapsed = Date.now() - cycleStartTime;
+            const remainingTime = Math.max(0, totalCycleDuration - elapsed);
+
+            console.log(`Setting transition timer for ${remainingTime}ms (total: ${totalCycleDuration}ms) for tech:`, supportedTechs[currentBadgeIndex].name);
+
+            transitionTimer = setTimeout(() => {
+                console.log('Transitioning to next technology...');
+                setCurrentBadgeIndex((prev) => (prev + 1) % supportedTechs.length);
+            }, remainingTime);
+        }
+
+        return () => {
+            if (transitionTimer) {
+                clearTimeout(transitionTimer);
+            }
+        };
+    }, [cycleStartTime, totalCycleDuration, currentBadgeIndex]);
+
+    // **UPDATED: Reset terminal state when badge changes and start new cycle**
+    useEffect(() => {
+        console.log('Badge changed to:', supportedTechs[currentBadgeIndex].name);
+        
+        // Reset all states
+        setCodeText('');
+        setCurrentLineIndex(0);
+        setTerminalCompleted(false);
+        setProgressPercent(0);
+        
+        // Calculate new cycle duration and start cycle
+        const currentCodeLines = getCurrentCodeLines();
+        const newCycleDuration = calculateCycleDuration(currentCodeLines);
+        setTotalCycleDuration(newCycleDuration);
+        setCycleStartTime(Date.now());
+        
+        console.log(`Starting new cycle for ${supportedTechs[currentBadgeIndex].name}, duration: ${newCycleDuration}ms`);
+    }, [currentBadgeIndex]);
 
     // Generate random CPU usage values
     useEffect(() => {
@@ -206,30 +399,39 @@ const AmoledHero = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Typewriter effect
+    // **UPDATED: Typewriter effect - only manages typing, doesn't control transitions**
     useEffect(() => {
         let timeout: NodeJS.Timeout;
+        const currentCodeLines = getCurrentCodeLines();
         
-        if (currentLineIndex < codeLines.length) {
-            const currentLine = codeLines[currentLineIndex];
+        if (currentLineIndex < currentCodeLines.length && !terminalCompleted) {
+            const currentLine = currentCodeLines[currentLineIndex];
             const currentText = codeText.split('\n')[currentLineIndex] || '';
             
             if (currentText.length < currentLine.length) {
+                // Still typing current line
                 timeout = setTimeout(() => {
                     const lines = codeText.split('\n');
                     lines[currentLineIndex] = currentLine.slice(0, currentText.length + 1);
                     setCodeText(lines.join('\n'));
-                }, 50);
-            } else if (currentLineIndex < codeLines.length - 1) {
+                }, TYPING_SPEED);
+            } else if (currentLineIndex < currentCodeLines.length - 1) {
+                // Move to next line
                 timeout = setTimeout(() => {
                     setCurrentLineIndex(prev => prev + 1);
                     setCodeText(prev => prev + '\n');
-                }, 800);
+                }, LINE_DELAY);
+            } else {
+                // All lines completed - mark terminal as complete
+                console.log('Terminal completed for:', supportedTechs[currentBadgeIndex].name);
+                setTerminalCompleted(true);
             }
         }
 
-        return () => clearTimeout(timeout);
-    }, [codeText, currentLineIndex]);
+        return () => {
+            if (timeout) clearTimeout(timeout);
+        };
+    }, [codeText, currentLineIndex, currentBadgeIndex, terminalCompleted, TYPING_SPEED, LINE_DELAY]);
 
     const features = [
         { icon: <Zap className="w-5 h-5" />, text: "Lightning Fast", detail: "Zero-config builds" },
@@ -288,16 +490,20 @@ const AmoledHero = () => {
                         />
                     ))}
 
-                    {/* Grid pattern */}
+                    {/* Fixed Grid pattern - covers everything including margins */}
                     <div 
-                        className="absolute inset-0 opacity-[0.03]"
+                        className="fixed inset-0 opacity-[0.05] pointer-events-none"
                         style={{
                             backgroundImage: `
                                 linear-gradient(#00ffff 1px, transparent 1px),
                                 linear-gradient(90deg, #00ffff 1px, transparent 1px)
                             `,
-                            backgroundSize: '60px 60px',
-                            transform: `translate(${mousePosition.x * -20}px, ${mousePosition.y * -20}px)`
+                            backgroundSize: '40px 40px',
+                            backgroundPosition: '0 0, 0 0',
+                            left: '-50px',
+                            right: '-50px',
+                            top: '-50px',
+                            bottom: '-50px'
                         }}
                     />
 
@@ -348,14 +554,19 @@ const AmoledHero = () => {
                             </div>
                         </div>
 
-                        {/* Main heading */}
+                        {/* Main heading with simple typewriter flip word */}
                         <div className="space-y-4 lg:space-y-6">
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-none">
-                                <span className="block text-white">Build</span>
-                                <span className="block text-blue-500">
-                                    Ship
+                                <span className="text-white">
+                                    {flipWordText}
+                                    <span className="animate-pulse">|</span>
                                 </span>
-                                <span className="block text-white">Scale</span>
+                                <span className="block text-blue-500 mt-2">
+                                    Fast
+                                </span>
+                                <span className="block text-white mt-2">
+                                    Applications
+                                </span>
                             </h1>
                             
                             <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-lg leading-relaxed">
@@ -405,13 +616,9 @@ const AmoledHero = () => {
 
                     {/* Right side - Terminal & Server Visualization */}
                     <div className="space-y-6 lg:space-y-8 max-w-xl mx-auto lg:mx-0">
-                        {/* Terminal */}
+                        {/* Terminal with Progress Bar */}
                         <div 
-                            className="relative p-4 sm:p-6 lg:p-8 rounded-2xl border border-gray-800 bg-gray-900/30 backdrop-blur-xl shadow-2xl w-full max-w-md mx-auto lg:mx-0"
-                            style={{
-                                transform: `perspective(1000px) rotateY(${(mousePosition.x - 0.5) * -8}deg) rotateX(${(mousePosition.y - 0.5) * 4}deg)`,
-                                transition: 'transform 0.3s ease-out'
-                            }}
+                            className="relative p-4 sm:p-6 lg:p-8 rounded-2xl border border-gray-800 bg-gray-900/30 backdrop-blur-xl shadow-2xl w-full max-w-md mx-auto lg:mx-0 overflow-hidden"
                         >
                             {/* Terminal header */}
                             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-gray-700">
@@ -429,6 +636,26 @@ const AmoledHero = () => {
                                     {codeText}
                                     <span className="animate-pulse text-white">|</span>
                                 </pre>
+                            </div>
+
+                            {/* **UPDATED: Progress Bar - now tracks entire cycle** */}
+                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-800/50">
+                                <div 
+                                    className="h-full transition-all duration-75 ease-linear relative overflow-hidden"
+                                    style={{ 
+                                        width: `${progressPercent}%`,
+                                        backgroundColor: currentTech.progressColor,
+                                        boxShadow: `0 0 8px ${currentTech.progressColor}40`
+                                    }}
+                                >
+                                    {/* Animated shine effect */}
+                                    <div 
+                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                                        style={{
+                                            animation: cycleStartTime ? 'shimmer 2s ease-in-out infinite' : 'none'
+                                        }}
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -600,6 +827,11 @@ const AmoledHero = () => {
                     0% { opacity: 0; transform: translateY(-10px) scale(0.9); }
                     100% { opacity: 1; transform: translateY(0) scale(1); }
                 }
+
+                @keyframes shimmer {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                }
                 
                 .animate-float {
                     animation: float 6s ease-in-out infinite;
@@ -611,6 +843,10 @@ const AmoledHero = () => {
 
                 .animate-badge-enter {
                     animation: badge-enter 0.5s ease-out;
+                }
+
+                .animate-shimmer {
+                    animation: shimmer 2s ease-in-out infinite;
                 }
             `}</style>
         </div>
