@@ -558,15 +558,9 @@ const AmoledHero = () => {
                         {/* Main heading with simple typewriter flip word */}
                         <div className="space-y-4 lg:space-y-6">
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-none">
-                                <span className="text-white">
-                                    {flipWordText}
-                                    <span className="animate-pulse">|</span>
-                                </span>
                                 <span className="block text-blue-500 mt-2">
-                                    Fast
-                                </span>
-                                <span className="block text-white mt-2">
-                                    Applications
+                                    {flipWordText}
+                                    <span className="animate-pulse text-white font-thin">|</span>
                                 </span>
                             </h1>
                             
