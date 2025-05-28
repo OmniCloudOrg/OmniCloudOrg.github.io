@@ -352,7 +352,7 @@ const AmoledHero = () => {
                         <div className="space-y-4 lg:space-y-6">
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight leading-none">
                                 <span className="block text-white">Build</span>
-                                <span className="block text-blue-600">
+                                <span className="block text-blue-500">
                                     Ship
                                 </span>
                                 <span className="block text-white">Scale</span>
