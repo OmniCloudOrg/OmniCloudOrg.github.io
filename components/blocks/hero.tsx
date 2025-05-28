@@ -264,7 +264,7 @@ const AmoledHero = () => {
     };
 
     return (
-        <div className="relative bg-black">
+        <div className="relative bg-black p-20">
             <div 
                 ref={containerRef}
                 className="relative min-h-screen max-h-screen lg:max-h-none overflow-hidden flex items-center justify-center pt-8 sm:pt-12 lg:pt-0"
