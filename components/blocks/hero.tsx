@@ -86,8 +86,9 @@ const AmoledHero = () => {
         ]
     };
 
+    type CodeExampleKey = keyof typeof codeExamples;
     const getCurrentCodeLines = () => {
-        const techKeys = Object.keys(codeExamples);
+        const techKeys = Object.keys(codeExamples) as CodeExampleKey[];
         const currentTechKey = techKeys[currentBadgeIndex];
         return codeExamples[currentTechKey] || codeExamples.nextjs;
     };
