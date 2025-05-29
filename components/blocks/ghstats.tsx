@@ -266,18 +266,6 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detai
                 }}
             />
 
-            {/* Status indicator */}
-            <div className="absolute top-6 right-6 flex items-center gap-2">
-                <div 
-                    className="w-2 h-2 rounded-full animate-pulse"
-                    style={{ 
-                        backgroundColor: color.primary,
-                        boxShadow: `0 0 10px ${color.primary}`
-                    }}
-                />
-                <span className="text-xs text-gray-500 font-mono">LIVE</span>
-            </div>
-
             <div className="relative h-full flex flex-col">
                 {/* Enhanced icon */}
                 <div 
