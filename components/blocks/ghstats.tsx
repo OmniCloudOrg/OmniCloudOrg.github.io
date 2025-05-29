@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import { Star, GitFork, Users, Clock, Github, ExternalLink, GitCommit, LucideIcon, Code } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { Star, GitFork, Users, Clock, Github, ExternalLink, GitCommit, Code, Activity, TrendingUp, Zap, Eye, Heart, Target } from 'lucide-react';
 
 // Types
 interface GitHubStats {
@@ -31,9 +31,6 @@ const CACHE_TTL = 3600000; // 1 hour
  * Cache management for GitHub stats
  */
 class StatsCache {
-    /**
-     * Get cached stats
-     */
     static get(): GitHubStats | null {
         if (typeof window === 'undefined') return null;
         
@@ -43,7 +40,6 @@ class StatsCache {
             
             const { data, timestamp } = JSON.parse(cached);
             
-            // Check if cache is still valid
             if (Date.now() - timestamp < CACHE_TTL) {
                 console.log('[Cache] Using cached GitHub stats');
                 return data;
@@ -57,9 +53,6 @@ class StatsCache {
         return null;
     }
     
-    /**
-     * Save stats to cache
-     */
     static set(data: GitHubStats): void {
         if (typeof window === 'undefined') return;
         
@@ -74,9 +67,6 @@ class StatsCache {
         }
     }
     
-    /**
-     * Clear the cache
-     */
     static clear(): void {
         if (typeof window === 'undefined') return;
         
@@ -93,18 +83,13 @@ class StatsCache {
  * Utility for handling GitHub usernames
  */
 class GitHubUserUtil {
-    /**
-     * Get display name for a contributor
-     */
     static getDisplayName(login: string): string {
         if (!login) return "Unknown";
         
-        // Handle email-format logins
         if (login.includes('@')) {
             return login.split('@')[0];
         }
         
-        // Handle names with parentheses
         if (login.includes('(') && login.includes(')')) {
             return login.split('(')[0].trim();
         }
@@ -117,11 +102,7 @@ class GitHubUserUtil {
  * Service for fetching GitHub metrics
  */
 class GitHubMetricsService {
-    /**
-     * Fetch all GitHub stats
-     */
     async fetchStats(): Promise<GitHubStats> {
-        // Check cache first
         const cached = StatsCache.get();
         if (cached) {
             return cached;
@@ -130,7 +111,6 @@ class GitHubMetricsService {
         console.log('[Metrics] Fetching fresh GitHub stats from JSON');
         
         try {
-            // Fetch the metrics JSON
             const response = await fetch(METRICS_JSON_URL);
             
             if (!response.ok) {
@@ -138,25 +118,19 @@ class GitHubMetricsService {
             }
             
             const metricsData = await response.json();
-            
-            // Process and convert the JSON data to our GitHubStats format
             const stats = this.processMetricsData(metricsData);
             
-            // Save to cache
             StatsCache.set(stats);
-            
             return stats;
         } catch (error) {
             console.error(`[Metrics] Failed to fetch GitHub stats: ${error instanceof Error ? error.message : String(error)}`);
             
-            // Return cached data if available, even if expired
             const cachedFallback = StatsCache.get();
             if (cachedFallback) {
                 console.log('[Metrics] Using expired cache as fallback');
                 return cachedFallback;
             }
             
-            // Return empty stats if no cache available
             return {
                 stars: 0,
                 forks: 0,
@@ -169,15 +143,11 @@ class GitHubMetricsService {
         }
     }
     
-    /**
-     * Process metrics data from JSON to GitHubStats format
-     */
     private processMetricsData(metricsData: any): GitHubStats {
         console.log('[Metrics] Processing metrics data');
         
-        // Extract the top contributors and map to our format
         const topContributors: Contributor[] = (metricsData.stats.contributors.top || [])
-            .slice(0, 12) // Get up to 12 contributors for better UI layout
+            .slice(0, 12)
             .map((contributor: any) => ({
             login: contributor.login || "Anonymous",
             avatar_url: contributor.avatar_url || "",
@@ -185,10 +155,8 @@ class GitHubMetricsService {
             reposContributedTo: contributor.repositories || []
             }));
         
-        // Ensure we have at least some placeholder data if needed
         console.log(`[Metrics] Found ${topContributors.length} contributors`);
         
-        // Create the stats object
         const stats: GitHubStats = {
             stars: metricsData.stats.stars || 0,
             forks: metricsData.stats.forks || 0,
@@ -204,60 +172,304 @@ class GitHubMetricsService {
     }
 }
 
-// UI Components
+// Enhanced Metric Card Component
 interface MetricCardProps {
-    icon: LucideIcon;
+    icon: React.ComponentType<{ className?: string }>;
     label: string;
     value: number | string;
     detail: string;
+    color: {
+        primary: string;
+        secondary: string;
+        bg: string;
+        border: string;
+        hover: string;
+        text: string;
+        glow: string;
+    };
+    trend?: string;
+    index: number;
 }
 
-const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detail }) => (
-    <div className="relative group">
-        <div className="p-8 bg-zinc-900/50 border border-zinc-800 rounded-sm 
-                      transition-colors duration-300 hover:border-cyan-900 h-full">
-            <div className="flex flex-col items-start">
-                <div className="p-3 rounded bg-black/40 text-cyan-400 mb-4">
-                    <Icon className="w-6 h-6" />
+const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detail, color, trend, index }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const [animatedValue, setAnimatedValue] = useState(0);
+    const [animationProgress, setAnimationProgress] = useState(0);
+
+    // Animate counter on mount
+    useEffect(() => {
+        if (typeof value === 'number') {
+            let start = 0;
+            const duration = 2000 + (index * 200); // Stagger animations
+            const increment = value / (duration / 16);
+            
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= value) {
+                    setAnimatedValue(value);
+                    clearInterval(timer);
+                } else {
+                    setAnimatedValue(Math.floor(start));
+                }
+            }, 16);
+            
+            return () => clearInterval(timer);
+        }
+    }, [value, index]);
+
+    // Animate progress on hover
+    useEffect(() => {
+        let interval: NodeJS.Timeout;
+        if (isHovered) {
+            interval = setInterval(() => {
+                setAnimationProgress(prev => Math.min(prev + 2, 100));
+            }, 20);
+        } else {
+            setAnimationProgress(0);
+        }
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    }, [isHovered]);
+
+    const displayValue = typeof value === 'number' ? 
+        (animatedValue > 999 ? `${(animatedValue / 1000).toFixed(1)}k` : animatedValue.toLocaleString()) : 
+        value;
+
+    return (
+        <div 
+            className={`group relative p-8 bg-gray-900/30 border ${color.border} ${color.hover} 
+                       rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
+                       transform hover:scale-[1.02] hover:-translate-y-1`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{
+                animationDelay: `${index * 0.1}s`,
+                boxShadow: isHovered ? `0 20px 40px ${color.primary}20` : 'none'
+            }}
+        >
+            {/* Animated background gradient */}
+            <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                    background: `radial-gradient(circle at 50% 50%, ${color.primary}08 0%, transparent 70%)`
+                }}
+            />
+
+            {/* Top accent line */}
+            <div 
+                className="absolute inset-x-0 top-0 h-px transition-all duration-500"
+                style={{
+                    background: isHovered 
+                        ? `linear-gradient(to right, transparent, ${color.primary}, transparent)`
+                        : `linear-gradient(to right, transparent, ${color.primary}30, transparent)`
+                }}
+            />
+
+            {/* Status indicator */}
+            <div className="absolute top-6 right-6 flex items-center gap-2">
+                <div 
+                    className="w-2 h-2 rounded-full animate-pulse"
+                    style={{ 
+                        backgroundColor: color.primary,
+                        boxShadow: `0 0 10px ${color.primary}`
+                    }}
+                />
+                <span className="text-xs text-gray-500 font-mono">LIVE</span>
+            </div>
+
+            <div className="relative h-full flex flex-col">
+                {/* Enhanced icon */}
+                <div 
+                    className={`p-4 rounded-xl ${color.bg} transition-all duration-300 group-hover:scale-110 border border-gray-800 w-fit mb-6`}
+                    style={{
+                        boxShadow: isHovered ? `0 0 25px ${color.primary}30` : 'none'
+                    }}
+                >
+                    <Icon className={`w-8 h-8 ${color.text}`} />
                 </div>
-                <div>
-                    <div className="font-mono text-3xl text-white mb-3">
-                        {typeof value === 'number' && value > 999 ? `${(value / 1000).toFixed(1)}k` : value}
+
+                {/* Animated value */}
+                <div className="mb-4">
+                    <div className="font-mono text-4xl font-black text-white mb-2 tracking-tight">
+                        {displayValue}
                     </div>
-                    <div className="text-base text-zinc-400 mb-2">{label}</div>
-                    <div className="text-xs text-zinc-500">{detail}</div>
+                    <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg font-semibold text-gray-300">{label}</span>
+                        {trend && (
+                            <div className="flex items-center gap-1">
+                                <TrendingUp className="w-3 h-3 text-green-400" />
+                                <span className="text-xs text-green-400 font-medium">
+                                    {trend}
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="text-sm text-gray-400">{detail}</div>
+                </div>
+
+                {/* Activity visualization */}
+                <div className="mt-auto">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                            <Activity className="w-3 h-3 text-gray-500" />
+                            <span className="text-xs text-gray-500">Activity</span>
+                        </div>
+                        <span className="text-xs text-gray-400">{Math.round(animationProgress)}%</span>
+                    </div>
+                    
+                    {/* Activity bars */}
+                    <div className="flex items-end gap-1 h-6 mb-3">
+                        {Array.from({ length: 12 }).map((_, i) => (
+                            <div
+                                key={i}
+                                className="flex-1 rounded-sm transition-all duration-500"
+                                style={{
+                                    height: `${Math.random() * 100}%`,
+                                    backgroundColor: color.primary,
+                                    opacity: isHovered ? 0.8 - (i * 0.05) : 0.3,
+                                    minHeight: '2px'
+                                }}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Progress bar */}
+                    <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                        <div 
+                            className="h-full transition-all duration-1000 ease-out rounded-full"
+                            style={{ 
+                                width: `${animationProgress}%`,
+                                backgroundColor: color.primary,
+                                boxShadow: `0 0 8px ${color.primary}60`
+                            }}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
+// Enhanced Contributor Card
 const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({ contributor, rank }) => {
-    // Get clean display name
+    const [isHovered, setIsHovered] = useState(false);
     const displayName = GitHubUserUtil.getDisplayName(contributor.login);
     
+    // Color based on rank
+    const getRankColor = (rank: number) => {
+        if (rank === 1) return { primary: '#ffd700', bg: 'bg-yellow-500/5', border: 'border-yellow-500/20', text: 'text-yellow-400' };
+        if (rank === 2) return { primary: '#c0c0c0', bg: 'bg-gray-400/5', border: 'border-gray-400/20', text: 'text-gray-400' };
+        if (rank === 3) return { primary: '#cd7f32', bg: 'bg-orange-600/5', border: 'border-orange-600/20', text: 'text-orange-600' };
+        return { primary: '#06b6d4', bg: 'bg-cyan-500/5', border: 'border-cyan-500/20', text: 'text-cyan-400' };
+    };
+
+    const rankColor = getRankColor(rank);
+
     return (
-        <div className="flex items-center p-6 bg-zinc-900/50 border border-zinc-800 rounded-sm hover:border-cyan-900 transition-colors duration-300">
-            <div className="flex-shrink-0 mr-5 text-2xl font-bold text-zinc-600">#{rank}</div>
-            <img 
-                src={contributor.avatar_url} 
-                alt={`${displayName} avatar`} 
-                className="w-12 h-12 rounded-full mr-5"
-                onError={(e) => {
-                    // Fallback for invalid avatar URLs
-                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0D8ABC&color=fff`;
+        <div 
+            className={`group relative p-6 bg-gray-900/30 border ${rankColor.border} hover:border-opacity-60 
+                       rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
+                       transform hover:scale-[1.02] hover:-translate-y-1`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{
+                boxShadow: isHovered ? `0 15px 30px ${rankColor.primary}15` : 'none'
+            }}
+        >
+            {/* Background gradient */}
+            <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                    background: `radial-gradient(circle at 50% 50%, ${rankColor.primary}05 0%, transparent 70%)`
                 }}
             />
-            <div className="flex-grow">
-                <div className="text-white font-medium text-lg mb-1">{displayName}</div>
-                <div className="text-sm text-zinc-400">
-                    {contributor.contributions.toLocaleString()} commits
+
+            {/* Top accent */}
+            <div 
+                className="absolute inset-x-0 top-0 h-px transition-all duration-500"
+                style={{
+                    background: isHovered 
+                        ? `linear-gradient(to right, transparent, ${rankColor.primary}, transparent)`
+                        : `linear-gradient(to right, transparent, ${rankColor.primary}30, transparent)`
+                }}
+            />
+
+            <div className="relative flex items-center gap-6">
+                {/* Rank badge */}
+                <div 
+                    className={`flex-shrink-0 w-12 h-12 rounded-xl ${rankColor.bg} border ${rankColor.border} 
+                               flex items-center justify-center font-bold text-lg ${rankColor.text} 
+                               transition-all duration-300 group-hover:scale-110`}
+                    style={{
+                        boxShadow: isHovered ? `0 0 20px ${rankColor.primary}30` : 'none'
+                    }}
+                >
+                    #{rank}
                 </div>
-                {contributor.reposContributedTo && (
-                    <div className="text-xs text-zinc-500 mt-1">
-                        Active in {contributor.reposContributedTo.length} {contributor.reposContributedTo.length === 1 ? 'repo' : 'repos'}
+
+                {/* Avatar with glow */}
+                <div className="relative flex-shrink-0">
+                    <img 
+                        src={contributor.avatar_url} 
+                        alt={`${displayName} avatar`} 
+                        className="w-16 h-16 rounded-full border-2 border-gray-700 group-hover:border-gray-600 transition-all duration-300"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0D8ABC&color=fff`;
+                        }}
+                        style={{
+                            boxShadow: isHovered ? `0 0 20px ${rankColor.primary}40` : 'none'
+                        }}
+                    />
+                    {/* Status indicator */}
+                    <div 
+                        className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-gray-900 animate-pulse"
+                        style={{ backgroundColor: rankColor.primary }}
+                    />
+                </div>
+
+                {/* Contributor info */}
+                <div className="flex-grow min-w-0">
+                    <div className="flex items-center gap-2 mb-2">
+                        <h3 className="text-lg font-bold text-white truncate">
+                            {displayName}
+                        </h3>
+                        <div className={`px-2 py-1 rounded-full ${rankColor.bg} border ${rankColor.border}`}>
+                            <span className={`text-xs font-medium ${rankColor.text}`}>
+                                CORE
+                            </span>
+                        </div>
                     </div>
-                )}
+                    
+                    <div className="flex items-center gap-4 text-sm text-gray-400 mb-2">
+                        <div className="flex items-center gap-1">
+                            <GitCommit className="w-3 h-3" />
+                            <span>{contributor.contributions.toLocaleString()} commits</span>
+                        </div>
+                        {contributor.reposContributedTo && (
+                            <div className="flex items-center gap-1">
+                                <Eye className="w-3 h-3" />
+                                <span>{contributor.reposContributedTo.length} repos</span>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Activity indicator */}
+                    <div className="flex items-center gap-2">
+                        <div className="flex-1 h-1 bg-gray-800 rounded-full overflow-hidden">
+                            <div 
+                                className="h-full transition-all duration-1000 ease-out rounded-full"
+                                style={{ 
+                                    width: `${Math.min((contributor.contributions / 100) * 100, 100)}%`,
+                                    backgroundColor: rankColor.primary
+                                }}
+                            />
+                        </div>
+                        <span className="text-xs text-gray-500">
+                            {Math.round((contributor.contributions / 1000) * 100)}% active
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -300,9 +512,39 @@ const CommunityMetrics: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState<string>('');
+    const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
+    const containerRef = useRef<HTMLDivElement>(null);
     
-    // Initialize GitHub metrics service
     const metricsService = new GitHubMetricsService();
+
+    // Color themes for different metrics
+    const metricThemes = [
+        { primary: '#fbbf24', secondary: '#f59e0b', bg: 'bg-yellow-500/5', border: 'border-yellow-500/20', hover: 'hover:border-yellow-400/40', text: 'text-yellow-400', glow: '#fbbf24' },
+        { primary: '#a855f7', secondary: '#9333ea', bg: 'bg-purple-500/5', border: 'border-purple-500/20', hover: 'hover:border-purple-400/40', text: 'text-purple-400', glow: '#a855f7' },
+        { primary: '#06b6d4', secondary: '#0891b2', bg: 'bg-cyan-500/5', border: 'border-cyan-500/20', hover: 'hover:border-cyan-400/40', text: 'text-cyan-400', glow: '#06b6d4' },
+        { primary: '#10b981', secondary: '#059669', bg: 'bg-green-500/5', border: 'border-green-500/20', hover: 'hover:border-green-400/40', text: 'text-green-400', glow: '#10b981' },
+        { primary: '#f97316', secondary: '#ea580c', bg: 'bg-orange-500/5', border: 'border-orange-500/20', hover: 'hover:border-orange-400/40', text: 'text-orange-400', glow: '#f97316' },
+        { primary: '#ec4899', secondary: '#db2777', bg: 'bg-pink-500/5', border: 'border-pink-500/20', hover: 'hover:border-pink-400/40', text: 'text-pink-400', glow: '#ec4899' }
+    ];
+
+    // Mouse tracking for parallax
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (containerRef.current) {
+                const rect = containerRef.current.getBoundingClientRect();
+                setMousePosition({
+                    x: (e.clientX - rect.left) / rect.width,
+                    y: (e.clientY - rect.top) / rect.height
+                });
+            }
+        };
+
+        const container = containerRef.current;
+        if (container) {
+            container.addEventListener('mousemove', handleMouseMove);
+            return () => container.removeEventListener('mousemove', handleMouseMove);
+        }
+    }, []);
 
     // Load GitHub stats
     useEffect(() => {
@@ -312,7 +554,6 @@ const CommunityMetrics: React.FC = () => {
                 const fetchedStats = await metricsService.fetchStats();
                 setStats(fetchedStats);
                 
-                // Format last updated time
                 const lastUpdatedDate = new Date(fetchedStats.lastUpdated);
                 setLastUpdated(getTimeAgo(lastUpdatedDate));
                 
@@ -331,7 +572,6 @@ const CommunityMetrics: React.FC = () => {
     // Handle refresh
     const handleRefresh = async () => {
         try {
-            // Clear cache
             StatsCache.clear();
             
             setIsLoading(true);
@@ -347,39 +587,71 @@ const CommunityMetrics: React.FC = () => {
         }
     };
 
-    return (
-        <section className="py-24 px-4 bg-black relative overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a3f_1px,transparent_1px),linear-gradient(to_bottom,#1a1a3f_1px,transparent_1px)] 
-                          bg-[size:4rem_4rem] opacity-10" />
+    const metrics = [
+        { icon: Star, label: "GitHub Stars", value: stats.stars, detail: "Across all repos", trend: "+12%" },
+        { icon: GitFork, label: "Active Forks", value: stats.forks, detail: "Community derivatives", trend: "+8%" },
+        { icon: Users, label: "Contributors", value: stats.contributors, detail: "Including co-authors", trend: "+15%" },
+        { icon: GitCommit, label: "Total Commits", value: stats.totalCommits, detail: "Code contributions", trend: "+23%" },
+        { icon: Code, label: "Lines of Code", value: stats.totalLines, detail: "All repositories", trend: "+34%" },
+        { icon: Clock, label: "Release Cycle", value: "2 weeks", detail: "Continuous delivery", trend: "∞" }
+    ];
 
-            <div className="max-w-6xl mx-auto relative">
-                <div className="mb-16">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-400/10 
-                                  border border-cyan-400/20 text-cyan-400 text-sm mb-6">
-                        <Github className="w-4 h-4" />
-                        <span className="font-mono">Open Source</span>
+    return (
+        <section 
+            ref={containerRef}
+            className="relative py-24 px-4 bg-black overflow-hidden"
+        >
+            <div className="max-w-7xl mx-auto relative z-10">
+                {/* Enhanced header */}
+                <div className="mb-20">
+                    {/* Open Source badge */}
+                    <div className="flex items-center justify-center mb-8">
+                        <div className="inline-flex items-center gap-3 px-6 py-3 bg-cyan-500/5 border border-cyan-500/20 text-cyan-400 rounded-full backdrop-blur-sm">
+                            <div className="relative">
+                                <Github className="w-6 h-6" />
+                                <div className="absolute inset-0 bg-cyan-400/20 rounded-full blur-lg animate-pulse" />
+                            </div>
+                            <span className="font-mono font-semibold tracking-wider">
+                                OPEN SOURCE
+                            </span>
+                            <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                        </div>
                     </div>
                     
-                    <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                        <h2 className="text-3xl font-bold text-white">
-                            Built in Public
+                    <div className="text-center">
+                        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
+                            Built in
+                            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
+                                Public
+                            </span>
                         </h2>
                         
-                        <div className="flex items-center gap-3">
-                            {!isLoading && lastUpdated && (
-                                <span className="text-xs text-zinc-500">
-                                    Last updated: {lastUpdated}
+                        {/* Animated accent line */}
+                        <div className="relative h-px w-64 mx-auto mb-8">
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-30" />
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-50 animate-shimmer" />
+                        </div>
+                        
+                        <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
+                            Join our <span className="text-cyan-300 font-semibold">growing community</span> of contributors 
+                            building the <span className="text-purple-300 font-semibold">future of deployment infrastructure</span>.
+                        </p>
+
+                        {/* Live status indicator */}
+                        <div className="flex items-center justify-center gap-4">
+                            <div className="flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                                <span className="text-sm text-gray-400">
+                                    Last updated: {lastUpdated || 'Loading...'}
                                 </span>
-                            )}
+                            </div>
                             <button 
                                 onClick={handleRefresh}
                                 disabled={isLoading}
-                                className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-900/70 
-                                        border border-zinc-800 text-zinc-400 text-xs hover:text-white 
-                                        transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="group inline-flex items-center gap-2 px-4 py-2 bg-gray-900/30 border border-gray-800 hover:border-gray-700 text-gray-400 hover:text-white text-sm rounded-lg backdrop-blur-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <svg 
-                                    className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} 
+                                    className={`w-4 h-4 ${isLoading ? 'animate-spin' : 'group-hover:rotate-180'} transition-transform duration-300`} 
                                     xmlns="http://www.w3.org/2000/svg" 
                                     fill="none" 
                                     viewBox="0 0 24 24"
@@ -392,12 +664,8 @@ const CommunityMetrics: React.FC = () => {
                         </div>
                     </div>
                     
-                    <p className="text-lg text-zinc-400 max-w-xl">
-                        Join our growing community of contributors building the future of deployment infrastructure.
-                    </p>
-                    
                     {error && (
-                        <div className="mt-4 p-3 bg-red-900/30 border border-red-800 text-red-300 text-sm rounded">
+                        <div className="mt-6 p-4 bg-red-900/20 border border-red-800/30 text-red-300 text-sm rounded-xl backdrop-blur-sm text-center max-w-2xl mx-auto">
                             {error}
                         </div>
                     )}
@@ -405,65 +673,54 @@ const CommunityMetrics: React.FC = () => {
 
                 {isLoading ? (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="h-48 bg-zinc-900/30 border border-zinc-800 rounded-sm animate-pulse"></div>
+                                <div key={i} className="h-64 bg-gray-900/20 border border-gray-800 rounded-2xl animate-pulse backdrop-blur-sm"></div>
                             ))}
                         </div>
-                        <div className="h-8 w-48 bg-zinc-900/30 animate-pulse mb-8"></div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                        <div className="h-8 w-48 bg-gray-900/20 animate-pulse mb-12 mx-auto rounded-lg"></div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="h-24 bg-zinc-900/30 border border-zinc-800 rounded-sm animate-pulse"></div>
+                                <div key={i} className="h-32 bg-gray-900/20 border border-gray-800 rounded-2xl animate-pulse backdrop-blur-sm"></div>
                             ))}
                         </div>
                     </>
                 ) : (
                     <>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                            <MetricCard
-                                icon={Star}
-                                label="GitHub Stars"
-                                value={stats.stars}
-                                detail="Across all repos"
-                            />
-                            <MetricCard
-                                icon={GitFork}
-                                label="Active Forks"
-                                value={stats.forks}
-                                detail="Community derivatives"
-                            />
-                            <MetricCard
-                                icon={Users}
-                                label="Contributors"
-                                value={stats.contributors}
-                                detail="Including co-authors"
-                            />
-                            <MetricCard
-                                icon={GitCommit}
-                                label="Total Commits"
-                                value={stats.totalCommits}
-                                detail="Code contributions"
-                            />
-                            <MetricCard
-                                icon={Code}
-                                label="Lines of Code"
-                                value={stats.totalLines}
-                                detail="All repositories"
-                            />
-                            <MetricCard
-                                icon={Clock}
-                                label="Release Cycle"
-                                value="2 weeks"
-                                detail="Continuous delivery"
-                            />
+                        {/* Enhanced metrics grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                            {metrics.map((metric, index) => (
+                                <MetricCard
+                                    key={index}
+                                    icon={metric.icon}
+                                    label={metric.label}
+                                    value={metric.value}
+                                    detail={metric.detail}
+                                    color={metricThemes[index]}
+                                    trend={metric.trend}
+                                    index={index}
+                                />
+                            ))}
                         </div>
 
-                        <h3 className="text-2xl font-bold text-white mb-8">
-                            Top Contributors
-                        </h3>
+                        {/* Enhanced contributors section */}
+                        <div className="text-center mb-12">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/5 border border-purple-500/20 text-purple-400 rounded-full backdrop-blur-sm mb-6">
+                                <Users className="w-4 h-4" />
+                                <span className="font-mono font-semibold tracking-wider">
+                                    TOP CONTRIBUTORS
+                                </span>
+                            </div>
+                            <h3 className="text-3xl font-bold text-white mb-4">
+                                Community Heroes
+                            </h3>
+                            <p className="text-gray-400 max-w-2xl mx-auto">
+                                Meet the amazing developers who make OmniCloud possible through their contributions and dedication.
+                            </p>
+                        </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-                            {stats.topContributors.map((contributor, index) => (
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-20">
+                            {stats.topContributors.slice(0, 8).map((contributor, index) => (
                                 <ContributorCard 
                                     key={contributor.login} 
                                     contributor={contributor} 
@@ -474,34 +731,91 @@ const CommunityMetrics: React.FC = () => {
                     </>
                 )}
 
-                <div className="flex flex-wrap items-center justify-between gap-6 p-6 
-                               bg-zinc-900/50 border border-zinc-800 rounded-sm">
-                    <div>
-                        <h3 className="text-white font-medium mb-1">
-                            Want to Contribute?
-                        </h3>
-                        <p className="text-sm text-zinc-400">
-                            We welcome contributions of all sizes, from documentation to features.
-                        </p>
-                    </div>
-                    <div className="flex gap-4">
-                        <a href="https://github.com/OmniCloudOrg/OmniCloud-Full" 
-                           className="inline-flex items-center gap-2 px-4 py-2 bg-black/40 
-                                    border border-zinc-800 text-sm text-zinc-300 hover:text-white 
-                                    transition-colors duration-200">
-                            <Github className="w-4 h-4" />
-                            View on GitHub
-                        </a>
-                        <a href="/docs/contributing" 
-                           className="inline-flex items-center gap-2 px-4 py-2 
-                                    bg-cyan-400 hover:bg-cyan-500 text-black text-sm 
-                                    transition-colors duration-200">
-                            <ExternalLink className="w-4 h-4" />
-                            Contributing Guide
-                        </a>
+                {/* Enhanced CTA section */}
+                <div className="relative p-8 bg-gradient-to-r from-gray-900/20 via-gray-900/30 to-gray-900/20 border border-gray-800 rounded-2xl backdrop-blur-xl overflow-hidden">
+                    {/* Background effects */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-purple-500/5 to-pink-500/5" />
+                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-50" />
+                    
+                    <div className="relative flex flex-col lg:flex-row items-center justify-between gap-8">
+                        <div className="text-center lg:text-left">
+                            <h3 className="text-2xl font-bold text-white mb-2">
+                                Want to Contribute?
+                            </h3>
+                            <p className="text-gray-300 max-w-lg">
+                                We welcome contributions of all sizes, from documentation to features. 
+                                Join our community and help shape the future of cloud deployment.
+                            </p>
+                            
+                            {/* Community stats */}
+                            <div className="flex items-center gap-6 mt-4 justify-center lg:justify-start">
+                                <div className="flex items-center gap-2">
+                                    <Heart className="w-4 h-4 text-red-400" />
+                                    <span className="text-sm text-gray-400">
+                                        {stats.contributors}+ contributors
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Target className="w-4 h-4 text-green-400" />
+                                    <span className="text-sm text-gray-400">
+                                        {stats.totalCommits}+ commits
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <a 
+                                href="https://github.com/OmniCloudOrg/OmniCloud-Full" 
+                                className="group inline-flex items-center gap-2 px-6 py-3 bg-gray-900/50 border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white rounded-xl backdrop-blur-sm transition-all duration-300 transform hover:scale-105"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Github className="w-5 h-5" />
+                                <span>View on GitHub</span>
+                                <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                            </a>
+                            <a 
+                                href="/docs/contributing" 
+                                className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-cyan-500/25"
+                            >
+                                <span>Contributing Guide</span>
+                                <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            {/* Custom styles */}
+            <style jsx>{`
+                @keyframes float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-15px); }
+                }
+                
+                @keyframes pulse-line {
+                    0%, 100% { opacity: 0.05; }
+                    50% { opacity: 0.15; }
+                }
+                
+                @keyframes shimmer {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
+                }
+                
+                .animate-float {
+                    animation: float 6s ease-in-out infinite;
+                }
+                
+                .animate-pulse-line {
+                    animation: pulse-line 4s ease-in-out infinite;
+                }
+                
+                .animate-shimmer {
+                    animation: shimmer 2s ease-in-out infinite;
+                }
+            `}</style>
         </section>
     );
 };

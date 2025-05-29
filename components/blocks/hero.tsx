@@ -474,22 +474,31 @@ const AmoledHero = () => {
             >
                 {/* Animated background elements */}
                 <div className="absolute inset-0">
-                    {/* Floating orbs */}
-                    {Array.from({ length: 6 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className="absolute rounded-full opacity-20 animate-float"
-                            style={{
-                                width: `${120 + i * 40}px`,
-                                height: `${120 + i * 40}px`,
-                                background: `radial-gradient(circle, ${['#00ffff', '#ff0080', '#8000ff'][i % 3]} 0%, transparent 70%)`,
-                                left: `${10 + i * 15}%`,
-                                top: `${5 + i * 12}%`,
-                                animationDelay: `${i * 1.2}s`,
-                                transform: `translate(${(mousePosition.x - 0.5) * (30 + i * 10)}px, ${(mousePosition.y - 0.5) * (20 + i * 8)}px)`
-                            }}
-                        />
-                    ))}
+                   {/* Floating orbs */}
+                    {Array.from({ length: 6 }).map((_, i) => {
+                        const size = 120 + i * 40;
+                        const maxMovement = 30 + i * 10;
+                        // Calculate safe positioning that accounts for size and parallax movement
+                        const safeMargin = (size / 2) + maxMovement;
+                        const leftPercent = 15 + (i * 12); // More conservative spacing
+                        const topPercent = 10 + (i * 10);
+                        
+                        return (
+                            <div
+                                key={i}
+                                className="absolute rounded-full opacity-20 animate-float"
+                                style={{
+                                    width: `${size}px`,
+                                    height: `${size}px`,
+                                    background: `radial-gradient(circle, ${['#00ffff', '#ff0080', '#8000ff'][i % 3]} 0%, transparent 70%)`,
+                                    left: `${Math.max(5, Math.min(leftPercent, 75))}%`,
+                                    top: `${Math.max(5, Math.min(topPercent, 70))}%`,
+                                    animationDelay: `${i * 1.2}s`,
+                                    transform: `translate(${(mousePosition.x - 0.5) * Math.min(maxMovement, 40)}px, ${(mousePosition.y - 0.5) * Math.min(maxMovement * 0.7, 30)}px)`
+                                }}
+                            />
+                        );
+                    })}
 
                     {/* Fixed Grid pattern - covers everything including margins */}
                     <div 
