@@ -180,7 +180,6 @@ const FeaturesPage = () => {
   ];
 
   const stats = [
-    { value: "99.99%", label: "Uptime SLA", icon: Shield },
     { value: "<30s", label: "Deployment Time", icon: Zap },
     { value: "150+", label: "Integrations", icon: Settings },
     { value: "24/7", label: "Expert Support", icon: Star }
