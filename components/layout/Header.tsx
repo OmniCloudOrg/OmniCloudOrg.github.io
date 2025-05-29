@@ -258,6 +258,52 @@ const Header = () => {
         )}
       </div>
 
+      {/* Development Warning Banner */}
+      <div 
+        data-dev-banner
+        className="relative border-t border-gray-800/30 bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-red-500/10 backdrop-blur-xl overflow-hidden"
+      >
+        {/* Background effects */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-orange-500/5 to-red-500/5 opacity-50" />
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/50 to-transparent animate-pulse" />
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center justify-center gap-3 text-center">
+            {/* Warning icon */}
+            <div className="flex-shrink-0 p-1.5 rounded-full bg-amber-500/20 border border-amber-500/30">
+              <svg className="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            
+            {/* Warning text */}
+            <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+              <span className="text-sm font-semibold text-amber-300">
+                ⚠️ Development Notice
+              </span>
+              <span className="hidden sm:block text-gray-400">•</span>
+              <span className="text-xs sm:text-sm text-gray-300">
+                OmniCloud is currently in active development. Features may be incomplete or change without notice.
+              </span>
+            </div>
+            
+            {/* Optional close button */}
+            <button 
+              className="flex-shrink-0 p-1 text-gray-400 hover:text-white transition-colors duration-200 rounded-md hover:bg-gray-800/50"
+              onClick={() => {
+                // You could implement banner dismissal logic here
+                const banner = document.querySelector('[data-dev-banner]');
+                if (banner) banner.style.display = 'none';
+              }}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Custom styles */}
       <style jsx>{`
         @keyframes float {
