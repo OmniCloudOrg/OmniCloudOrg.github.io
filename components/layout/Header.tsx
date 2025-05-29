@@ -295,7 +295,7 @@ const Header = () => {
               onClick={() => {
                 // You could implement banner dismissal logic here
                 const banner = document.querySelector('[data-dev-banner]');
-                if (banner) banner.style.display = 'none';
+                if (banner) (banner as HTMLElement).style.display = 'none';
               }}
             >
               <X className="w-4 h-4" />
