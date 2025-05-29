@@ -215,23 +215,23 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
                     </div>
                 </div>
 
-                {/* Feature highlight */}
+                {/* Feature highlight with aligned metrics */}
                 <div className="mb-4">
-                    <p className={`text-xl font-semibold ${feature.color.text} mb-2 tracking-tight`}>
+                    <p className={`text-xl font-semibold ${feature.color.text} mb-4 tracking-tight`}>
                         {feature.description}
                     </p>
                     
-                    {/* Metrics display */}
-                    <div className="flex items-center gap-4 mb-4">
-                        <div className="flex items-center gap-2">
-                            <span className="text-2xl font-black text-white">
+                    {/* Metrics display with consistent alignment */}
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-baseline gap-3">
+                            <span className="text-3xl font-black text-white leading-none">
                                 {feature.metrics.value}
                             </span>
-                            <div>
-                                <div className="text-xs text-gray-400 font-medium">
+                            <div className="flex flex-col">
+                                <span className="text-xs text-gray-400 font-medium leading-tight">
                                     {feature.metrics.label}
-                                </div>
-                                <div className="flex items-center gap-1">
+                                </span>
+                                <div className="flex items-center gap-1 mt-0.5">
                                     <TrendingUp className="w-3 h-3 text-green-400" />
                                     <span className="text-xs text-green-400 font-medium">
                                         {feature.metrics.trend}
@@ -249,11 +249,27 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
 
                 {/* Bottom accent */}
                 <div className="mt-6 pt-4 border-t border-gray-800 group-hover:border-gray-700 transition-colors">
-                    <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-gray-500" />
-                        <span className="text-xs text-gray-500 font-medium">
-                            Production Ready
-                        </span>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Activity className="w-4 h-4 text-gray-500" />
+                            <span className="text-xs text-gray-500 font-medium">
+                                Production Ready
+                            </span>
+                        </div>
+                        <div 
+                            className="w-6 h-6 rounded-full border-2 border-gray-700 group-hover:border-gray-600 transition-colors relative overflow-hidden"
+                            style={{
+                                borderColor: isHovered ? feature.color.primary : undefined
+                            }}
+                        >
+                            <div 
+                                className="absolute inset-1 rounded-full transition-all duration-500"
+                                style={{
+                                    backgroundColor: isHovered ? feature.color.primary : 'transparent',
+                                    opacity: isHovered ? 0.8 : 0
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
