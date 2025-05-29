@@ -139,22 +139,6 @@ interface Feature {
 
 const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) => {
     const [isHovered, setIsHovered] = useState(false);
-    const [animationProgress, setAnimationProgress] = useState(0);
-    
-    // Animate metrics on hover
-    useEffect(() => {
-        let interval: NodeJS.Timeout;
-        if (isHovered) {
-            interval = setInterval(() => {
-                setAnimationProgress(prev => Math.min(prev + 2, 100));
-            }, 20);
-        } else {
-            setAnimationProgress(0);
-        }
-        return () => {
-            if (interval) clearInterval(interval);
-        };
-    }, [isHovered]);
 
     return (
         <div 
@@ -231,13 +215,13 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
                     </div>
                 </div>
 
-                {/* Feature highlight with animation */}
+                {/* Feature highlight */}
                 <div className="mb-4">
                     <p className={`text-xl font-semibold ${feature.color.text} mb-2 tracking-tight`}>
                         {feature.description}
                     </p>
                     
-                    {/* Animated metrics display */}
+                    {/* Metrics display */}
                     <div className="flex items-center gap-4 mb-4">
                         <div className="flex items-center gap-2">
                             <span className="text-2xl font-black text-white">
@@ -255,18 +239,6 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
                                 </div>
                             </div>
                         </div>
-                        
-                        {/* Mini progress visualization */}
-                        <div className="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                            <div 
-                                className="h-full transition-all duration-1000 ease-out rounded-full"
-                                style={{ 
-                                    width: `${animationProgress}%`,
-                                    backgroundColor: feature.color.primary,
-                                    boxShadow: `0 0 8px ${feature.color.primary}60`
-                                }}
-                            />
-                        </div>
                     </div>
                 </div>
 
@@ -277,27 +249,11 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
 
                 {/* Bottom accent */}
                 <div className="mt-6 pt-4 border-t border-gray-800 group-hover:border-gray-700 transition-colors">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <Activity className="w-4 h-4 text-gray-500" />
-                            <span className="text-xs text-gray-500 font-medium">
-                                Production Ready
-                            </span>
-                        </div>
-                        <div 
-                            className="w-6 h-6 rounded-full border-2 border-gray-700 group-hover:border-gray-600 transition-colors relative overflow-hidden"
-                            style={{
-                                borderColor: isHovered ? feature.color.primary : undefined
-                            }}
-                        >
-                            <div 
-                                className="absolute inset-0 transition-transform duration-500"
-                                style={{
-                                    background: `conic-gradient(${feature.color.primary} ${animationProgress * 3.6}deg, transparent 0deg)`,
-                                    transform: isHovered ? 'scale(1)' : 'scale(0)'
-                                }}
-                            />
-                        </div>
+                    <div className="flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-gray-500" />
+                        <span className="text-xs text-gray-500 font-medium">
+                            Production Ready
+                        </span>
                     </div>
                 </div>
             </div>
@@ -333,8 +289,6 @@ const Features = () => {
             ref={containerRef}
             className="relative py-24 px-4 bg-black overflow-hidden"
         >
-
-
             <div className="max-w-7xl mx-auto relative z-10">
                 {/* Enhanced header */}
                 <div className="text-center mb-20">

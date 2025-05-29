@@ -192,9 +192,7 @@ interface MetricCardProps {
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detail, color, trend, index }) => {
-    const [isHovered, setIsHovered] = useState(false);
     const [animatedValue, setAnimatedValue] = useState(0);
-    const [animationProgress, setAnimationProgress] = useState(0);
 
     // Animate counter on mount
     useEffect(() => {
@@ -217,21 +215,6 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detai
         }
     }, [value, index]);
 
-    // Animate progress on hover
-    useEffect(() => {
-        let interval: NodeJS.Timeout;
-        if (isHovered) {
-            interval = setInterval(() => {
-                setAnimationProgress(prev => Math.min(prev + 2, 100));
-            }, 20);
-        } else {
-            setAnimationProgress(0);
-        }
-        return () => {
-            if (interval) clearInterval(interval);
-        };
-    }, [isHovered]);
-
     const displayValue = typeof value === 'number' ? 
         (animatedValue > 999 ? `${(animatedValue / 1000).toFixed(1)}k` : animatedValue.toLocaleString()) : 
         value;
@@ -241,16 +224,13 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detai
             className={`group relative p-8 bg-gray-900/30 border ${color.border} ${color.hover} 
                        rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
                        transform hover:scale-[1.02] hover:-translate-y-1`}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
             style={{
-                animationDelay: `${index * 0.1}s`,
-                boxShadow: isHovered ? `0 20px 40px ${color.primary}20` : 'none'
+                animationDelay: `${index * 0.1}s`
             }}
         >
             {/* Animated background gradient */}
             <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{
                     background: `radial-gradient(circle at 50% 50%, ${color.primary}08 0%, transparent 70%)`
                 }}
@@ -258,27 +238,41 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detai
 
             {/* Top accent line */}
             <div 
-                className="absolute inset-x-0 top-0 h-px transition-all duration-500"
+                className="absolute inset-x-0 top-0 h-px transition-all duration-500 pointer-events-none"
                 style={{
-                    background: isHovered 
-                        ? `linear-gradient(to right, transparent, ${color.primary}, transparent)`
-                        : `linear-gradient(to right, transparent, ${color.primary}30, transparent)`
+                    background: `linear-gradient(to right, transparent, ${color.primary}30, transparent)`
+                }}
+            />
+
+            {/* Enhanced top accent on hover */}
+            <div 
+                className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                    background: `linear-gradient(to right, transparent, ${color.primary}, transparent)`
+                }}
+            />
+
+            {/* Corner glow effect */}
+            <div 
+                className="absolute top-0 right-0 w-32 h-32 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
+                style={{
+                    background: `radial-gradient(circle, ${color.primary} 0%, transparent 70%)`
                 }}
             />
 
             <div className="relative h-full flex flex-col">
                 {/* Enhanced icon */}
                 <div 
-                    className={`p-4 rounded-xl ${color.bg} transition-all duration-300 group-hover:scale-110 border border-gray-800 w-fit mb-6`}
+                    className={`p-4 rounded-xl ${color.bg} transition-all duration-300 group-hover:scale-110 border border-gray-800 w-fit mb-6 group-hover:shadow-lg`}
                     style={{
-                        boxShadow: isHovered ? `0 0 25px ${color.primary}30` : 'none'
-                    }}
+                        '--hover-shadow': `0 0 25px ${color.primary}30`
+                    } as any}
                 >
                     <Icon className={`w-8 h-8 ${color.text}`} />
                 </div>
 
                 {/* Animated value */}
-                <div className="mb-4">
+                <div className="mb-4 flex-1">
                     <div className="font-mono text-4xl font-black text-white mb-2 tracking-tight">
                         {displayValue}
                     </div>
@@ -296,52 +290,29 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detai
                     <div className="text-sm text-gray-400">{detail}</div>
                 </div>
 
-                {/* Activity visualization */}
-                <div className="mt-auto">
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                            <Activity className="w-3 h-3 text-gray-500" />
-                            <span className="text-xs text-gray-500">Activity</span>
-                        </div>
-                        <span className="text-xs text-gray-400">{Math.round(animationProgress)}%</span>
-                    </div>
-                    
-                    {/* Activity bars */}
-                    <div className="flex items-end gap-1 h-6 mb-3">
-                        {Array.from({ length: 12 }).map((_, i) => (
-                            <div
-                                key={i}
-                                className="flex-1 rounded-sm transition-all duration-500"
-                                style={{
-                                    height: `${Math.random() * 100}%`,
-                                    backgroundColor: color.primary,
-                                    opacity: isHovered ? 0.8 - (i * 0.05) : 0.3,
-                                    minHeight: '2px'
-                                }}
-                            />
-                        ))}
-                    </div>
-
-                    {/* Progress bar */}
-                    <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                        <div 
-                            className="h-full transition-all duration-1000 ease-out rounded-full"
-                            style={{ 
-                                width: `${animationProgress}%`,
-                                backgroundColor: color.primary,
-                                boxShadow: `0 0 8px ${color.primary}60`
-                            }}
-                        />
-                    </div>
+                {/* Status indicator */}
+                <div className="flex items-center gap-2 pt-4 border-t border-gray-800 group-hover:border-gray-700 transition-colors">
+                    <Activity className="w-3 h-3 text-gray-500" />
+                    <span className="text-xs text-gray-500">Active</span>
+                    <div className={`ml-auto w-2 h-2 rounded-full ${color.text} animate-pulse`} />
                 </div>
             </div>
+
+            {/* Hover shadow effect */}
+            <style jsx>{`
+                .group:hover [style*="--hover-shadow"] {
+                    box-shadow: var(--hover-shadow);
+                }
+                .group:hover {
+                    box-shadow: 0 20px 40px ${color.primary}20;
+                }
+            `}</style>
         </div>
     );
 };
 
 // Enhanced Contributor Card
 const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({ contributor, rank }) => {
-    const [isHovered, setIsHovered] = useState(false);
     const displayName = GitHubUserUtil.getDisplayName(contributor.login);
     
     // Color based on rank
@@ -359,15 +330,10 @@ const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({
             className={`group relative p-6 bg-gray-900/30 border ${rankColor.border} hover:border-opacity-60 
                        rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
                        transform hover:scale-[1.02] hover:-translate-y-1`}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            style={{
-                boxShadow: isHovered ? `0 15px 30px ${rankColor.primary}15` : 'none'
-            }}
         >
             {/* Background gradient */}
             <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{
                     background: `radial-gradient(circle at 50% 50%, ${rankColor.primary}05 0%, transparent 70%)`
                 }}
@@ -375,11 +341,17 @@ const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({
 
             {/* Top accent */}
             <div 
-                className="absolute inset-x-0 top-0 h-px transition-all duration-500"
+                className="absolute inset-x-0 top-0 h-px transition-all duration-500 pointer-events-none"
                 style={{
-                    background: isHovered 
-                        ? `linear-gradient(to right, transparent, ${rankColor.primary}, transparent)`
-                        : `linear-gradient(to right, transparent, ${rankColor.primary}30, transparent)`
+                    background: `linear-gradient(to right, transparent, ${rankColor.primary}30, transparent)`
+                }}
+            />
+
+            {/* Enhanced top accent on hover */}
+            <div 
+                className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                style={{
+                    background: `linear-gradient(to right, transparent, ${rankColor.primary}, transparent)`
                 }}
             />
 
@@ -388,10 +360,10 @@ const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({
                 <div 
                     className={`flex-shrink-0 w-12 h-12 rounded-xl ${rankColor.bg} border ${rankColor.border} 
                                flex items-center justify-center font-bold text-lg ${rankColor.text} 
-                               transition-all duration-300 group-hover:scale-110`}
+                               transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}
                     style={{
-                        boxShadow: isHovered ? `0 0 20px ${rankColor.primary}30` : 'none'
-                    }}
+                        '--hover-shadow': `0 0 20px ${rankColor.primary}30`
+                    } as any}
                 >
                     #{rank}
                 </div>
@@ -401,13 +373,13 @@ const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({
                     <img 
                         src={contributor.avatar_url} 
                         alt={`${displayName} avatar`} 
-                        className="w-16 h-16 rounded-full border-2 border-gray-700 group-hover:border-gray-600 transition-all duration-300"
+                        className="w-16 h-16 rounded-full border-2 border-gray-700 group-hover:border-gray-600 transition-all duration-300 group-hover:shadow-lg"
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0D8ABC&color=fff`;
                         }}
                         style={{
-                            boxShadow: isHovered ? `0 0 20px ${rankColor.primary}40` : 'none'
-                        }}
+                            '--hover-shadow': `0 0 20px ${rankColor.primary}40`
+                        } as any}
                     />
                     {/* Status indicator */}
                     <div 
@@ -442,23 +414,25 @@ const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({
                         )}
                     </div>
 
-                    {/* Activity indicator */}
+                    {/* Simple activity indicator */}
                     <div className="flex items-center gap-2">
-                        <div className="flex-1 h-1 bg-gray-800 rounded-full overflow-hidden">
-                            <div 
-                                className="h-full transition-all duration-1000 ease-out rounded-full"
-                                style={{ 
-                                    width: `${Math.min((contributor.contributions / 100) * 100, 100)}%`,
-                                    backgroundColor: rankColor.primary
-                                }}
-                            />
-                        </div>
+                        <div className={`w-2 h-2 rounded-full ${rankColor.text} animate-pulse`} />
                         <span className="text-xs text-gray-500">
-                            {Math.round((contributor.contributions / 1000) * 100)}% active
+                            Active contributor
                         </span>
                     </div>
                 </div>
             </div>
+
+            {/* Hover shadow effect */}
+            <style jsx>{`
+                .group:hover [style*="--hover-shadow"] {
+                    box-shadow: var(--hover-shadow);
+                }
+                .group:hover {
+                    box-shadow: 0 15px 30px ${rankColor.primary}15;
+                }
+            `}</style>
         </div>
     );
 };

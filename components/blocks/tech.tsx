@@ -5,9 +5,6 @@ import { Shield, Cpu, GitBranch, Zap, Server, Lock, Code, Activity, TrendingUp, 
 
 const TechOverview = () => {
     const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
-    const [activeMetricIndex, setActiveMetricIndex] = useState(0);
-    const [cpuUsage, setCpuUsage] = useState<number[]>([]);
-    const [memoryUsage, setMemoryUsage] = useState<number[]>([]);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const techFeatures = [
@@ -27,8 +24,7 @@ const TechOverview = () => {
             metrics: [
                 { label: "Memory Overhead", value: "24MB", trend: "-89%", icon: <Monitor className="w-3 h-3" /> },
                 { label: "GC Pauses", value: "0ms", trend: "100%", icon: <Activity className="w-3 h-3" /> }
-            ],
-            liveData: { cpu: [12, 8, 15, 9, 11], memory: [24, 24, 24, 24, 24] }
+            ]
         },
         {
             icon: <Lock className="w-6 h-6" />,
@@ -46,8 +42,7 @@ const TechOverview = () => {
             metrics: [
                 { label: "Memory Safety", value: "100%", trend: "✓", icon: <Shield className="w-3 h-3" /> },
                 { label: "Data Races", value: "0", trend: "∞", icon: <Lock className="w-3 h-3" /> }
-            ],
-            liveData: { cpu: [5, 3, 4, 2, 3], memory: [18, 19, 18, 19, 18] }
+            ]
         },
         {
             icon: <Cpu className="w-6 h-6" />,
@@ -65,39 +60,9 @@ const TechOverview = () => {
             metrics: [
                 { label: "Thread Safety", value: "✓", trend: "∞", icon: <Cpu className="w-3 h-3" /> },
                 { label: "Deadlock Free", value: "✓", trend: "100%", icon: <GitBranch className="w-3 h-3" /> }
-            ],
-            liveData: { cpu: [45, 52, 38, 61, 44], memory: [128, 145, 132, 156, 139] }
+            ]
         }
     ];
-
-    // Generate live system data
-    useEffect(() => {
-        const generateCpuData = () => {
-            return Array.from({ length: 20 }, () => Math.floor(Math.random() * 60) + 5);
-        };
-        
-        const generateMemoryData = () => {
-            return Array.from({ length: 20 }, () => Math.floor(Math.random() * 40) + 20);
-        };
-
-        setCpuUsage(generateCpuData());
-        setMemoryUsage(generateMemoryData());
-
-        const interval = setInterval(() => {
-            setCpuUsage(prev => [...prev.slice(1), Math.floor(Math.random() * 60) + 5]);
-            setMemoryUsage(prev => [...prev.slice(1), Math.floor(Math.random() * 40) + 20]);
-        }, 2000);
-
-        return () => clearInterval(interval);
-    }, []);
-
-    // Cycle through active metrics
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveMetricIndex(prev => (prev + 1) % techFeatures.length);
-        }, 3000);
-        return () => clearInterval(interval);
-    }, []);
 
     // Mouse tracking for parallax
     useEffect(() => {
@@ -119,38 +84,18 @@ const TechOverview = () => {
     }, []);
 
     const FeatureCard = ({ feature, index }: { feature: any; index: number }) => {
-        const [isHovered, setIsHovered] = useState(false);
-        const [animationProgress, setAnimationProgress] = useState(0);
-
-        useEffect(() => {
-            let interval: NodeJS.Timeout;
-            if (isHovered) {
-                interval = setInterval(() => {
-                    setAnimationProgress(prev => Math.min(prev + 3, 100));
-                }, 30);
-            } else {
-                setAnimationProgress(0);
-            }
-            return () => {
-                if (interval) clearInterval(interval);
-            };
-        }, [isHovered]);
-
         return (
             <div 
                 className={`group relative p-8 bg-gray-900/30 border ${feature.color.border} ${feature.color.hover} 
                            rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
                            transform hover:scale-[1.02] hover:-translate-y-2`}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
                 style={{
-                    animationDelay: `${index * 0.2}s`,
-                    boxShadow: isHovered ? `0 25px 50px ${feature.color.primary}20` : 'none'
+                    animationDelay: `${index * 0.2}s`
                 }}
             >
                 {/* Animated background gradient */}
                 <div 
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     style={{
                         background: `radial-gradient(circle at 50% 50%, ${feature.color.primary}08 0%, transparent 70%)`
                     }}
@@ -158,16 +103,22 @@ const TechOverview = () => {
 
                 {/* Top accent line */}
                 <div 
-                    className="absolute inset-x-0 top-0 h-px transition-all duration-500"
+                    className="absolute inset-x-0 top-0 h-px transition-all duration-500 pointer-events-none"
                     style={{
-                        background: isHovered 
-                            ? `linear-gradient(to right, transparent, ${feature.color.primary}, transparent)`
-                            : `linear-gradient(to right, transparent, ${feature.color.primary}30, transparent)`
+                        background: `linear-gradient(to right, transparent, ${feature.color.primary}30, transparent)`,
+                    }}
+                />
+
+                {/* Enhanced top accent on hover */}
+                <div 
+                    className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                        background: `linear-gradient(to right, transparent, ${feature.color.primary}, transparent)`
                     }}
                 />
 
                 {/* Floating status indicator */}
-                <div className="absolute top-6 right-6 flex items-center gap-2">
+                <div className="absolute top-6 right-6 flex items-center gap-2 pointer-events-none">
                     <div 
                         className="w-2 h-2 rounded-full animate-pulse"
                         style={{ 
@@ -178,13 +129,21 @@ const TechOverview = () => {
                     <span className="text-xs text-gray-500 font-mono">ACTIVE</span>
                 </div>
 
+                {/* Corner glow effect */}
+                <div 
+                    className="absolute top-0 right-0 w-32 h-32 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                        background: `radial-gradient(circle, ${feature.color.primary} 0%, transparent 70%)`
+                    }}
+                />
+
                 {/* Enhanced header */}
                 <div className="flex items-start gap-4 mb-6">
                     <div 
-                        className={`p-4 rounded-xl ${feature.color.bg} transition-all duration-300 group-hover:scale-110 border border-gray-800`}
+                        className={`p-4 rounded-xl ${feature.color.bg} transition-all duration-300 group-hover:scale-110 border border-gray-800 group-hover:shadow-lg`}
                         style={{
-                            boxShadow: isHovered ? `0 0 25px ${feature.color.primary}30` : 'none'
-                        }}
+                            '--hover-shadow': `0 0 25px ${feature.color.primary}30`
+                        } as any}
                     >
                         <div className={feature.color.text}>
                             {feature.icon}
@@ -210,12 +169,12 @@ const TechOverview = () => {
                     </div>
                 </div>
 
-                {/* Enhanced metrics with mini charts */}
+                {/* Enhanced metrics */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
                     {feature.metrics.map((metric: any, idx: number) => (
                         <div 
                             key={idx} 
-                            className="relative p-4 bg-black/40 border border-gray-800 rounded-xl hover:border-gray-700 transition-colors backdrop-blur-sm group/metric"
+                            className="relative p-4 bg-black/40 border border-gray-800 rounded-xl hover:border-gray-700 transition-colors backdrop-blur-sm"
                         >
                             <div className="flex items-center gap-2 mb-2">
                                 <div className={feature.color.text}>
@@ -237,21 +196,6 @@ const TechOverview = () => {
                                     </span>
                                 </div>
                             </div>
-
-                            {/* Mini performance chart */}
-                            <div className="mt-3 h-8 flex items-end gap-0.5">
-                                {feature.liveData.cpu.slice(-8).map((value: number, i: number) => (
-                                    <div
-                                        key={i}
-                                        className="flex-1 rounded-sm transition-all duration-300 group-hover/metric:opacity-100 opacity-60"
-                                        style={{
-                                            height: `${(value / 100) * 100}%`,
-                                            backgroundColor: feature.color.primary,
-                                            minHeight: '2px'
-                                        }}
-                                    />
-                                ))}
-                            </div>
                         </div>
                     ))}
                 </div>
@@ -265,21 +209,22 @@ const TechOverview = () => {
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${feature.color.text} animate-pulse`} />
                         <div className="text-xs text-gray-400 font-mono">
-                            {Math.round(animationProgress)}% optimized
-                        </div>
-                        <div className="w-12 h-1.5 bg-gray-800 rounded-full overflow-hidden">
-                            <div 
-                                className="h-full transition-all duration-1000 ease-out rounded-full"
-                                style={{ 
-                                    width: `${animationProgress}%`,
-                                    backgroundColor: feature.color.primary,
-                                    boxShadow: `0 0 8px ${feature.color.primary}60`
-                                }}
-                            />
+                            Optimized
                         </div>
                     </div>
                 </div>
+
+                {/* Hover shadow effect */}
+                <style jsx>{`
+                    .group:hover [style*="--hover-shadow"] {
+                        box-shadow: var(--hover-shadow);
+                    }
+                    .group:hover {
+                        box-shadow: 0 25px 50px ${feature.color.primary}20;
+                    }
+                `}</style>
             </div>
         );
     };
@@ -383,67 +328,7 @@ const TechOverview = () => {
                     </div>
                 </div>
 
-                {/* Live system monitor */}
-                <div className="mb-12 p-6 bg-gray-900/20 border border-gray-800 rounded-2xl backdrop-blur-sm">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                            <BarChart3 className="w-5 h-5 text-cyan-400" />
-                            <span className="text-sm font-medium text-gray-300">System Performance Monitor</span>
-                        </div>
-                        <div className="flex items-center gap-4 text-xs text-gray-400">
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                                <span>CPU Usage</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-                                <span>Memory Usage</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-8">
-                        {/* CPU Usage Chart */}
-                        <div>
-                            <div className="h-16 flex items-end gap-1 mb-2">
-                                {cpuUsage.map((usage, i) => (
-                                    <div
-                                        key={i}
-                                        className="flex-1 rounded-sm transition-all duration-500"
-                                        style={{
-                                            height: `${usage}%`,
-                                            backgroundColor: '#f59e0b',
-                                            opacity: i === cpuUsage.length - 1 ? 1 : 0.7 - (cpuUsage.length - i) * 0.05
-                                        }}
-                                    />
-                                ))}
-                            </div>
-                            <div className="text-xs text-gray-400">
-                                Avg: {Math.round(cpuUsage.reduce((a, b) => a + b, 0) / cpuUsage.length)}% CPU
-                            </div>
-                        </div>
-                        
-                        {/* Memory Usage Chart */}
-                        <div>
-                            <div className="h-16 flex items-end gap-1 mb-2">
-                                {memoryUsage.map((usage, i) => (
-                                    <div
-                                        key={i}
-                                        className="flex-1 rounded-sm transition-all duration-500"
-                                        style={{
-                                            height: `${usage}%`,
-                                            backgroundColor: '#8b5cf6',
-                                            opacity: i === memoryUsage.length - 1 ? 1 : 0.7 - (memoryUsage.length - i) * 0.05
-                                        }}
-                                    />
-                                ))}
-                            </div>
-                            <div className="text-xs text-gray-400">
-                                Avg: {Math.round(memoryUsage.reduce((a, b) => a + b, 0) / memoryUsage.length)}MB RAM
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
 
                 {/* Enhanced features grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">

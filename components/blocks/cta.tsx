@@ -137,23 +137,6 @@ const CallToAction = () => {
   }, []);
 
   const MetricCard = ({ metric, index }: { metric: any; index: number }) => {
-    const [isHovered, setIsHovered] = useState(false);
-    const [progress, setProgress] = useState(0);
-
-    useEffect(() => {
-      let interval: NodeJS.Timeout;
-      if (isHovered) {
-        interval = setInterval(() => {
-          setProgress(prev => Math.min(prev + 3, 100));
-        }, 30);
-      } else {
-        setProgress(0);
-      }
-      return () => {
-        if (interval) clearInterval(interval);
-      };
-    }, [isHovered]);
-
     const displayValue = index === 2 ? `<${Math.round(animatedMetrics[index])}` : 
                        index === 3 ? Math.round(animatedMetrics[index]) :
                        animatedMetrics[index].toFixed(1);
@@ -163,16 +146,13 @@ const CallToAction = () => {
         className={`group relative p-6 border ${metric.color.border} ${metric.color.bg} 
                    rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
                    transform hover:scale-[1.05] hover:-translate-y-2 cursor-pointer`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
         style={{
-          animationDelay: `${index * 0.1}s`,
-          boxShadow: metric.highlight || isHovered ? `0 20px 40px ${metric.color.primary}20` : 'none'
+          animationDelay: `${index * 0.1}s`
         }}
       >
         {/* Background gradient */}
         <div 
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
           style={{
             background: `radial-gradient(circle at 50% 50%, ${metric.color.primary}08 0%, transparent 70%)`
           }}
@@ -180,16 +160,40 @@ const CallToAction = () => {
 
         {/* Top accent line */}
         <div 
-          className="absolute inset-x-0 top-0 h-px transition-all duration-500"
+          className="absolute inset-x-0 top-0 h-px transition-all duration-500 pointer-events-none"
           style={{
-            background: isHovered || metric.highlight
-              ? `linear-gradient(to right, transparent, ${metric.color.primary}, transparent)`
-              : `linear-gradient(to right, transparent, ${metric.color.primary}30, transparent)`
+            background: `linear-gradient(to right, transparent, ${metric.color.primary}30, transparent)`
+          }}
+        />
+
+        {/* Enhanced top accent on hover */}
+        <div 
+          className="absolute inset-x-0 top-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          style={{
+            background: `linear-gradient(to right, transparent, ${metric.color.primary}, transparent)`
+          }}
+        />
+
+        {/* Highlight accent for featured metric */}
+        {metric.highlight && (
+          <div 
+            className="absolute inset-x-0 top-0 h-px pointer-events-none"
+            style={{
+              background: `linear-gradient(to right, transparent, ${metric.color.primary}, transparent)`
+            }}
+          />
+        )}
+
+        {/* Corner glow effect */}
+        <div 
+          className="absolute top-0 right-0 w-32 h-32 opacity-0 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none"
+          style={{
+            background: `radial-gradient(circle, ${metric.color.primary} 0%, transparent 70%)`
           }}
         />
 
         {/* Floating indicator */}
-        <div className="absolute top-4 right-4 flex items-center gap-2">
+        <div className="absolute top-4 right-4 flex items-center gap-2 pointer-events-none">
           <div className={metric.color.text}>
             {metric.icon}
           </div>
@@ -204,9 +208,9 @@ const CallToAction = () => {
 
         <div className="relative">
           {/* Metric value */}
-          <div className={`text-3xl font-black mb-2 font-mono transition-all duration-300 ${
+          <div className={`text-3xl font-black mb-2 font-mono transition-all duration-300 group-hover:scale-110 ${
             metric.highlight ? metric.color.text : 'text-white'
-          } ${isHovered ? 'scale-110' : ''}`}>
+          }`}>
             {displayValue}{metric.suffix}
           </div>
           
@@ -215,22 +219,19 @@ const CallToAction = () => {
             {metric.label}
           </div>
 
-          {/* Progress indicator */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-gray-500">Performance</span>
-            <span className="text-xs text-gray-400">{Math.round(progress)}%</span>
-          </div>
-          <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
-            <div 
-              className="h-full transition-all duration-1000 ease-out rounded-full"
-              style={{ 
-                width: `${progress}%`,
-                backgroundColor: metric.color.primary,
-                boxShadow: `0 0 8px ${metric.color.primary}60`
-              }}
-            />
+          {/* Status indicator */}
+          <div className="flex items-center gap-2 mt-auto">
+            <div className={`w-2 h-2 rounded-full ${metric.color.text} animate-pulse`} />
+            <span className="text-xs text-gray-500">Optimized</span>
           </div>
         </div>
+
+        {/* Hover shadow effect */}
+        <style jsx>{`
+          .group:hover {
+            box-shadow: ${metric.highlight ? `0 20px 40px ${metric.color.primary}20` : `0 20px 40px ${metric.color.primary}15`};
+          }
+        `}</style>
       </div>
     );
   };
@@ -349,7 +350,6 @@ const CallToAction = () => {
             ))}
           </div>
         </div>
-
 
         {/* Final call to action */}
         <div className="text-center mt-16">
