@@ -1,12 +1,12 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Shield, 
-  Server, 
-  Cloud, 
-  Terminal, 
-  Settings, 
+import {
+  Shield,
+  Server,
+  Cloud,
+  Terminal,
+  Settings,
   Box,
   RefreshCw,
   Zap,
@@ -31,10 +31,10 @@ interface FeatureCardProps {
 
 const FeatureCard: React.FC<FeatureCardProps> = ({ feature, index }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   return (
-    <div 
-      className="group relative p-6 lg:p-8 bg-gray-900/30 border border-gray-800 rounded-2xl hover:border-cyan-500/50 transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 backdrop-blur-sm overflow-hidden"
+    <div
+      className="group relative p-6 lg:p-8 bg-gray-900/30 border border-gray-800 rounded-2xl hover:border-cyan-500/50 transition-all duration-500 backdrop-blur-sm overflow-hidden"
       style={{
         animationDelay: `${index * 0.1}s`
       }}
@@ -43,14 +43,14 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ feature, index }) => {
     >
       {/* Background gradient effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
+
       {/* Animated border glow */}
       <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-purple-500/20 to-cyan-500/20 animate-pulse" style={{ padding: '1px' }}>
           <div className="w-full h-full bg-gray-900/30 rounded-2xl" />
         </div>
       </div>
-      
+
       <div className="relative z-10">
         {/* Icon with enhanced styling */}
         <div className="relative mb-6">
@@ -59,25 +59,25 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ feature, index }) => {
             {/* Icon glow effect */}
             <div className="absolute inset-0 bg-cyan-400/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </div>
-          
+
           {/* Floating sparkles */}
           <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
             <Sparkles className="w-4 h-4 text-cyan-300 animate-pulse" />
           </div>
         </div>
-        
+
         <div className="space-y-4">
           <h3 className="text-lg lg:text-xl font-bold text-white group-hover:text-cyan-100 transition-colors duration-300">
             {feature.title}
           </h3>
-          
+
           {/* Animated underline */}
           <div className="h-0.5 bg-gradient-to-r from-cyan-400/0 via-cyan-400/50 to-cyan-400/0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
-          
+
           <p className="text-sm lg:text-base text-gray-400 group-hover:text-gray-300 transition-colors duration-300 leading-relaxed">
             {feature.description}
           </p>
-          
+
           {/* Status indicator */}
           {feature.status && (
             <div className="flex items-center gap-2 text-cyan-400 text-sm font-medium">
@@ -85,7 +85,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ feature, index }) => {
               <span>{feature.status}</span>
             </div>
           )}
-          
+
           {/* Hover learn more */}
           <div className="flex items-center gap-2 text-cyan-400 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
             <span className="text-sm font-medium">Explore feature</span>
@@ -142,12 +142,6 @@ const FeaturesPage = () => {
       status: "Developer Focused"
     },
     {
-      icon: Settings,
-      title: "Advanced Configuration",
-      description: "Flexible configuration management with support for dynamic environment variables and secrets handling.",
-      status: "Security First"
-    },
-    {
       icon: Box,
       title: "Container Orchestration",
       description: "Built-in container orchestration with automatic scaling, load balancing, and service discovery.",
@@ -171,12 +165,6 @@ const FeaturesPage = () => {
       description: "Lightning-fast deployments with edge caching, CDN integration, and intelligent resource allocation.",
       status: "Sub-second Response"
     },
-    {
-      icon: Server,
-      title: "Infrastructure as Code",
-      description: "Define your infrastructure declaratively with version control, testing, and automated provisioning.",
-      status: "GitOps Ready"
-    }
   ];
 
   const stats = [
@@ -186,7 +174,7 @@ const FeaturesPage = () => {
   ];
 
   return (
-    <section 
+    <section
       ref={sectionRef}
       className="relative min-h-screen py-20 lg:py-32 px-4 bg-black overflow-hidden"
     >
@@ -198,7 +186,7 @@ const FeaturesPage = () => {
           const maxMovement = 20 + i * 6;
           const leftPercent = 8 + (i * 8);
           const topPercent = 5 + (i * 9);
-          
+
           return (
             <div
               key={i}
@@ -217,7 +205,7 @@ const FeaturesPage = () => {
         })}
 
         {/* Enhanced grid pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage: `
@@ -256,47 +244,30 @@ const FeaturesPage = () => {
                 Platform Features
               </span>
             </div>
-            
+
             <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight leading-none">
               Everything You Need to
               <span className="block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Build & Scale
               </span>
             </h2>
-            
+
             {/* Animated underline */}
             <div className="h-1 w-40 bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 mx-auto rounded-full mb-8">
               <div className="h-full bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-full animate-pulse" />
             </div>
           </div>
-          
+
           <p className="text-lg lg:text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-12">
             Enterprise-grade reliability meets developer-friendly simplicity. Deploy, manage, and scale your applications with confidence.
           </p>
-
-          {/* Stats showcase */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto mb-16">
-            {stats.map((stat, index) => (
-              <div 
-                key={index}
-                className="p-6 bg-gray-900/30 border border-gray-800 rounded-xl backdrop-blur-sm hover:border-cyan-500/30 transition-all duration-300 group"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <stat.icon className="w-6 h-6 text-cyan-400 mb-3 mx-auto group-hover:animate-pulse" />
-                <div className="text-2xl lg:text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Enhanced features grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-20">
           {features.map((feature, index) => (
-            <FeatureCard 
-              key={index} 
+            <FeatureCard
+              key={index}
               feature={feature}
               index={index}
             />
@@ -309,7 +280,7 @@ const FeaturesPage = () => {
             {/* CTA background effects */}
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-purple-500/5 to-pink-500/5 opacity-50" />
             <div className="absolute inset-0 bg-gradient-to-br from-transparent via-cyan-500/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-700" />
-            
+
             <div className="relative z-10">
               <div className="flex items-center justify-center gap-3 mb-6">
                 <Star className="w-6 h-6 text-yellow-400 animate-pulse" />
@@ -318,11 +289,11 @@ const FeaturesPage = () => {
                 </h3>
                 <Star className="w-6 h-6 text-yellow-400 animate-pulse" />
               </div>
-              
+
               <p className="text-gray-400 mb-8 max-w-2xl mx-auto text-lg leading-relaxed">
                 Join thousands of developers and teams who trust OmniCloud for their deployment needs. Start building today with our free tier.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row justify-center gap-4 lg:gap-6">
                 <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black text-lg font-bold transition-all duration-300 transform hover:scale-105 rounded-xl shadow-lg shadow-cyan-500/25 overflow-hidden">
                   <span className="relative z-10">Start Building Now</span>
@@ -330,7 +301,7 @@ const FeaturesPage = () => {
                   {/* Animated shine */}
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer" />
                 </button>
-                
+
                 <button className="group inline-flex items-center gap-3 px-8 py-4 border border-gray-700 hover:border-cyan-500/50 text-gray-300 hover:text-white text-lg font-medium transition-all duration-300 transform hover:scale-105 rounded-xl backdrop-blur-sm hover:bg-cyan-500/5 relative overflow-hidden">
                   <span className="relative z-10">View Documentation</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

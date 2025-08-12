@@ -398,20 +398,19 @@ const Workflow = () => {
         className="relative"
       >
 
-          {/* Flowing data lines */}
-          <div className="absolute inset-0 opacity-10">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent animate-pulse-line"
-                style={{
-                  top: `${20 + i * 25}%`,
-                  left: '0',
-                  right: '0',
-                  animationDelay: `${i * 1.8}s`
-                }}
-              />
-            ))}
+          {/* Flowchart background pattern */}
+          <div className="absolute inset-0 opacity-[0.02]">
+            <div 
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `
+                  linear-gradient(#06b6d4 1px, transparent 1px),
+                  linear-gradient(90deg, #06b6d4 1px, transparent 1px)
+                `,
+                backgroundSize: '40px 40px',
+                backgroundPosition: '0 0, 0 0'
+              }}
+            />
           </div>
        
         <div className="max-w-7xl mx-auto relative z-10">
@@ -469,36 +468,26 @@ const Workflow = () => {
 
           {/* Enhanced Workflow Steps */}
           <div className="relative">
-            {/* Flow connectors */}
-            <div className="hidden lg:block absolute top-20 left-0 right-0 h-2 pointer-events-none">
-              <div className="relative w-full h-full max-w-4xl mx-auto">
-                {[0, 1].map(index => (
-                  <div
-                    key={index}
-                    className="absolute top-0 h-full transition-all duration-1000 flex items-center"
-                    style={{
-                      left: `${25 + index * 25}%`,
-                      width: '25%',
-                      opacity: progress[index] > 50 ? 1 : 0.2
-                    }}
-                  >
-                    <div 
-                      className="h-1 rounded-full transition-all duration-1000"
-                      style={{
-                        width: `${Math.min(progress[index] * 2, 100)}%`,
-                        backgroundColor: phases[index].color.primary,
-                        boxShadow: `0 0 10px ${phases[index].color.primary}60`
-                      }}
-                    />
-                    <ArrowRight 
-                      className="w-5 h-5 absolute -right-2 transition-all duration-500" 
-                      style={{ 
-                        color: phases[index].color.primary,
-                        opacity: progress[index] > 80 ? 1 : 0.3
-                      }} 
-                    />
+            {/* Flowchart connectors */}
+            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-px pointer-events-none transform -translate-y-1/2">
+              <div className="relative w-full h-full max-w-6xl mx-auto">
+                {/* Horizontal flow line */}
+                <div className="absolute inset-0 flex items-center justify-between px-8">
+                  <div className="w-1/3 h-px bg-gradient-to-r from-cyan-500/30 via-cyan-500/60 to-cyan-500/30"></div>
+                  <div className="w-1/3 h-px bg-gradient-to-r from-purple-500/30 via-purple-500/60 to-purple-500/30"></div>
+                </div>
+                
+                {/* Flow arrows */}
+                <div className="absolute top-1/2 transform -translate-y-1/2" style={{ left: '33.33%' }}>
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-cyan-500/10 border border-cyan-500/30">
+                    <ArrowRight className="w-4 h-4 text-cyan-400" />
                   </div>
-                ))}
+                </div>
+                <div className="absolute top-1/2 transform -translate-y-1/2" style={{ left: '66.66%' }}>
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-500/10 border border-green-500/30">
+                    <ArrowRight className="w-4 h-4 text-green-400" />
+                  </div>
+                </div>
               </div>
             </div>
 

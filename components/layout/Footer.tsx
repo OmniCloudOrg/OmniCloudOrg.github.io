@@ -11,22 +11,24 @@ const Footer = () => {
       title: "Project",
       links: [
         { href: "/features", label: "Features", icon: <Zap className="w-3 h-3" /> },
-        { href: "/demo", label: "Live Demo", icon: <ExternalLink className="w-3 h-3" /> },
-        { href: "/changelog", label: "Changelog", icon: <Code className="w-3 h-3" /> }
-      ]
-    },
-    {
-      title: "Developers",
-      links: [
-        { href: "/docs", label: "Documentation", icon: <Book className="w-3 h-3" /> },
-        { href: "/blogs", label: "Blogs", icon: <ExternalLink className="w-3 h-3" /> }
+        { href: "/why", label: "Why OmniCloud", icon: <Shield className="w-3 h-3" /> },
+        { href: "/about", label: "About", icon: <Users className="w-3 h-3" /> }
       ]
     },
     {
       title: "Community",
       links: [
+        { href: "/community", label: "Community", icon: <Users className="w-3 h-3" /> },
         { href: "https://github.com/OmniCloudOrg", label: "GitHub", icon: <Github className="w-3 h-3" /> },
-        { href: "https://discord.gg/26feC6QAav", label: "Discord", icon: <MessageCircle className="w-3 h-3" /> },
+        { href: "https://discord.gg/26feC6QAav", label: "Discord", icon: <MessageCircle className="w-3 h-3" /> }
+      ]
+    },
+    {
+      title: "Resources",
+      links: [
+        { href: "/docs", label: "Documentation", icon: <Book className="w-3 h-3" /> },
+        { href: "/contact", label: "Contact", icon: <Mail className="w-3 h-3" /> },
+        { href: "/blog", label: "Blog", icon: <ExternalLink className="w-3 h-3" /> }
       ]
     },
   ];

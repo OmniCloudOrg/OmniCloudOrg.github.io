@@ -172,8 +172,7 @@ const AutonomousOps = () => {
     return (
       <div 
         className={`group relative p-6 bg-gray-900/30 border ${metric.color.border} hover:border-opacity-60 
-                   rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
-                   transform hover:scale-[1.02] hover:-translate-y-1`}
+                   rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
@@ -217,7 +216,7 @@ const AutonomousOps = () => {
           {/* Header */}
           <div className="flex items-center gap-3 mb-4">
             <div 
-              className={`p-3 rounded-xl ${metric.color.bg} border border-gray-800 transition-all duration-300 group-hover:scale-110`}
+              className={`p-3 rounded-xl ${metric.color.bg} border border-gray-800 transition-all duration-300`}
               style={{
                 boxShadow: isHovered ? `0 0 20px ${metric.color.primary}30` : 'none'
               }}
@@ -286,8 +285,7 @@ const AutonomousOps = () => {
     return (
       <div 
         className={`group relative p-8 bg-gray-900/30 border ${feature.color.border} hover:border-opacity-60 
-                   rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
-                   transform hover:scale-[1.02] hover:-translate-y-1`}
+                   rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
@@ -325,7 +323,7 @@ const AutonomousOps = () => {
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
             <div 
-              className={`p-4 rounded-xl ${feature.color.bg} border border-gray-800 transition-all duration-300 group-hover:scale-110`}
+              className={`p-4 rounded-xl ${feature.color.bg} border border-gray-800 transition-all duration-300`}
               style={{
                 boxShadow: isHovered ? `0 0 25px ${feature.color.primary}30` : 'none'
               }}

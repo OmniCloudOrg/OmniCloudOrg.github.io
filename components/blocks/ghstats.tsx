@@ -222,8 +222,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detai
     return (
         <div 
             className={`group relative p-8 bg-gray-900/30 border ${color.border} ${color.hover} 
-                       rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
-                       transform hover:scale-[1.02] hover:-translate-y-1`}
+                       rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl`}
             style={{
                 animationDelay: `${index * 0.1}s`
             }}
@@ -263,7 +262,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detai
             <div className="relative h-full flex flex-col">
                 {/* Enhanced icon */}
                 <div 
-                    className={`p-4 rounded-xl ${color.bg} transition-all duration-300 group-hover:scale-110 border border-gray-800 w-fit mb-6 group-hover:shadow-lg`}
+                    className={`p-4 rounded-xl ${color.bg} transition-all duration-300 border border-gray-800 w-fit mb-6 group-hover:shadow-lg`}
                     style={{
                         '--hover-shadow': `0 0 25px ${color.primary}30`
                     } as any}
@@ -328,8 +327,7 @@ const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({
     return (
         <div 
             className={`group relative p-6 bg-gray-900/30 border ${rankColor.border} hover:border-opacity-60 
-                       rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
-                       transform hover:scale-[1.02] hover:-translate-y-1`}
+                       rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl`}
         >
             {/* Background gradient */}
             <div 
@@ -360,7 +358,7 @@ const ContributorCard: React.FC<{ contributor: Contributor; rank: number }> = ({
                 <div 
                     className={`flex-shrink-0 w-12 h-12 rounded-xl ${rankColor.bg} border ${rankColor.border} 
                                flex items-center justify-center font-bold text-lg ${rankColor.text} 
-                               transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}
+                               transition-all duration-300 group-hover:shadow-lg`}
                     style={{
                         '--hover-shadow': `0 0 20px ${rankColor.primary}30`
                     } as any}
@@ -729,7 +727,7 @@ const CommunityMetrics: React.FC = () => {
                         <div className="flex flex-col sm:flex-row gap-4">
                             <a 
                                 href="https://github.com/OmniCloudOrg/OmniCloud-Full" 
-                                className="group inline-flex items-center gap-2 px-6 py-3 bg-gray-900/50 border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white rounded-xl backdrop-blur-sm transition-all duration-300 transform hover:scale-105"
+                                className="group inline-flex items-center gap-2 px-6 py-3 bg-gray-900/50 border border-gray-700 hover:border-gray-600 text-gray-300 hover:text-white rounded-xl backdrop-blur-sm transition-all duration-300"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
@@ -739,7 +737,7 @@ const CommunityMetrics: React.FC = () => {
                             </a>
                             <a 
                                 href="/docs/contributing" 
-                                className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-cyan-500/25"
+                                className="group inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-bold rounded-xl transition-all duration-300 shadow-lg shadow-cyan-500/25"
                             >
                                 <span>Contributing Guide</span>
                                 <ExternalLink className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />

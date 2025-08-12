@@ -87,8 +87,7 @@ const TechOverview = () => {
         return (
             <div 
                 className={`group relative p-8 bg-gray-900/30 border ${feature.color.border} ${feature.color.hover} 
-                           rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
-                           transform hover:scale-[1.02] hover:-translate-y-2`}
+                           rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl`}
                 style={{
                     animationDelay: `${index * 0.2}s`
                 }}
@@ -140,7 +139,7 @@ const TechOverview = () => {
                 {/* Enhanced header */}
                 <div className="flex items-start gap-4 mb-6">
                     <div 
-                        className={`p-4 rounded-xl ${feature.color.bg} transition-all duration-300 group-hover:scale-110 border border-gray-800 group-hover:shadow-lg`}
+                        className={`p-4 rounded-xl ${feature.color.bg} transition-all duration-300 border border-gray-800 group-hover:shadow-lg`}
                         style={{
                             '--hover-shadow': `0 0 25px ${feature.color.primary}30`
                         } as any}

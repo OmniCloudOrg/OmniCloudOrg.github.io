@@ -145,7 +145,7 @@ const CallToAction = () => {
       <div 
         className={`group relative p-6 border ${metric.color.border} ${metric.color.bg} 
                    rounded-2xl transition-all duration-500 overflow-hidden backdrop-blur-xl
-                   transform hover:scale-[1.05] hover:-translate-y-2 cursor-pointer`}
+                   cursor-pointer`}
         style={{
           animationDelay: `${index * 0.1}s`
         }}
@@ -208,7 +208,7 @@ const CallToAction = () => {
 
         <div className="relative">
           {/* Metric value */}
-          <div className={`text-3xl font-black mb-2 font-mono transition-all duration-300 group-hover:scale-110 ${
+          <div className={`text-3xl font-black mb-2 font-mono transition-all duration-300 ${
             metric.highlight ? metric.color.text : 'text-white'
           }`}>
             {displayValue}{metric.suffix}
@@ -324,7 +324,7 @@ const CallToAction = () => {
 
             {/* Enhanced CTA buttons */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-bold text-lg rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-cyan-500/25 overflow-hidden">
+              <button className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-bold text-lg rounded-2xl transition-all duration-300 shadow-lg shadow-cyan-500/25 overflow-hidden">
                 <span className="relative z-10">Get Started, it's open source!</span>
                 <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
                 {/* Shimmer effect */}
@@ -332,7 +332,7 @@ const CallToAction = () => {
               </button>
               
               <a 
-                href="/demo" 
+                href="http://108.17.48.98:5673/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="group inline-flex items-center gap-2 text-gray-400 hover:text-white transition-all duration-300 text-lg font-medium"

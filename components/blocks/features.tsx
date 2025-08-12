@@ -144,7 +144,7 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
         <div 
             className={`group relative p-6 sm:p-8 bg-gray-900/30 border ${feature.color.border} ${feature.color.hover} 
                        rounded-2xl transition-all duration-500 overflow-hidden h-full backdrop-blur-xl
-                       transform hover:scale-[1.02] hover:-translate-y-1 ${feature.className}`}
+                       ${feature.className}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             style={{
@@ -192,7 +192,7 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
                         <div 
-                            className={`p-3 rounded-xl ${feature.color.bg} transition-all duration-300 group-hover:scale-110 border border-gray-800 group-hover:border-opacity-50`}
+                            className={`p-3 rounded-xl ${feature.color.bg} transition-all duration-300 border border-gray-800 group-hover:border-opacity-50`}
                             style={{
                                 boxShadow: isHovered ? `0 0 20px ${feature.color.primary}30` : 'none'
                             }}
@@ -348,7 +348,7 @@ const Features = () => {
 
                 {/* Bottom CTA section */}
                 <div className="text-center mt-20">
-                    <div className="inline-flex items-center gap-4 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-cyan-500/25 cursor-pointer group">
+                    <div className="inline-flex items-center gap-4 px-8 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black font-bold rounded-2xl transition-all duration-300 shadow-lg shadow-cyan-500/25 cursor-pointer group">
                         <span className="text-lg">Explore All Features</span>
                         <div className="flex items-center gap-1">
                             {[0, 1, 2].map((i) => (
