@@ -310,15 +310,6 @@ const AutonomousOps = () => {
           }}
         />
 
-        {/* Autonomy level indicator */}
-        <div className="absolute top-6 right-6">
-          <div className={`px-3 py-1 rounded-full ${feature.color.bg} border ${feature.color.border}`}>
-            <span className={`text-xs font-bold ${feature.color.text}`}>
-              {feature.autonomousLevel}% AUTO
-            </span>
-          </div>
-        </div>
-
         <div className="relative">
           {/* Header */}
           <div className="flex items-center gap-4 mb-6">
