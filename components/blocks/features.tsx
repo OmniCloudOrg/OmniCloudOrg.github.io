@@ -6,9 +6,9 @@ import { Zap, Cloud, Box, Cpu, GitBranch, Wrench, Activity, TrendingUp, Server }
 const features = [
     {
         icon: <Zap className="w-6 h-6" />,
-        title: "Ultra-Light Runtime",
-        description: "Only 24MB RAM overhead per microservice",
-        detail: "Deploy more services on existing hardware without compromise. Industry-leading efficiency.",
+        title: "Block-Level Storage",
+        description: "High-performance I/O with configurable block sizes",
+        detail: "Advanced block-level storage engine with write-ahead journaling for crash consistency and optimal performance.",
         area: "feat1",
         className: "lg:col-span-2",
         color: {
@@ -20,13 +20,13 @@ const features = [
             glow: "#fbbf24",
             text: "text-yellow-400"
         },
-        metrics: { value: "24MB", label: "RAM Overhead", trend: "-89%" }
+        metrics: { value: "2.1ms", label: "Avg Latency", trend: "-67%" }
     },
     {
         icon: <Cloud className="w-6 h-6" />,
-        title: "Universal Deployment",
-        description: "Deploy to any infrastructure",
-        detail: "Native support for major cloud providers, VMs (VirtualBox, VMware, OpenStack), and bare metal through simple JSON templates.",
+        title: "Distributed Replication",
+        description: "Synchronous and asynchronous replication modes",
+        detail: "Enterprise-grade distributed replication with multi-node synchronization and automatic failover capabilities.",
         area: "feat2",
         className: "lg:col-span-2",
         color: {
@@ -38,13 +38,13 @@ const features = [
             glow: "#06b6d4",
             text: "text-cyan-400"
         },
-        metrics: { value: "15+", label: "Platforms", trend: "+300%" }
+        metrics: { value: "3x", label: "Replication Factor", trend: "+200%" }
     },
     {
         icon: <Box className="w-6 h-6" />,
-        title: "Smart Build System",
-        description: "Automatic container optimization",
-        detail: "Leverages devcontainer features to create optimized base images without manual configuration.",
+        title: "Volume Management",
+        description: "Dynamic provisioning and lifecycle management",
+        detail: "Complete volume lifecycle management with online expansion, cloning, and multiple access modes support.",
         area: "feat3",
         className: "lg:col-span-1",
         color: {
@@ -56,13 +56,13 @@ const features = [
             glow: "#8b5cf6",
             text: "text-purple-400"
         },
-        metrics: { value: "78%", label: "Size Reduction", trend: "+42%" }
+        metrics: { value: "∞", label: "Volume Scaling", trend: "+∞%" }
     },
     {
         icon: <Cpu className="w-6 h-6" />,
-        title: "Multi-Runtime Support",
-        description: "Any Docker-compatible runtime",
-        detail: "Run workloads on any container runtime compatible with the Docker image standard.",
+        title: "Snapshot Support",
+        description: "Point-in-time recovery and cloning",
+        detail: "Instant snapshots with copy-on-write technology for efficient backup and recovery operations.",
         area: "feat4",
         className: "lg:col-span-1",
         color: {
@@ -74,13 +74,13 @@ const features = [
             glow: "#10b981",
             text: "text-green-400"
         },
-        metrics: { value: "100%", label: "Compatibility", trend: "+25%" }
+        metrics: { value: "<1s", label: "Snapshot Time", trend: "+95%" }
     },
     {
         icon: <GitBranch className="w-6 h-6" />,
         title: "Rust-Powered Core",
-        description: "Built for reliability",
-        detail: "Get the security and efficiency benefits of a modern systems programming language.",
+        description: "Memory-safe systems programming",
+        detail: "Built with Rust for zero-cost abstractions, memory safety, and fearless concurrency in storage operations.",
         area: "feat5",
         className: "lg:col-span-1",
         color: {
@@ -95,10 +95,10 @@ const features = [
         metrics: { value: "0", label: "Memory Leaks", trend: "100%" }
     },
     {
-        icon: <Wrench className="w-6 h-6" />,
-        title: "Hardware Integration",
-        description: "Direct bare metal support",
-        detail: "Seamlessly mix cloud, VM, and physical hardware resources in your infrastructure.",
+        icon: <Activity className="w-6 h-6" />,
+        title: "Real-time Monitoring",
+        description: "Performance metrics and health monitoring",
+        detail: "Comprehensive monitoring with real-time IOPS, throughput, latency tracking and Prometheus integration.",
         area: "feat6",
         className: "lg:col-span-1",
         color: {
@@ -110,7 +110,7 @@ const features = [
             glow: "#ec4899",
             text: "text-pink-400"
         },
-        metrics: { value: "99.9%", label: "Uptime", trend: "+15%" }
+        metrics: { value: "99.99%", label: "Uptime SLA", trend: "+15%" }
     }
 ];
 
@@ -287,15 +287,15 @@ const Features = () => {
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/20 bg-cyan-500/5 backdrop-blur-sm mb-6">
                             <Server className="w-4 h-4 text-cyan-400" />
                             <span className="text-sm font-medium text-cyan-300 tracking-wider uppercase">
-                                Platform Features
+                                Storage Features
                             </span>
                             <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                         </div>
                         
                         <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
-                            Next-Generation
+                            Enterprise-Grade
                             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400">
-                                Deployment Platform
+                                Distributed Storage
                             </span>
                         </h2>
                         
@@ -307,9 +307,9 @@ const Features = () => {
                     </div>
                     
                     <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                        Ultra-efficient deployment to any target - from public clouds to bare metal - 
-                        with <span className="text-cyan-300 font-semibold">minimal overhead</span> and 
-                        <span className="text-purple-300 font-semibold"> maximum flexibility</span>.
+                        High-performance distributed filesystem with advanced features - from local storage to multi-region replication - 
+                        delivering <span className="text-cyan-300 font-semibold">enterprise reliability</span> with 
+                        <span className="text-purple-300 font-semibold"> blazing-fast performance</span>.
                     </p>
                 </div>
                 

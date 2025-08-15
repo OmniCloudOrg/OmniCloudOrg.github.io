@@ -163,11 +163,11 @@ const Footer = () => {
             <div className="lg:col-span-2">
               <div className="mb-6">
                 <h2 className="text-2xl font-black text-white mb-2 tracking-tight">
-                  OmniCloud
+                  GalleonFS
                 </h2>
                 <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
-                  The future of cloud deployment. Deploy anywhere, scale everywhere, 
-                  manage nothing. <span className="text-cyan-300 font-semibold">Zero configuration required</span>.
+                  High-performance distributed filesystem built in Rust. 
+                  <span className="text-cyan-300 font-semibold">Enterprise-grade storage</span> for modern applications.
                 </p>
               </div>
 
@@ -241,7 +241,7 @@ const Footer = () => {
             {/* Additional links */}
             <div className="flex items-center gap-6 text-sm">
               <span className="text-gray-500">
-                © 2024 OmniCloud. Open source software.
+                © 2024 GalleonFS | An OmniCloud project
               </span>
             </div>
           </div>

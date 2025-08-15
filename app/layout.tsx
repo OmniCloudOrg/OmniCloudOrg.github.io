@@ -24,18 +24,6 @@ function ConstructionWarningModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -93,21 +81,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>OmniCloud - Next-Generation Cloud Infrastructure Platform</title>
-        <meta name="description" content="Deploy, manage, and scale your applications with OmniCloud's developer-friendly infrastructure platform. 24MB RAM overhead, 99.99% uptime, zero-config deployment." />
-        <meta name="keywords" content="cloud infrastructure, deployment platform, microservices, container orchestration, DevOps, serverless" />
-        <meta name="author" content="OmniCloud" />
-        <meta property="og:title" content="OmniCloud - Next-Generation Cloud Infrastructure Platform" />
-        <meta property="og:description" content="Deploy, manage, and scale your applications with OmniCloud's developer-friendly infrastructure platform." />
+        <title>GalleonFS - High-Performance Distributed Storage System</title>
+        <meta name="description" content="Enterprise-grade distributed filesystem built in Rust. Block-level storage with advanced replication, snapshots, encryption, and monitoring. 99.99% uptime, sub-3ms latency." />
+        <meta name="keywords" content="distributed storage, filesystem, block storage, data replication, enterprise storage, rust storage, cloud storage, backup recovery" />
+        <meta name="author" content="GalleonFS Team" />
+        <meta property="og:title" content="GalleonFS - High-Performance Distributed Storage System" />
+        <meta property="og:description" content="Enterprise-grade distributed filesystem with advanced features like snapshots, backup/recovery, migration, and comprehensive monitoring." />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="/logo.png" />
+        <meta property="og:image" content="/branding/logo-wide-transparent.svg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="OmniCloud - Next-Generation Cloud Infrastructure Platform" />
-        <meta name="twitter:description" content="Deploy, manage, and scale your applications with OmniCloud's developer-friendly infrastructure platform." />
-        <meta name="twitter:image" content="/logo.png" />
+        <meta name="twitter:title" content="GalleonFS - High-Performance Distributed Storage System" />
+        <meta name="twitter:description" content="Enterprise-grade distributed filesystem with advanced features like snapshots, backup/recovery, migration, and comprehensive monitoring." />
+        <meta name="twitter:image" content="/branding/logo-wide-transparent.svg" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased relative overflow-x-hidden`}
+        className={`antialiased relative overflow-x-hidden`}
       >
         {showWarning && <ConstructionWarningModal onClose={handleClose} />}
         <Header />
