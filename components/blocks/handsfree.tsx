@@ -258,22 +258,6 @@ const AutonomousOps = () => {
               ))}
             </div>
           </div>
-
-          {/* Progress indicator */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-gray-500">System Response</span>
-            <span className="text-xs text-gray-400">{Math.round(animationProgress)}%</span>
-          </div>
-          <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
-            <div 
-              className="h-full transition-all duration-1000 ease-out rounded-full"
-              style={{ 
-                width: `${animationProgress}%`,
-                backgroundColor: metric.color.primary,
-                boxShadow: `0 0 8px ${metric.color.primary}60`
-              }}
-            />
-          </div>
         </div>
       </div>
     );
@@ -351,22 +335,6 @@ const AutonomousOps = () => {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Autonomy progress */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-gray-500">Autonomy Level</span>
-            <span className="text-xs text-gray-400">{feature.autonomousLevel}%</span>
-          </div>
-          <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
-            <div 
-              className="h-full transition-all duration-1000 ease-out rounded-full"
-              style={{ 
-                width: `${feature.autonomousLevel}%`,
-                backgroundColor: feature.color.primary,
-                boxShadow: `0 0 10px ${feature.color.primary}60`
-              }}
-            />
           </div>
         </div>
       </div>

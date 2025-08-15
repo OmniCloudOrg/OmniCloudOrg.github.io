@@ -199,22 +199,6 @@ const TechOverview = () => {
                     ))}
                 </div>
 
-                {/* Performance indicator */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-800 group-hover:border-gray-700 transition-colors">
-                    <div className="flex items-center gap-2">
-                        <Activity className="w-4 h-4 text-gray-500" />
-                        <span className="text-xs text-gray-500 font-medium">
-                            Real-time Performance
-                        </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${feature.color.text} animate-pulse`} />
-                        <div className="text-xs text-gray-400 font-mono">
-                            Optimized
-                        </div>
-                    </div>
-                </div>
-
                 {/* Hover shadow effect */}
                 <style jsx>{`
                     .group:hover [style*="--hover-shadow"] {

@@ -3,7 +3,26 @@
 import localFont from "next/font/local";
 import { Header, Footer } from "@/components/layout";
 import "./globals.css";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+// Modal for construction warning
+function ConstructionWarningModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70">
+      <div className="bg-neutral-900 text-neutral-100 p-8 rounded-xl shadow-2xl max-w-md w-full text-center border border-neutral-800">
+        <h2 className="text-2xl font-bold mb-4 text-white">Site Under Construction</h2>
+        <p className="mb-6 text-base opacity-80 text-neutral-300">
+          This site is currently under construction. Some features may not work as expected.
+        </p>
+        <button
+          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          onClick={onClose}
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  );
+}
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,6 +41,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>): React.ReactNode {
+  const [showWarning, setShowWarning] = useState(false);
+
   useEffect(() => {
     // Add favicon dynamically on client side
     const addFavicon = () => {
@@ -52,7 +73,22 @@ export default function RootLayout({
     };
 
     addFavicon();
+
+    // Show construction warning if not dismissed
+    if (typeof window !== "undefined") {
+      const dismissed = localStorage.getItem("siteWarningDismissed");
+      if (!dismissed) {
+        setShowWarning(true);
+      }
+    }
   }, []);
+
+  const handleClose = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("siteWarningDismissed", "true");
+    }
+    setShowWarning(false);
+  };
 
   return (
     <html lang="en">
@@ -73,6 +109,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative overflow-x-hidden`}
       >
+        {showWarning && <ConstructionWarningModal onClose={handleClose} />}
         <Header />
         {children}
         <Footer />

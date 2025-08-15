@@ -288,13 +288,6 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon: Icon, label, value, detai
                     </div>
                     <div className="text-sm text-gray-400">{detail}</div>
                 </div>
-
-                {/* Status indicator */}
-                <div className="flex items-center gap-2 pt-4 border-t border-gray-800 group-hover:border-gray-700 transition-colors">
-                    <Activity className="w-3 h-3 text-gray-500" />
-                    <span className="text-xs text-gray-500">Active</span>
-                    <div className={`ml-auto w-2 h-2 rounded-full ${color.text} animate-pulse`} />
-                </div>
             </div>
 
             {/* Hover shadow effect */}

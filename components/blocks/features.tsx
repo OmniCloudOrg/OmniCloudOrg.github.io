@@ -246,32 +246,6 @@ const FeatureCard = ({ feature, index }: { feature: Feature; index: number }) =>
                 <p className="text-sm text-gray-300 leading-relaxed flex-1">
                     {feature.detail}
                 </p>
-
-                {/* Bottom accent */}
-                <div className="mt-6 pt-4 border-t border-gray-800 group-hover:border-gray-700 transition-colors">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <Activity className="w-4 h-4 text-gray-500" />
-                            <span className="text-xs text-gray-500 font-medium">
-                                Production Ready
-                            </span>
-                        </div>
-                        <div 
-                            className="w-6 h-6 rounded-full border-2 border-gray-700 group-hover:border-gray-600 transition-colors relative overflow-hidden"
-                            style={{
-                                borderColor: isHovered ? feature.color.primary : undefined
-                            }}
-                        >
-                            <div 
-                                className="absolute inset-1 rounded-full transition-all duration-500"
-                                style={{
-                                    backgroundColor: isHovered ? feature.color.primary : 'transparent',
-                                    opacity: isHovered ? 0.8 : 0
-                                }}
-                            />
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     );
