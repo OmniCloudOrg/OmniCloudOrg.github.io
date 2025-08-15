@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, Menu, ExternalLink, X, Zap, Code2, Globe } from 'lucide-react';
+import { Github, Menu, ExternalLink, X, Zap, Code2, Globe, Folder } from 'lucide-react';
 
 const ForgeLogoSVG = () => (
   <img src="/logo.png" alt="Forge Logo" className="w-32 h-32" />
@@ -115,6 +115,7 @@ const Header = () => {
               <NavLink href="/" icon={<Globe className="w-4 h-4" />}>Home</NavLink>
               <NavLink href="/why" icon={<Zap className="w-4 h-4" />}>Why</NavLink>
               <NavLink href="/features" icon={<Code2 className="w-4 h-4" />}>Features</NavLink>
+              <NavLink href="/galleon" icon={<Folder className="w-4 h-4" />}>GalleonFS</NavLink>
               <NavLink href="/about">About</NavLink>
                 <NavLink href="">
                   <span className="line-through text-gray-500">Documentation</span>
