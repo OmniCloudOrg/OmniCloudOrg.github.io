@@ -10,8 +10,8 @@ const TechOverview = () => {
     const techFeatures = [
         {
             icon: <Zap className="w-6 h-6" />,
-            title: "Write-Ahead Journaling",
-            description: "Crash consistency and recovery guarantees",
+            title: "Zero Runtime Overhead",
+            description: "No garbage collection, no runtime, no surprises",
             color: {
                 primary: "#f59e0b", // amber
                 secondary: "#d97706",
@@ -22,14 +22,14 @@ const TechOverview = () => {
                 glow: "#f59e0b"
             },
             metrics: [
-                { label: "Crash Recovery", value: "100%", trend: "✓", icon: <Monitor className="w-3 h-3" /> },
-                { label: "Data Integrity", value: "✓", trend: "∞", icon: <Activity className="w-3 h-3" /> }
+                { label: "Memory Overhead", value: "24MB", trend: "-89%", icon: <Monitor className="w-3 h-3" /> },
+                { label: "GC Pauses", value: "0ms", trend: "100%", icon: <Activity className="w-3 h-3" /> }
             ]
         },
         {
             icon: <Lock className="w-6 h-6" />,
-            title: "Enterprise Encryption",
-            description: "AES-256-GCM with multiple key management options",
+            title: "Memory Safe by Design",
+            description: "Compile-time guarantees eliminate common vulnerabilities",
             color: {
                 primary: "#ef4444", // red
                 secondary: "#dc2626",
@@ -40,14 +40,14 @@ const TechOverview = () => {
                 glow: "#ef4444"
             },
             metrics: [
-                { label: "Encryption", value: "AES-256", trend: "✓", icon: <Shield className="w-3 h-3" /> },
-                { label: "Key Security", value: "HSM", trend: "✓", icon: <Lock className="w-3 h-3" /> }
+                { label: "Memory Safety", value: "100%", trend: "✓", icon: <Shield className="w-3 h-3" /> },
+                { label: "Data Races", value: "0", trend: "∞", icon: <Lock className="w-3 h-3" /> }
             ]
         },
         {
             icon: <Cpu className="w-6 h-6" />,
-            title: "High-Performance I/O",
-            description: "Optimized for throughput and low-latency operations",
+            title: "Fearless Concurrency",
+            description: "Safe parallelism without the complexity of typical models",
             color: {
                 primary: "#8b5cf6", // purple
                 secondary: "#7c3aed",
@@ -58,8 +58,8 @@ const TechOverview = () => {
                 glow: "#8b5cf6"
             },
             metrics: [
-                { label: "IOPS", value: ">10K", trend: "+250%", icon: <Cpu className="w-3 h-3" /> },
-                { label: "Latency", value: "2.1ms", trend: "-67%", icon: <BarChart3 className="w-3 h-3" /> }
+                { label: "Thread Safety", value: "✓", trend: "∞", icon: <Cpu className="w-3 h-3" /> },
+                { label: "Deadlock Free", value: "✓", trend: "100%", icon: <GitBranch className="w-3 h-3" /> }
             ]
         }
     ];
@@ -291,9 +291,9 @@ const TechOverview = () => {
                     
                     <div className="text-center">
                         <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 tracking-tight">
-                            Reliable Storage
+                            Performance
                             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-red-400">
-                                Built for Scale
+                                Without Compromise
                             </span>
                         </h2>
                         
@@ -304,9 +304,9 @@ const TechOverview = () => {
                         </div>
                         
                         <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                            Powered by Rust's <span className="text-orange-300 font-semibold">memory safety guarantees</span> and 
-                            <span className="text-red-300 font-semibold"> concurrent I/O performance</span>, 
-                            GalleonFS delivers enterprise storage reliability at cloud scale.
+                            Powered by Rust's <span className="text-orange-300 font-semibold">zero-cost abstractions</span> and 
+                            <span className="text-red-300 font-semibold"> memory safety guarantees</span>, 
+                            OmniCloud delivers exceptional performance while ensuring reliability.
                         </p>
                     </div>
                 </div>
@@ -320,27 +320,27 @@ const TechOverview = () => {
                     ))}
                 </div>
 
-                {/* Storage performance metrics */}
+                {/* Bottom stats summary */}
                 <div className="text-center">
-                    <div className="inline-flex items-center gap-6 px-6 py-4 bg-gradient-to-r from-amber-500/5 via-red-500/5 to-purple-500/5 border border-gray-800 rounded-2xl backdrop-blur-sm">
+                    <div className="inline-flex items-center gap-8 px-8 py-4 bg-gradient-to-r from-amber-500/5 via-red-500/5 to-purple-500/5 border border-gray-800 rounded-2xl backdrop-blur-sm">
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-amber-400">15K+</div>
-                            <div className="text-xs text-gray-400">IOPS</div>
+                            <div className="text-2xl font-bold text-white">99.9%</div>
+                            <div className="text-xs text-gray-400">Uptime</div>
                         </div>
                         <div className="w-px h-8 bg-gray-700" />
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-red-400">2.1ms</div>
-                            <div className="text-xs text-gray-400">Latency</div>
+                            <div className="text-2xl font-bold text-amber-400">24MB</div>
+                            <div className="text-xs text-gray-400">Max RAM</div>
                         </div>
                         <div className="w-px h-8 bg-gray-700" />
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-purple-400">AES-256</div>
-                            <div className="text-xs text-gray-400">Encryption</div>
+                            <div className="text-2xl font-bold text-red-400">0ms</div>
+                            <div className="text-xs text-gray-400">GC Pause</div>
                         </div>
                         <div className="w-px h-8 bg-gray-700" />
                         <div className="text-center">
-                            <div className="text-2xl font-bold text-white">100%</div>
-                            <div className="text-xs text-gray-400">Data Safety</div>
+                            <div className="text-2xl font-bold text-purple-400">∞</div>
+                            <div className="text-xs text-gray-400">Thread Safe</div>
                         </div>
                     </div>
                 </div>

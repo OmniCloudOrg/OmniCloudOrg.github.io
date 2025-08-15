@@ -5,7 +5,6 @@
       "Bash(npm run build:*)",
       "Bash(rm:*)"
     ],
-    "deny": [],
-    "defaultMode": "acceptEdits"
+    "deny": []
   }
 }

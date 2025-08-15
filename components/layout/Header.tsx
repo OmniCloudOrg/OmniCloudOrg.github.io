@@ -1,17 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Github, ExternalLink } from 'lucide-react';
+import { Github, Menu, ExternalLink, X, Zap, Code2, Globe } from 'lucide-react';
 
 const ForgeLogoSVG = () => (
-  <img src="/logo-wide-transparent.svg" alt="Forge Logo" className="h-20 pt-5" />
+  <img src="/logo.png" alt="Forge Logo" className="w-32 h-32" />
 );
 
-type NavLinkProps = {
-  href: string;
-  children: React.ReactNode;
-  icon?: React.ReactNode;
-};
-
-const NavLink = ({ href, children, icon }: NavLinkProps) => (
+const NavLink: React.FC<{ href: string; children: React.ReactNode; icon?: React.ReactNode }> = ({ href, children, icon }) => (
   <a
     href={href}
     className="group flex items-center gap-2 px-3 py-2 text-sm text-gray-300 hover:text-white transition-all duration-300 hover:bg-cyan-500/5 rounded-lg border border-transparent hover:border-cyan-500/20 backdrop-blur-sm relative overflow-hidden"
@@ -24,13 +18,14 @@ const NavLink = ({ href, children, icon }: NavLinkProps) => (
 );
 
 const Header = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
   const [scrollY, setScrollY] = useState(0);
-  const headerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
-  // Mouse tracking for parallax with proper cleanup
+  // Mouse tracking for parallax
   useEffect(() => {
-    const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
+    const handleMouseMove = (e: MouseEvent) => {
       if (headerRef.current) {
         const rect = headerRef.current.getBoundingClientRect();
         setMousePosition({
@@ -43,9 +38,7 @@ const Header = () => {
     const header = headerRef.current;
     if (header) {
       header.addEventListener('mousemove', handleMouseMove);
-      return () => {
-        header.removeEventListener('mousemove', handleMouseMove);
-      };
+      return () => header.removeEventListener('mousemove', handleMouseMove);
     }
   }, []);
 
@@ -53,76 +46,161 @@ const Header = () => {
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <>
-      <header
-        ref={headerRef}
-        className="fixed top-0 left-0 right-0 z-50 border-b border-gray-800/30 overflow-hidden"
-      >
-        {/* Animated background elements */}
-        <div className="absolute inset-0 pointer-events-none">
-          {/* Floating orbs */}
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full opacity-10"
-              style={{
-                width: `${60 + i * 20}px`,
-                height: `${60 + i * 20}px`,
-                background: `radial-gradient(circle, ${['#00ffff', '#8000ff', '#ff0080'][i]} 0%, transparent 70%)`,
-                left: `${20 + i * 30}%`,
-                top: `${-20 + i * 10}%`,
-                transform: `translate(${(mousePosition.x - 0.5) * (15 + i * 5)}px, ${(mousePosition.y - 0.5) * (10 + i * 3)}px)`
-              }}
-            />
-          ))}
-
-          {/* Grid pattern */}
+    <header 
+      ref={headerRef}
+      className="fixed top-0 left-0 right-0 z-50 border-b border-gray-800/30 overflow-hidden"
+    >
+      {/* Animated background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Floating orbs */}
+        {Array.from({ length: 3 }).map((_, i) => (
           <div
-            className="absolute inset-0 opacity-[0.03]"
+            key={i}
+            className="absolute rounded-full opacity-10"
             style={{
-              backgroundImage: `
-                linear-gradient(#00ffff 1px, transparent 1px),
-                linear-gradient(90deg, #00ffff 1px, transparent 1px)
-              `,
-              backgroundSize: '30px 30px',
-              backgroundPosition: '0 0, 0 0'
+              width: `${60 + i * 20}px`,
+              height: `${60 + i * 20}px`,
+              background: `radial-gradient(circle, ${['#00ffff', '#8000ff', '#ff0080'][i]} 0%, transparent 70%)`,
+              left: `${20 + i * 30}%`,
+              top: `${-20 + i * 10}%`,
+              transform: `translate(${(mousePosition.x - 0.5) * (15 + i * 5)}px, ${(mousePosition.y - 0.5) * (10 + i * 3)}px)`
             }}
           />
+        ))}
 
-          {/* Pulsing accent line */}
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-20 animate-pulse" />
-        </div>
-
-        {/* Main header content */}
-        <div
-          className="relative bg-black/80 backdrop-blur-xl transition-all duration-300"
+        {/* Grid pattern */}
+        <div 
+          className="absolute inset-0 opacity-[0.03]"
           style={{
-            backgroundColor: scrollY > 50 ? 'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.8)'
+            backgroundImage: `
+              linear-gradient(#00ffff 1px, transparent 1px),
+              linear-gradient(90deg, #00ffff 1px, transparent 1px)
+            `,
+            backgroundSize: '30px 30px',
+            backgroundPosition: '0 0, 0 0'
           }}
-        >
-          <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              {/* Logo */}
-              <a href="/" className="flex items-center gap-3 group relative">
-                <div className="relative pl-10">
-                  <ForgeLogoSVG />
-                  {/* Animated glow effect */}
-                  <div className="absolute inset-0 bg-cyan-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse" />
-                  <div className="absolute inset-0 bg-cyan-400/10 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-all duration-500" />
-                </div>
-                {/* Subtle moving gradient on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
+        />
+
+        {/* Pulsing accent line */}
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-20 animate-pulse" />
+      </div>
+
+      {/* Main header content */}
+      <div 
+        className="relative bg-black/80 backdrop-blur-xl transition-all duration-300"
+        style={{
+          backgroundColor: scrollY > 50 ? 'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.8)'
+        }}
+      >
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <a href="/" className="flex items-center gap-3 group relative">
+              <div className="relative pl-10">
+                <ForgeLogoSVG />
+                {/* Animated glow effect */}
+                <div className="absolute inset-0 bg-cyan-400/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500 animate-pulse" />
+                <div className="absolute inset-0 bg-cyan-400/10 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-all duration-500" />
+              </div>
+              {/* Subtle moving gradient on hover */}
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
+            </a>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-1">
+              <NavLink href="/" icon={<Globe className="w-4 h-4" />}>Home</NavLink>
+              <NavLink href="/why" icon={<Zap className="w-4 h-4" />}>Why</NavLink>
+              <NavLink href="/features" icon={<Code2 className="w-4 h-4" />}>Features</NavLink>
+              <NavLink href="/about">About</NavLink>
+                <NavLink href="">
+                  <span className="line-through text-gray-500">Documentation</span>
+                </NavLink>
+                <NavLink href="">
+                  <span className="line-through text-gray-500">Blog</span>
+                </NavLink>
+
+              {/* Animated divider */}
+              <div className="h-6 w-px bg-gradient-to-b from-transparent via-gray-600 to-transparent mx-4 relative">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/50 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+              </div>
+
+              {/* GitHub with enhanced hover */}
+              <a 
+                href="https://github.com/OmniCloudOrg" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group p-2 text-gray-400 hover:text-white transition-all duration-300 hover:bg-gray-800/50 rounded-lg border border-transparent hover:border-gray-700/50 backdrop-blur-sm relative overflow-hidden"
+              >
+                <Github className="w-5 h-5 relative z-10" />
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-500/0 via-gray-500/10 to-gray-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </a>
+
+              {/* Enhanced CTA Button */}
+              <a 
+                href="/docs/quickstart" 
+                className="group relative inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black text-sm font-bold transition-all duration-300 transform hover:scale-105 rounded-lg shadow-lg shadow-cyan-500/25 overflow-hidden"
+              >
+                <span className="relative z-10">Get Started</span>
+                <ExternalLink className="w-4 h-4 relative z-10 group-hover:translate-x-0.5 transition-transform duration-300" />
+                {/* Animated shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer" />
+              </a>
+            </div>
+
+            {/* Enhanced Mobile Menu Button */}
+            <button
+              className="md:hidden group p-2 text-gray-400 hover:text-white transition-all duration-300 hover:bg-gray-800/50 rounded-lg border border-transparent hover:border-gray-700/50 backdrop-blur-sm relative overflow-hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6 relative z-10" />
+              ) : (
+                <Menu className="w-6 h-6 relative z-10" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-500/0 via-gray-500/10 to-gray-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </button>
+          </div>
+        </nav>
+
+        {/* Enhanced Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-gray-800/30 relative">
+            {/* Mobile menu background effects */}
+            <div className="absolute inset-0 bg-gradient-to-b from-gray-900/20 to-gray-900/40 backdrop-blur-xl" />
+            <div className="absolute inset-0 opacity-[0.02]">
+              <div 
+                style={{
+                  backgroundImage: `
+                    linear-gradient(#00ffff 1px, transparent 1px),
+                    linear-gradient(90deg, #00ffff 1px, transparent 1px)
+                  `,
+                  backgroundSize: '20px 20px'
+                }}
+                className="w-full h-full"
+              />
+            </div>
+            
+            <nav className="relative max-w-7xl mx-auto px-4 py-6 space-y-2">
+              <NavLink href="/" icon={<Globe className="w-4 h-4" />}>Home</NavLink>
+              <NavLink href="/why" icon={<Zap className="w-4 h-4" />}>Why</NavLink>
+              <NavLink href="/features" icon={<Code2 className="w-4 h-4" />}>Features</NavLink>
+              <NavLink href="/community">Community</NavLink>
+              <NavLink href="/about">About</NavLink>
+              <NavLink href="/docs">Documentation</NavLink>
+              <NavLink href="/blog">Blog</NavLink>
               
-              <div className="flex items-center justify-between pt-2 gap-4">
-                <a
-                  href="https://github.com/OmniCloudOrg"
+              {/* Animated divider */}
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-600 to-transparent my-6 relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent animate-pulse" />
+              </div>
+              
+              <div className="flex items-center justify-between pt-2">
+                <a 
+                  href="https://github.com/OmniCloudOrg" 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group p-2 text-gray-400 hover:text-white transition-all duration-300 hover:bg-gray-800/50 rounded-lg border border-transparent hover:border-gray-700/50 backdrop-blur-sm relative overflow-hidden"
@@ -130,9 +208,9 @@ const Header = () => {
                   <Github className="w-5 h-5 relative z-10" />
                   <div className="absolute inset-0 bg-gradient-to-r from-gray-500/0 via-gray-500/10 to-gray-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </a>
-
-                <a
-                  href="/docs/quickstart"
+                
+                <a 
+                  href="/docs/quickstart" 
                   className="group relative inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-black text-sm font-bold transition-all duration-300 transform hover:scale-105 rounded-lg shadow-lg shadow-cyan-500/25 overflow-hidden"
                 >
                   <span className="relative z-10">Get Started</span>
@@ -140,10 +218,10 @@ const Header = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer" />
                 </a>
               </div>
-            </div>
-          </nav>
-        </div>
-      </header>
+            </nav>
+          </div>
+        )}
+      </div>
 
       {/* Custom styles */}
       <style jsx>{`
@@ -165,7 +243,7 @@ const Header = () => {
           animation: shimmer 2s ease-in-out infinite;
         }
       `}</style>
-    </>
+    </header>
   );
 };
 

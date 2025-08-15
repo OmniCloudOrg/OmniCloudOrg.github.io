@@ -24,58 +24,65 @@ const AmoledHero = () => {
     const TYPING_SPEED = 50; // ms between characters
     const LINE_DELAY = 800; // ms between lines
 
-    const flipWords = ["Store", "Distribute", "Scale"];
+    const flipWords = ["Build", "Ship", "Scale"];
 
-    // Different storage operation examples for GalleonFS
+    // Different code examples for each technology
     const codeExamples = {
-        volumes: [
-            'galleonfs create volume app-data 100GB --class fast-ssd',
-            'galleonfs mount app-data /mnt/data',
-            '> Creating distributed volume...',
-            '> Mounting filesystem...',
-            '✨ Volume ready for cloud applications'
+        nextjs: [
+            'npx create-next-app@latest my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Building Next.js application...',
+            '✨ Deployed to https://my-app.omni.dev'
         ],
-        replication: [
-            'galleonfs replicate app-data --nodes 3 --sync',
-            '> Synchronizing across nodes...',
-            '> Verifying data consistency...',
-            '✨ Distributed replication active'
+        rust: [
+            'cargo new my-rust-app',
+            'cd my-rust-app',
+            'omni deploy --runtime rust',
+            '> Compiling Rust binary...',
+            '✨ Serverless function deployed'
         ],
-        snapshots: [
-            'galleonfs snapshot create app-data backup-v1.2',
-            '> Creating point-in-time snapshot...',
-            '> Calculating block-level changes...',
-            '✨ Snapshot created successfully'
+        svelte: [
+            'npm create svelte@latest my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Building SvelteKit app...',
+            '✨ Edge deployment complete'
         ],
-        backup: [
-            'galleonfs backup schedule app-data --policy incremental',
-            '> Configuring automated backups...',
-            '> Setting retention policies...',
-            '✨ Backup schedule configured'
+        react: [
+            'npx create-react-app my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Optimizing React build...',
+            '✨ CDN distribution ready'
         ],
-        migration: [
-            'galleonfs migrate app-data --target cloud-nvme',
-            '> Starting live migration...',
-            '> Zero-downtime data transfer...',
-            '✨ Migration completed seamlessly'
+        vue: [
+            'npm create vue@latest my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Building Vue.js application...',
+            '✨ Global deployment successful'
         ],
-        monitoring: [
-            'galleonfs status --volume app-data',
-            '> Volume: 85GB/100GB used, 3 replicas',
-            '> IOPS: 5,240 read/s, 2,180 write/s',
-            '✨ All nodes healthy and synchronized'
+        angular: [
+            'ng new my-app',
+            'cd my-app',
+            'omni deploy',
+            '> Building Angular project...',
+            '✨ Production build deployed'
         ],
-        encryption: [
-            'galleonfs encrypt app-data --aes256 --keys hsm',
-            '> Enabling encryption at rest...',
-            '> Configuring HSM key management...',
-            '✨ Volume secured with enterprise encryption'
+        python: [
+            'mkdir my-python-api',
+            'cd my-python-api',
+            'omni deploy --runtime python',
+            '> Installing dependencies...',
+            '✨ Python API endpoint live'
         ],
-        recovery: [
-            'galleonfs restore app-data --from backup-v1.2',
-            '> Restoring from distributed backup...',
-            '> Validating data integrity...',
-            '✨ Data restored across all nodes'
+        nodejs: [
+            'mkdir my-node-api',
+            'cd my-node-api && npm init -y',
+            'omni deploy',
+            '> Packaging Node.js app...',
+            '✨ Microservice deployed'
         ]
     };
 
@@ -83,7 +90,7 @@ const AmoledHero = () => {
     const getCurrentCodeLines = () => {
         const techKeys = Object.keys(codeExamples) as CodeExampleKey[];
         const currentTechKey = techKeys[currentBadgeIndex];
-        return codeExamples[currentTechKey] || codeExamples.volumes;
+        return codeExamples[currentTechKey] || codeExamples.nextjs;
     };
 
     // **NEW: Calculate total cycle duration including typing time**
@@ -101,84 +108,80 @@ const AmoledHero = () => {
         return totalTypingTime + DISPLAY_DURATION; // Total typing + display time
     };
 
-    // Storage technology icons
+    // Technology logos from online sources
     const TechIcons = {
-        volumes: (
-            <HardDrive className="w-4 h-4" />
+        nextjs: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" 
+                alt="Next.js" 
+                className="w-4 h-4 filter invert"
+            />
         ),
-        replication: (
-            <Wifi className="w-4 h-4" />
+        rust: (
+            <img 
+                src="https://www.rust-lang.org/logos/rust-logo-128x128.png" 
+                alt="Rust" 
+                className="w-4 h-4"
+            />
         ),
-        snapshots: (
-            <Zap className="w-4 h-4" />
+        svelte: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/svelte/svelte-original.svg" 
+                alt="Svelte" 
+                className="w-4 h-4"
+            />
         ),
-        backup: (
-            <Server className="w-4 h-4" />
+        react: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" 
+                alt="React" 
+                className="w-4 h-4"
+            />
         ),
-        migration: (
-            <Activity className="w-4 h-4" />
+        vue: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" 
+                alt="Vue.js" 
+                className="w-4 h-4"
+            />
         ),
-        monitoring: (
-            <Activity className="w-4 h-4" />
+        angular: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" 
+                alt="Angular" 
+                className="w-4 h-4"
+            />
         ),
-        encryption: (
-            <Zap className="w-4 h-4" />
+        python: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" 
+                alt="Python" 
+                className="w-4 h-4"
+            />
         ),
-        recovery: (
-            <Server className="w-4 h-4" />
+        nodejs: (
+            <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" 
+                alt="Node.js" 
+                className="w-4 h-4"
+            />
         )
     };
 
-    // Storage features for animated badge with custom styling
+    // Supported technologies for animated badge with custom styling
     const supportedTechs = [
         { 
-            icon: TechIcons.volumes, 
-            name: "Volume Management", 
-            borderColor: "border-blue-500/30",
-            bgColor: "bg-blue-500/5",
-            textColor: "text-blue-300",
-            iconColor: "text-blue-400",
-            progressColor: "#60a5fa"
+            icon: TechIcons.nextjs, 
+            name: "Next.js 15", 
+            borderColor: "border-white/30",
+            bgColor: "bg-white/5",
+            textColor: "text-white",
+            iconColor: "text-white",
+            progressColor: "#ffffff"
         },
         { 
-            icon: TechIcons.replication, 
-            name: "Distributed Replication", 
-            borderColor: "border-green-500/30",
-            bgColor: "bg-green-500/5",
-            textColor: "text-green-300",
-            iconColor: "text-green-400",
-            progressColor: "#4ade80"
-        },
-        { 
-            icon: TechIcons.snapshots, 
-            name: "Instant Snapshots", 
-            borderColor: "border-yellow-500/30",
-            bgColor: "bg-yellow-500/5",
-            textColor: "text-yellow-300",
-            iconColor: "text-yellow-400",
-            progressColor: "#facc15"
-        },
-        { 
-            icon: TechIcons.backup, 
-            name: "Automated Backup", 
-            borderColor: "border-purple-500/30",
-            bgColor: "bg-purple-500/5",
-            textColor: "text-purple-300",
-            iconColor: "text-purple-400",
-            progressColor: "#a855f7"
-        },
-        { 
-            icon: TechIcons.migration, 
-            name: "Live Migration", 
-            borderColor: "border-cyan-500/30",
-            bgColor: "bg-cyan-500/5",
-            textColor: "text-cyan-300",
-            iconColor: "text-cyan-400",
-            progressColor: "#22d3ee"
-        },
-        { 
-            icon: TechIcons.monitoring, 
-            name: "Performance Monitor", 
+            icon: TechIcons.rust, 
+            name: "Rust", 
             borderColor: "border-orange-500/30",
             bgColor: "bg-orange-500/5",
             textColor: "text-orange-300",
@@ -186,8 +189,8 @@ const AmoledHero = () => {
             progressColor: "#fb923c"
         },
         { 
-            icon: TechIcons.encryption, 
-            name: "Enterprise Encryption", 
+            icon: TechIcons.svelte, 
+            name: "Svelte", 
             borderColor: "border-red-500/30",
             bgColor: "bg-red-500/5",
             textColor: "text-red-300",
@@ -195,13 +198,49 @@ const AmoledHero = () => {
             progressColor: "#f87171"
         },
         { 
-            icon: TechIcons.recovery, 
-            name: "Disaster Recovery", 
-            borderColor: "border-pink-500/30",
-            bgColor: "bg-pink-500/5",
-            textColor: "text-pink-300",
-            iconColor: "text-pink-400",
-            progressColor: "#f472b6"
+            icon: TechIcons.react, 
+            name: "React", 
+            borderColor: "border-blue-500/30",
+            bgColor: "bg-blue-500/5",
+            textColor: "text-blue-300",
+            iconColor: "text-blue-400",
+            progressColor: "#60a5fa"
+        },
+        { 
+            icon: TechIcons.vue, 
+            name: "Vue.js", 
+            borderColor: "border-green-500/30",
+            bgColor: "bg-green-500/5",
+            textColor: "text-green-300",
+            iconColor: "text-green-400",
+            progressColor: "#4ade80"
+        },
+        { 
+            icon: TechIcons.angular, 
+            name: "Angular", 
+            borderColor: "border-red-600/30",
+            bgColor: "bg-red-600/5",
+            textColor: "text-red-300",
+            iconColor: "text-red-500",
+            progressColor: "#ef4444"
+        },
+        { 
+            icon: TechIcons.python, 
+            name: "Python", 
+            borderColor: "border-yellow-500/30",
+            bgColor: "bg-yellow-500/5",
+            textColor: "text-yellow-300",
+            iconColor: "text-yellow-400",
+            progressColor: "#facc15"
+        },
+        { 
+            icon: TechIcons.nodejs, 
+            name: "Node.js", 
+            borderColor: "border-green-600/30",
+            bgColor: "bg-green-600/5",
+            textColor: "text-green-300",
+            iconColor: "text-green-500",
+            progressColor: "#22c55e"
         }
     ];
 
@@ -312,24 +351,24 @@ const AmoledHero = () => {
         console.log(`Starting new cycle for ${supportedTechs[currentBadgeIndex].name}, duration: ${newCycleDuration}ms`);
     }, [currentBadgeIndex]);
 
-    // Generate random storage usage values
+    // Generate random CPU usage values
     useEffect(() => {
-        const generateStorageUsages = () => {
+        const generateCpuUsages = () => {
             const usages = [];
-            for (let nodeId = 0; nodeId < 2; nodeId++) {
-                const nodeUsages = [];
-                for (let volumeId = 0; volumeId < 8; volumeId++) {
-                    nodeUsages.push(Math.floor(Math.random() * 75) + 15); // 15-90%
+            for (let rackId = 0; rackId < 2; rackId++) {
+                const rackUsages = [];
+                for (let serverId = 0; serverId < 8; serverId++) {
+                    rackUsages.push(Math.floor(Math.random() * 85) + 10); // 10-95%
                 }
-                usages.push(nodeUsages);
+                usages.push(rackUsages);
             }
             return usages;
         };
 
-        setCpuUsages(generateStorageUsages());
+        setCpuUsages(generateCpuUsages());
         
         const interval = setInterval(() => {
-            setCpuUsages(generateStorageUsages());
+            setCpuUsages(generateCpuUsages());
         }, 3000);
 
         return () => clearInterval(interval);
@@ -396,33 +435,33 @@ const AmoledHero = () => {
     }, [codeText, currentLineIndex, currentBadgeIndex, terminalCompleted, TYPING_SPEED, LINE_DELAY]);
 
     const features = [
-        { icon: <Zap className="w-5 h-5" />, text: "Block-Level Storage", detail: "High-performance I/O" },
-        { icon: <Server className="w-5 h-5" />, text: "Distributed by Design", detail: "Multi-node replication" },
-        { icon: <Activity className="w-5 h-5" />, text: "Real-time Monitoring", detail: "Performance insights" },
-        { icon: <HardDrive className="w-5 h-5" />, text: "Enterprise Grade", detail: "Production ready" }
+        { icon: <Zap className="w-5 h-5" />, text: "Lightning Fast", detail: "Zero-config builds" },
+        { icon: <Code className="w-5 h-5" />, text: "Full-Stack Ready", detail: "API routes included" },
+        { icon: <Cpu className="w-5 h-5" />, text: "Edge Optimized", detail: "Global deployment" },
+        { icon: <Rocket className="w-5 h-5" />, text: "Scalable", detail: "Auto-scaling support" }
     ];
 
-    // Storage node configuration with cool colors
-    const storageNodes = [
-        { id: 1, volumes: 8, color: '#00d4ff', intensity: 0.8, delay: 0, name: 'NODE-01', type: 'PRIMARY' },
-        { id: 2, volumes: 8, color: '#8b5cf6', intensity: 0.6, delay: 0.3, name: 'NODE-02', type: 'REPLICA' }
+    // Enhanced server rack configuration with cool colors
+    const serverRacks = [
+        { id: 1, servers: 8, color: '#00d4ff', intensity: 0.8, delay: 0, name: 'US-EAST-1' },
+        { id: 2, servers: 8, color: '#8b5cf6', intensity: 0.6, delay: 0.3, name: 'EU-WEST-1' }
     ];
 
-    // Storage system stats for summary
+    // System stats for summary
     const systemStats = {
-        totalNodes: 2,
-        activeVolumes: 16,
-        avgLatency: '2.1ms',
+        totalServers: 16,
+        activeInstances: 247,
+        avgResponseTime: '12ms',
         uptime: '99.99%',
-        dataStored: '847GB',
-        replication: '3x'
+        dataTransfer: '2.4TB',
+        globalUsers: '150K+'
     };
 
     const currentTech = supportedTechs[currentBadgeIndex];
 
-    // Cool color scheme for storage usage
+    // Cool color scheme for CPU usage
     const getCoolUsageColor = (usage: number) => {
-        if (usage > 75) return { bg: 'linear-gradient(to right, #f97316, #ea580c)', color: '#fb923c' }; // Orange
+        if (usage > 75) return { bg: 'linear-gradient(to right, #7c3aed, #5b21b6)', color: '#a855f7' }; // Purple
         if (usage > 50) return { bg: 'linear-gradient(to right, #0ea5e9, #0284c7)', color: '#38bdf8' }; // Blue
         return { bg: 'linear-gradient(to right, #06b6d4, #0891b2)', color: '#22d3ee' }; // Cyan
     };
@@ -535,9 +574,9 @@ const AmoledHero = () => {
                             </h1>
                             
                             <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-lg leading-relaxed">
-                                High-performance distributed filesystem built in Rust.
-                                <span className="text-cyan-300 font-medium"> Enterprise-grade storage</span> with 
-                                <span className="text-purple-300 font-medium"> advanced replication</span>.
+                                Deploy your cloud native applications without the hassle.
+                                <span className="text-cyan-300 font-medium"> Zero configuration required</span>, 
+                                maximum performance.
                             </p>
                         </div>
 
@@ -624,56 +663,56 @@ const AmoledHero = () => {
                             </div>
                         </div>
 
-                        {/* Storage Nodes with Volume Visualization */}
+                        {/* Enhanced Server Racks with Cool Colors */}
                         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-6 max-w-md mx-auto lg:mx-0">
-                            {storageNodes.map((node, nodeIndex) => (
-                                <div key={node.id} className="relative">
+                            {serverRacks.map((rack, rackIndex) => (
+                                <div key={rack.id} className="relative">
                                     <div 
                                         className="bg-gray-900/40 border border-gray-700 rounded-xl p-3 sm:p-4 lg:p-5 backdrop-blur-sm"
                                         style={{
-                                            animation: `glow-${node.id} 3s infinite ease-in-out`,
-                                            animationDelay: `${node.delay}s`
+                                            animation: `glow-${rack.id} 3s infinite ease-in-out`,
+                                            animationDelay: `${rack.delay}s`
                                         }}
                                     >
-                                        {/* Node header */}
+                                        {/* Rack header */}
                                         <div className="flex items-center justify-between mb-3">
                                             <div>
-                                                <span className="text-xs text-gray-400 font-mono block">{node.name}</span>
-                                                <span className="text-xs text-gray-500 font-mono">{node.type}</span>
+                                                <span className="text-xs text-gray-400 font-mono block">{rack.name}</span>
+                                                <span className="text-xs text-gray-500 font-mono">RACK-{rack.id}</span>
                                             </div>
                                             <div 
                                                 className="w-2 h-2 rounded-full animate-pulse"
-                                                style={{ backgroundColor: node.color, boxShadow: `0 0 10px ${node.color}` }}
+                                                style={{ backgroundColor: rack.color, boxShadow: `0 0 10px ${rack.color}` }}
                                             />
                                         </div>
 
-                                        {/* Volume slots with storage usage colors */}
+                                        {/* Server slots with cool CPU colors */}
                                         <div className="space-y-2">
-                                            {Array.from({ length: node.volumes }).map((_, volumeIndex) => {
-                                                const storageUsage = cpuUsages[nodeIndex]?.[volumeIndex] || 0;
-                                                const coolColors = getCoolUsageColor(storageUsage);
+                                            {Array.from({ length: rack.servers }).map((_, serverIndex) => {
+                                                const cpuUsage = cpuUsages[rackIndex]?.[serverIndex] || 0;
+                                                const coolColors = getCoolUsageColor(cpuUsage);
                                                 
                                                 return (
                                                     <div
-                                                        key={volumeIndex}
+                                                        key={serverIndex}
                                                         className="flex items-center gap-2 p-2 rounded bg-gray-800/50 border border-gray-700"
                                                         style={{
-                                                            animationDelay: `${volumeIndex * 0.1 + node.delay}s`
+                                                            animationDelay: `${serverIndex * 0.1 + rack.delay}s`
                                                         }}
                                                     >
-                                                        <HardDrive 
-                                                            className="w-3 h-3 flex-shrink-0"
+                                                        <div 
+                                                            className="w-1.5 h-1.5 rounded-full animate-pulse flex-shrink-0"
                                                             style={{ 
-                                                                color: coolColors.color,
-                                                                opacity: node.intensity,
-                                                                filter: `drop-shadow(0 0 3px ${coolColors.color})`
+                                                                backgroundColor: coolColors.color,
+                                                                opacity: rack.intensity,
+                                                                boxShadow: `0 0 6px ${coolColors.color}`
                                                             }}
                                                         />
                                                         <div className="flex-1 h-1.5 bg-gray-700 rounded overflow-hidden min-w-0 relative">
                                                             <div 
                                                                 className="h-full transition-all duration-1000 ease-out"
                                                                 style={{ 
-                                                                    width: `${storageUsage}%`,
+                                                                    width: `${cpuUsage}%`,
                                                                     background: coolColors.bg
                                                                 }}
                                                             />
@@ -682,7 +721,7 @@ const AmoledHero = () => {
                                                             className="text-xs font-mono flex-shrink-0 w-8 text-right"
                                                             style={{ color: coolColors.color }}
                                                         >
-                                                            {storageUsage}%
+                                                            {cpuUsage}%
                                                         </span>
                                                     </div>
                                                 );
@@ -696,15 +735,15 @@ const AmoledHero = () => {
                 </div>
             </div>
 
-            {/* Storage System Summary */}
+            {/* System Usage Summary */}
             <div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 py-12 lg:py-16 xl:py-20">
                     <div className="text-center mb-8 lg:mb-12">
                         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
-                            Real-time Storage Overview
+                            Real-time System Overview
                         </h2>
                         <p className="text-gray-400 text-base lg:text-lg max-w-2xl mx-auto">
-                            Monitor your distributed filesystem performance and storage utilization across all nodes
+                            Monitor your global infrastructure performance and resource utilization across all regions
                         </p>
                     </div>
 
@@ -712,28 +751,28 @@ const AmoledHero = () => {
                         <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
                             <div className="flex items-center gap-3 mb-3">
                                 <Server className="w-4 lg:w-5 h-4 lg:h-5 text-cyan-400" />
-                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Storage Nodes</span>
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Total Servers</span>
                             </div>
-                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.totalNodes}</div>
-                            <div className="text-xs text-green-400 mt-1">All Online</div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.totalServers}</div>
+                            <div className="text-xs text-green-400 mt-1">All Active</div>
                         </div>
 
                         <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
                             <div className="flex items-center gap-3 mb-3">
-                                <HardDrive className="w-4 lg:w-5 h-4 lg:h-5 text-purple-400" />
-                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Active Volumes</span>
+                                <Activity className="w-4 lg:w-5 h-4 lg:h-5 text-purple-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Running Instances</span>
                             </div>
-                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.activeVolumes}</div>
-                            <div className="text-xs text-green-400 mt-1">+3 today</div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.activeInstances}</div>
+                            <div className="text-xs text-green-400 mt-1">+12 today</div>
                         </div>
 
                         <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
                             <div className="flex items-center gap-3 mb-3">
                                 <Zap className="w-4 lg:w-5 h-4 lg:h-5 text-yellow-400" />
-                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Avg Latency</span>
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Response Time</span>
                             </div>
-                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.avgLatency}</div>
-                            <div className="text-xs text-green-400 mt-1">Ultra-fast I/O</div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.avgResponseTime}</div>
+                            <div className="text-xs text-green-400 mt-1">Avg Global</div>
                         </div>
 
                         <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
@@ -747,20 +786,20 @@ const AmoledHero = () => {
 
                         <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
                             <div className="flex items-center gap-3 mb-3">
-                                <Activity className="w-4 lg:w-5 h-4 lg:h-5 text-blue-400" />
-                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Data Stored</span>
+                                <HardDrive className="w-4 lg:w-5 h-4 lg:h-5 text-blue-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Data Transfer</span>
                             </div>
-                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.dataStored}</div>
-                            <div className="text-xs text-cyan-400 mt-1">Encrypted</div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.dataTransfer}</div>
+                            <div className="text-xs text-cyan-400 mt-1">This month</div>
                         </div>
 
                         <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-4 lg:p-6 backdrop-blur-sm hover:border-cyan-500/30 transition-colors">
                             <div className="flex items-center gap-3 mb-3">
-                                <Wifi className="w-4 lg:w-5 h-4 lg:h-5 text-pink-400" />
-                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Replication</span>
+                                <Rocket className="w-4 lg:w-5 h-4 lg:h-5 text-pink-400" />
+                                <span className="text-xs lg:text-sm text-gray-400 font-medium">Global Users</span>
                             </div>
-                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.replication}</div>
-                            <div className="text-xs text-green-400 mt-1">High availability</div>
+                            <div className="text-xl lg:text-2xl font-bold text-white">{systemStats.globalUsers}</div>
+                            <div className="text-xs text-green-400 mt-1">+5.2% growth</div>
                         </div>
                     </div>
                 </div>
